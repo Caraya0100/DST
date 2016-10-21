@@ -10,27 +10,17 @@ namespace LogicaDifusa
     /// <summary>
     /// Clase para el metodo del centroide.
     /// </summary>
-    public class Centroide
+    public static class Centroide
     {
-        private double resultado;
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public Centroide()
-        {
-            resultado = 0;
-        }
-
         /// <summary>
         /// Realiza el metodo del centroide, devolviendo el numero defuzzificado.
         /// Recibe el conjunto difuso resultante de la agregacion.
         /// </summary>
         /// <param name="agregacion"></param>
         /// <returns></returns>
-        public double Realizar(List<ValorLinguistico> agregacion)
+        public static double Ejecutar(List<ValorLinguistico> agregacion)
         {
-            double numerador = 0;
-            double denominador = 0;
+            double resultado = 0, numerador = 0, denominador = 0;
 
             /* Las integrales de la formula del centroide se realizan para cada valor linguistico 
                que conforman el resultado de la agregación. */
@@ -45,15 +35,9 @@ namespace LogicaDifusa
                     b, epsilon);
             }
             // Se divide el resultado de las integrales para obtener el centroide.
-            Resultado = numerador / denominador;
+            resultado = numerador / denominador;
 
-            return Resultado;
-        }
-
-        public double Resultado
-        {
-            get { return resultado; }
-            set { resultado = value; }
+            return resultado;
         }
     }
 }

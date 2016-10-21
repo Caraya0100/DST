@@ -13,16 +13,26 @@ namespace LogicaDifusa
     {
         private string id;
         private string operador;
-        private Dictionary<string, ValorLinguistico> antecendente;
+        private Dictionary<string, ValorLinguistico> antecedente;
         private Tuple<string, ValorLinguistico> consecuente;
 
         /// <summary>
-        /// Constructor, recibe el operador de la regla (Y/O).
+        /// Constructor, recibe el antecedente, el consecuente y el operador de la regla.
         /// </summary>
         /// <param name="antecedente"></param>
         /// <param name="consecuente"></param>
-        public Regla(string operador)
+        /// <param name="operador"></param>
+        public Regla(Dictionary<string, ValorLinguistico> antecedente, Tuple<string, ValorLinguistico> consecuente, string operador)
         {
+            foreach (KeyValuePair<string, ValorLinguistico> actual in antecedente)
+            {
+                AgregarAntecendente(actual.Key, actual.Value);
+            }
+
+            if( consecuente != null )
+            {
+                AgregarConsecuente(consecuente.Item1, consecuente.Item2);
+            }
             Operador = operador;
         }
 
@@ -35,7 +45,7 @@ namespace LogicaDifusa
         public void AgregarAntecendente(string nombre_variable, ValorLinguistico valor)
         {
             ValorLinguistico val = new ValorLinguistico(valor.Nombre, valor.Fp);
-            Antecendente.Add(nombre_variable, val);
+            Antecedente.Add(nombre_variable, val);
         }
 
         /// <summary>
@@ -47,6 +57,31 @@ namespace LogicaDifusa
         {
             ValorLinguistico val = new ValorLinguistico(valor.Nombre, valor.Fp);
             Consecuente = new Tuple<string, ValorLinguistico>(nombre_variable, val);
+        }
+
+        /// <summary>
+        /// Evalua la regla regla.
+        /// </summary>
+        /// <returns></returns>
+        public double EvaluarRegla()
+        {
+            List<double> valoresLinguisticos = new List<double>();
+            double resultado = 0;
+
+            foreach (KeyValuePair<string, ValorLinguistico> actual in Antecedente)
+            {
+                valoresLinguisticos.Add(actual.Value.GradoPertenencia);
+            }
+
+            if ( operador == "y" )
+            {
+                resultado = valoresLinguisticos.Min();
+            } else if (operador == "o")
+            {
+                resultado = valoresLinguisticos.Max();
+            }
+
+            return resultado;
         }
 
         public string Id
@@ -61,10 +96,10 @@ namespace LogicaDifusa
             set { operador = value; }
         }
 
-        public Dictionary<string, ValorLinguistico> Antecendente
+        public Dictionary<string, ValorLinguistico> Antecedente
         {
-            get { return antecendente; }
-            set { antecendente = value; }
+            get { return antecedente; }
+            set { antecedente = value; }
         }
 
         public Tuple<string, ValorLinguistico> Consecuente
