@@ -13,6 +13,7 @@ namespace LogicaDifusa
     {
         private string nombre;
         private FuncionPertenencia fp;
+        private double gradoPertenencia;
 
         /// <summary>
         /// 
@@ -23,6 +24,16 @@ namespace LogicaDifusa
         {
             Nombre = nombre;
             Fp = fp;
+            GradoPertenencia = -1; // grado de pertenencia por defecto.
+        }
+
+        /// <summary>
+        /// Calcula el grado de pertenencia del valor linguistico.
+        /// </summary>
+        /// <param name="valor"></param>
+        public void CalcularGradoPertenencia(double valor)
+        {
+            GradoPertenencia = Fp.GradoPertenencia(valor);
         }
 
         public string Nombre
@@ -35,6 +46,12 @@ namespace LogicaDifusa
         {
             get { return fp; }
             set { fp = value; }
+        }
+
+        public double GradoPertenencia
+        {
+            get { return gradoPertenencia; }
+            set { gradoPertenencia = value; }
         }
     }
 }

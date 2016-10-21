@@ -61,6 +61,25 @@ namespace LogicaDifusa
         }
 
         /// <summary>
+        /// Fuzzifica la variable, obteniendo el grado de pertenencia para cada valor linguistico.
+        /// </summary>
+        /// <param name="dato"></param>
+        /// <returns></returns>
+        public bool Fuzzificar(double dato)
+        {
+            if ( dato > Min && dato < Max )
+            {
+                foreach (KeyValuePair<string, ValorLinguistico> valor in Valores)
+                {
+                    valor.Value.CalcularGradoPertenencia(dato);
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Elimina un valor linguistico de la variable linguistica.
         /// </summary>
         /// <param name="nombre"></param>
@@ -70,6 +89,21 @@ namespace LogicaDifusa
             // IMPLEMENTAR: COMPROBAR QUE EL VALOR LINGUISTICO EXISTA.
             Valores.Remove(nombre);
             return true;
+        }
+
+        /// <summary>
+        /// Retorna un valor linguistico segun el nombre.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <returns></returns>
+        public ValorLinguistico ValorLinguistico(string nombre)
+        {
+            if( Valores.ContainsKey(nombre) )
+            {
+                return Valores[nombre];
+            }
+
+            return null;
         }
 
         public string Nombre

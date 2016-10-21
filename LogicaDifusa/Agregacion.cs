@@ -6,27 +6,20 @@ using System.Threading.Tasks;
 
 namespace LogicaDifusa
 {
-    class Agregacion
+    /// <summary>
+    /// Clase para la agregacion.
+    /// </summary>
+    public static class Agregacion
     {
-        private List<ValorLinguistico> resultado;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="consecuentes"></param>
-        public Agregacion()
-        {
-            Resultado = new List<ValorLinguistico>();
-        }
-
         /// <summary>
         /// Realiza la agregacion, recibe los consecuentes agrupados por 
         /// los diferentes valores linguisticos.
         /// </summary>
         /// <param name="consecuentes"></param>
         /// <returns></returns>
-        public List<ValorLinguistico> Realizar(Dictionary<string, List<ValorLinguistico>> consecuentes)
+        public static List<ValorLinguistico> Ejecutar(Dictionary<string, List<ValorLinguistico>> consecuentes)
         {
+            List<ValorLinguistico> resultado = new List<ValorLinguistico>();
             foreach (KeyValuePair<string, List<ValorLinguistico>> consecuente in consecuentes)
             {
                 List<double> gradosPertenencias = new List<double>();
@@ -43,17 +36,11 @@ namespace LogicaDifusa
                 if (valorLinguistico != null)
                 {
                     valorLinguistico.GradoPertenencia = gradosPertenencias.Max();
-                    Resultado.Add(valorLinguistico);
+                    resultado.Add(valorLinguistico);
                 }
             }
 
-            return Resultado;
-        }
-
-        public List<ValorLinguistico> Resultado
-        {
-            get { return resultado; }
-            set { resultado = value; }
+            return resultado;
         }
     }
 }

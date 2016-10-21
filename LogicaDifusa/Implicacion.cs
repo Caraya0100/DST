@@ -9,37 +9,22 @@ namespace LogicaDifusa
     /// <summary>
     /// Clase para la implicacion de la logica difusa.
     /// </summary>
-    public class Implicacion
+    public static class Implicacion
     {
-        private ValorLinguistico resultado;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="valor_linguistico"></param>
-        /// <param name="fp"></param>
-        public Implicacion(ValorLinguistico valorLinguistico)
-        {
-            Resultado = new ValorLinguistico(valorLinguistico.Nombre, valorLinguistico.Fp);
-        }
-
         /// <summary>
         /// Realiza la implicacion, recibe el valor resultante de aplicar el operador
         /// a la regla evaluada.
         /// </summary>
-        /// <param name="resultado_operador"></param>
+        /// <param name="resultadOperador"></param>
         /// <returns></returns>
-        public ValorLinguistico Realizar(double resultado_operador)
+        public static ValorLinguistico Ejecutar(double resultadOperador, ValorLinguistico valorLinguistico)
         {
-            Resultado.CalcularGradoPertenencia(resultado_operador);
+            ValorLinguistico resultado = new ValorLinguistico(valorLinguistico.Nombre, valorLinguistico.Fp);
+            // Obtenemos el grado de pertenencia y cortamos la funcion de pertenencia en ese grado.
+            resultado.CalcularGradoPertenencia(resultadOperador);
+            resultado.Fp.CortarFuncion(resultado.GradoPertenencia);
 
-            return Resultado;
-        }
-
-        public ValorLinguistico Resultado
-        {
-            get { return resultado; }
-            set { resultado = value; }
+            return resultado;
         }
     }
 }
