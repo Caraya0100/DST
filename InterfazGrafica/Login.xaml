@@ -1,0 +1,20 @@
+﻿<Controls:MetroWindow x:Class="InterfazGrafica.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InterfazGrafica"
+        mc:Ignorable="d"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="Login" Height="600" Width="1200">
+    <Grid>
+        <TextBox x:Name="rut" Height="23" Margin="446,0,455,285" TextWrapping="Wrap" Text="1.111.111-1" VerticalAlignment="Bottom" Width="291" HorizontalAlignment="Center"/>
+        <Label x:Name="label" Content="RUT" HorizontalAlignment="Center" Margin="578,227,578,316" VerticalAlignment="Center" Width="36"/>
+        <Label x:Name="label_Copy" Content="CONTRASEÑA" HorizontalAlignment="Center" Margin="553,314,553,229" VerticalAlignment="Center" Width="86"/>
+        <PasswordBox x:Name="password" HorizontalAlignment="Center" Margin="445,345,455,198" VerticalAlignment="Center" Width="292"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="531,65,531,0" TextWrapping="Wrap" Text="DST" VerticalAlignment="Top" Height="74" Width="130" FontSize="62" FontWeight="Bold"/>
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Center" Margin="506,156,505,0" TextWrapping="Wrap" Text="Determinación Sección de Trabajo" VerticalAlignment="Top" Width="181"/>
+        <Button x:Name="ingresar" Content="Ingresar" HorizontalAlignment="Center" Margin="445,413,455,0" VerticalAlignment="Top" Width="292"/>
+
+    </Grid>
+</Controls:MetroWindow>
