@@ -52,6 +52,20 @@ namespace LogicaDifusa
         /// </summary>
         /// <param name="valor"></param>
         /// <returns>Retorna true si se ha agrega el valor con exito, de lo contrario false.</returns>
+        public bool AgregarValorLinguistico(string nombre, FuncionPertenencia fp)
+        {
+            // IMPLEMENTAR: COMPROBAR QUE EL VALOR LINGUISTICO NO SE SALGA DEL RANGO DE LA VARIABLE LINGUISTICA.
+            ValorLinguistico vl = new ValorLinguistico(nombre, fp);
+            valores.Add(vl.Nombre, vl);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Agrega un valor linguistico a la variable linguistica.
+        /// </summary>
+        /// <param name="valor"></param>
+        /// <returns>Retorna true si se ha agrega el valor con exito, de lo contrario false.</returns>
         public bool AgregarValorLinguistico(ValorLinguistico valor)
         {
             // IMPLEMENTAR: COMPROBAR QUE EL VALOR LINGUISTICO NO SE SALGA DEL RANGO DE LA VARIABLE LINGUISTICA.
@@ -67,7 +81,7 @@ namespace LogicaDifusa
         /// <returns></returns>
         public bool Fuzzificar(double dato)
         {
-            if ( dato > Min && dato < Max )
+            if ( dato >= Min && dato <= Max )
             {
                 foreach (KeyValuePair<string, ValorLinguistico> valor in Valores)
                 {

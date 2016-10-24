@@ -1,0 +1,9 @@
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\bin\Debug\Inferencia.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\bin\Debug\Inferencia.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\bin\Debug\LogicaDifusa.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\bin\Debug\Integracion.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\bin\Debug\LogicaDifusa.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\bin\Debug\Integracion.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\obj\Debug\SistemaInferencia.csprojResolveAssemblyReference.cache
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\obj\Debug\Inferencia.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Inferencia\obj\Debug\Inferencia.pdb

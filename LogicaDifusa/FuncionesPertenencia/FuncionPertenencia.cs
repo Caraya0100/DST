@@ -26,5 +26,11 @@ namespace LogicaDifusa
         {
             return 0;
         }
+
+        public virtual double ValorCorte
+        {
+            get { return -1; }
+            set { }
+        }
     }
 }

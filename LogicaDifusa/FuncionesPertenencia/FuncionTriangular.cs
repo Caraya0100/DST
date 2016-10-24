@@ -9,7 +9,7 @@ namespace LogicaDifusa
     /// <summary>
     /// Funcion Triangular de Pertenencia.
     /// </summary>
-    class FuncionTriangular : FuncionPertenencia
+    public class FuncionTriangular : FuncionPertenencia
     {
         private double _valorIzq, _valorCentro, _valorDerch, valorCorte;
         private bool cortada;
@@ -37,7 +37,7 @@ namespace LogicaDifusa
             _valorCentro = valorCentro;
             _valorDerch = valorDerch;
             Cortada = false;
-            ValorCorte = 0;
+            ValorCorte = -1;
         }
 
         /// <summary>
@@ -79,7 +79,6 @@ namespace LogicaDifusa
             {
                 resultado = ValorCorte;
             }
-
             return resultado;
         }
 
@@ -128,7 +127,7 @@ namespace LogicaDifusa
             set { cortada = value; }
         }
 
-        public double ValorCorte
+        public override double ValorCorte
         {
             get { return valorCorte; }
             set { valorCorte = value; }

@@ -24,6 +24,8 @@ namespace LogicaDifusa
         /// <param name="operador"></param>
         public Regla(Dictionary<string, ValorLinguistico> antecedente, Tuple<string, ValorLinguistico> consecuente, string operador)
         {
+            Antecedente = new Dictionary<string, ValorLinguistico>();
+
             foreach (KeyValuePair<string, ValorLinguistico> actual in antecedente)
             {
                 AgregarAntecendente(actual.Key, actual.Value);
@@ -42,10 +44,10 @@ namespace LogicaDifusa
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="nombre_valor"></param>
-        public void AgregarAntecendente(string nombre_variable, ValorLinguistico valor)
+        public void AgregarAntecendente(string nombreVariable, ValorLinguistico valor)
         {
-            ValorLinguistico val = new ValorLinguistico(valor.Nombre, valor.Fp);
-            Antecedente.Add(nombre_variable, val);
+            //ValorLinguistico val = new ValorLinguistico(valor.Nombre, valor.Fp);
+            Antecedente.Add(nombreVariable, valor);
         }
 
         /// <summary>
@@ -53,10 +55,10 @@ namespace LogicaDifusa
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="nombre_valor"></param>
-        public void AgregarConsecuente(string nombre_variable, ValorLinguistico valor)
+        public void AgregarConsecuente(string nombreVariable, ValorLinguistico valor)
         {
             ValorLinguistico val = new ValorLinguistico(valor.Nombre, valor.Fp);
-            Consecuente = new Tuple<string, ValorLinguistico>(nombre_variable, val);
+            Consecuente = new Tuple<string, ValorLinguistico>(nombreVariable, val);
         }
 
         /// <summary>
