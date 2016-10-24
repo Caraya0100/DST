@@ -22,15 +22,17 @@ namespace LogicaDifusa
         {
             double resultado = 0, numerador = 0, denominador = 0;
 
-            /* Las integrales de la formula del centroide se realizan para cada valor linguistico 
+            /* Las integrales de la formula del centroide se realizan para cada valor linguistico
                que conforman el resultado de la agregación. */
             foreach (ValorLinguistico valor in agregacion)
             {
                 double a = valor.Fp.LimiteInferior();
                 double b = valor.Fp.LimiteSuperior();
                 double epsilon = 1e-8; // tolerancia al error.
+
                 numerador += SimpsonIntegrator.Integrate(x => valor.Fp.GradoPertenencia(x) * x, a,
                     b, epsilon);
+
                 denominador += SimpsonIntegrator.Integrate(x => valor.Fp.GradoPertenencia(x), a,
                     b, epsilon);
             }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicaDifusa
 {
-    class FuncionTrapezoidal : FuncionPertenencia
+    public class FuncionTrapezoidal : FuncionPertenencia
     {
         double _valorIzqAbajo, _valorIzqArriba, _valorDerchArriba, _valorDerchAbajo, valorCorte;
         private bool cortada;

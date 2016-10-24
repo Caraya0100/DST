@@ -21,8 +21,8 @@ namespace LogicaDifusa
         {
             ValorLinguistico resultado = new ValorLinguistico(valorLinguistico.Nombre, valorLinguistico.Fp);
             // Obtenemos el grado de pertenencia y cortamos la funcion de pertenencia en ese grado.
-            resultado.CalcularGradoPertenencia(resultadOperador);
-            resultado.Fp.CortarFuncion(resultado.GradoPertenencia);
+            //resultado.CalcularGradoPertenencia(resultadOperador);
+            resultado.Fp.CortarFuncion(resultadOperador);
 
             return resultado;
         }

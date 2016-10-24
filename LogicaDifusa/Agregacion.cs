@@ -27,12 +27,13 @@ namespace LogicaDifusa
 
                 foreach (ValorLinguistico valor in consecuente.Value)
                 {
-                    // obtenemos el valor linguistico en la primera iteracion.
-                    if ( valorLinguistico != null )
+                    // Obtenemos el valor linguistico en la primera iteracion.
+                    if ( valorLinguistico == null )
                         valorLinguistico = new ValorLinguistico(valor.Nombre, valor.Fp);
+
                     gradosPertenencias.Add(valor.GradoPertenencia);
                 }
-                // obtenemos el maximo y agregamos el valor linguistico al conjunto difuso resultante.
+                // Obtenemos el maximo y agregamos el valor linguistico al conjunto difuso resultante.
                 if (valorLinguistico != null)
                 {
                     valorLinguistico.GradoPertenencia = gradosPertenencias.Max();

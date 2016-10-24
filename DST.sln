@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicaDifusa", "LogicaDifusa\LogicaDifusa.csproj", "{AAA06E03-91AF-4217-9C19-EBE4A6AFB1CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inferencia", "Inferencia\Inferencia.csproj", "{0DACE211-0647-46B3-A30A-6E55F5958C2E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaInferencia", "Inferencia\SistemaInferencia.csproj", "{0DACE211-0647-46B3-A30A-6E55F5958C2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfiles", "Perfiles\Perfiles.csproj", "{3A7AE906-3D0C-41FF-9421-92D442035F5D}"
 EndProject
@@ -18,6 +18,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evaluaciones", "Evaluaciones\Evaluaciones.csproj", "{505BBFB4-82AD-4446-B55A-57CB479668E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfazGrafica", "InterfazGrafica\InterfazGrafica.csproj", "{9F952A0B-0AFE-4683-B792-4B7DCC57D551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integracion", "Integracion\Integracion.csproj", "{BBEF19D7-D718-4057-88CA-10E8AD56B980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pruebas", "Pruebas\Pruebas.csproj", "{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,14 @@ Global
 		{9F952A0B-0AFE-4683-B792-4B7DCC57D551}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F952A0B-0AFE-4683-B792-4B7DCC57D551}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F952A0B-0AFE-4683-B792-4B7DCC57D551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBEF19D7-D718-4057-88CA-10E8AD56B980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBEF19D7-D718-4057-88CA-10E8AD56B980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBEF19D7-D718-4057-88CA-10E8AD56B980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBEF19D7-D718-4057-88CA-10E8AD56B980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

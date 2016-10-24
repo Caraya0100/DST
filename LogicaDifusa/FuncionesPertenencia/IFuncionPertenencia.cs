@@ -35,5 +35,11 @@ namespace LogicaDifusa
         /// </summary>
         /// <returns></returns>
         double LimiteSuperior();
+
+        double ValorCorte
+        {
+            get;
+            set;
+        }
     }
 }
