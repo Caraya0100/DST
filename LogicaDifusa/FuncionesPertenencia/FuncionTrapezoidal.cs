@@ -147,7 +147,7 @@ namespace LogicaDifusa
             set { cortada = value; }
         }
 
-        public double ValorCorte
+        public override double ValorCorte
         {
             get { return valorCorte; }
             set { valorCorte = value; }

@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicaDifusa", "LogicaDifusa\LogicaDifusa.csproj", "{AAA06E03-91AF-4217-9C19-EBE4A6AFB1CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaInferencia", "Inferencia\SistemaInferencia.csproj", "{0DACE211-0647-46B3-A30A-6E55F5958C2E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfiles", "Perfiles\Perfiles.csproj", "{3A7AE906-3D0C-41FF-9421-92D442035F5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trabajador", "Trabajador\Trabajador.csproj", "{27D521FF-8797-4C4E-BACF-CEDEB7B853DC}"
@@ -23,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integracion", "Integracion\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pruebas", "Pruebas\Pruebas.csproj", "{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaInferencia", "SistemaInferencia\SistemaInferencia.csproj", "{1904CCC6-CE97-4610-80FC-5349274E3C31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,10 +33,6 @@ Global
 		{AAA06E03-91AF-4217-9C19-EBE4A6AFB1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAA06E03-91AF-4217-9C19-EBE4A6AFB1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAA06E03-91AF-4217-9C19-EBE4A6AFB1CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0DACE211-0647-46B3-A30A-6E55F5958C2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DACE211-0647-46B3-A30A-6E55F5958C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DACE211-0647-46B3-A30A-6E55F5958C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0DACE211-0647-46B3-A30A-6E55F5958C2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A7AE906-3D0C-41FF-9421-92D442035F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A7AE906-3D0C-41FF-9421-92D442035F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A7AE906-3D0C-41FF-9421-92D442035F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,6 +65,10 @@ Global
 		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
