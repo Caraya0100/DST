@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicaDifusa", "LogicaDifusa\LogicaDifusa.csproj", "{AAA06E03-91AF-4217-9C19-EBE4A6AFB1CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfiles", "Perfiles\Perfiles.csproj", "{3A7AE906-3D0C-41FF-9421-92D442035F5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfil", "Perfiles\Perfil.csproj", "{3A7AE906-3D0C-41FF-9421-92D442035F5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trabajador", "Trabajador\Trabajador.csproj", "{27D521FF-8797-4C4E-BACF-CEDEB7B853DC}"
 EndProject
