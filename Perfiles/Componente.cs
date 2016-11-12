@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DST.Perfil
+namespace DST
 {
     /// <summary>
     /// Clase para el componente de un perfil.

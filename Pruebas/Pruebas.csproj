@@ -51,6 +51,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BaseDeDatos\BaseDeDatos.csproj">
+      <Project>{5b24a143-1bd9-4e73-a31f-dd6577a6886e}</Project>
+      <Name>BaseDeDatos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integracion\Integracion.csproj">
       <Project>{bbef19d7-d718-4057-88ca-10e8ad56b980}</Project>
       <Name>Integracion</Name>
