@@ -1,0 +1,7 @@
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\BaseDeDatos.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\BaseDeDatos.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\MySql.Data.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\MySql.Data.xml
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.csprojResolveAssemblyReference.cache
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.pdb

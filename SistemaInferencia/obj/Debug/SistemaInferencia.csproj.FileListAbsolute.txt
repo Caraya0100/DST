@@ -7,3 +7,12 @@ C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\obj\Debug\SistemaInferencia.csprojResolveAssemblyReference.cache
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\obj\Debug\SistemaInferencia.dll
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\obj\Debug\SistemaInferencia.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin\Debug\SistemaInferencia.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin\Debug\SistemaInferencia.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin\Debug\LogicaDifusa.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin\Debug\Integracion.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin\Debug\LogicaDifusa.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\bin\Debug\Integracion.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\obj\Debug\SistemaInferencia.csprojResolveAssemblyReference.cache
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\obj\Debug\SistemaInferencia.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\SistemaInferencia\obj\Debug\SistemaInferencia.pdb

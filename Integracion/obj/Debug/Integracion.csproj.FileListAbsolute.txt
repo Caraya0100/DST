@@ -3,3 +3,8 @@ C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Integracion\bin\Debug
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Integracion\obj\Debug\Integracion.csprojResolveAssemblyReference.cache
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Integracion\obj\Debug\Integracion.dll
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Integracion\obj\Debug\Integracion.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Integracion\bin\Debug\Integracion.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Integracion\bin\Debug\Integracion.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Integracion\obj\Debug\Integracion.csprojResolveAssemblyReference.cache
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Integracion\obj\Debug\Integracion.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Integracion\obj\Debug\Integracion.pdb

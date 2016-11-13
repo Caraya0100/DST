@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DST.Perfil;
+using DST;
 
-namespace DST.Trabajador
-{
+namespace DST
+{ 
     /// <summary>
     /// Clase para el trabajador, contiene el rut, el nombre, la fecha de nacimiento, y 
     /// su perfil.
