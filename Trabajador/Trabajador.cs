@@ -31,7 +31,7 @@ namespace DST
             this.nombre = nombre;
             this.rut = rut;
             this.fechaNacimiento = fechaNacimiento;
-            this.perfil = new Perfil(perfil.HB, perfil.HD, perfil.CF);
+            this.perfil = new Perfil(perfil.Blandas, perfil.Duras, perfil.Fisicas);
         }
 
         public string Nombre

@@ -11,8 +11,10 @@ namespace Pruebas
     {
         static void Main(string[] args)
         {
+            //new CreacionBD();
+
             //new PruebaInferencia().PruebaPropina(3.0, 8.0, 1.0);
-            AdminBD prueba = new AdminBD("localhost", "root", "", "bddst");
+            //AdminBD prueba = new AdminBD("localhost", "root", "", "bddst");
             //prueba.obtenerEmpresa();
             //prueba.insertarEmpresa("lider milagro","8765432-1","la otra esquina");
 
@@ -25,9 +27,9 @@ namespace Pruebas
             */
 
             
-            prueba.insertarSeccion("casa", "17263145-4");
+            /*prueba.insertarSeccion("casa", "17263145-4");
             prueba.insertarSeccion("electro", "15263145-4");
-            prueba.insertarSeccion("carniceria", "14263145-4");
+            prueba.insertarSeccion("carniceria", "14263145-4");*/
         }
     }
 }

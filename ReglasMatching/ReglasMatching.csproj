@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{8CCFDDD9-4371-4B8F-922B-476D609B782F}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pruebas</RootNamespace>
-    <AssemblyName>Pruebas</AssemblyName>
+    <RootNamespace>ReglasMatching</RootNamespace>
+    <AssemblyName>ReglasMatching</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,7 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,31 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreacionBD.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="ReglasMatching.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PruebaInferencia.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BaseDeDatos\BaseDeDatos.csproj">
-      <Project>{5b24a143-1bd9-4e73-a31f-dd6577a6886e}</Project>
-      <Name>BaseDeDatos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integracion\Integracion.csproj">
-      <Project>{bbef19d7-d718-4057-88ca-10e8ad56b980}</Project>
-      <Name>Integracion</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
-      <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
-      <Name>LogicaDifusa</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SistemaInferencia\SistemaInferencia.csproj">
-      <Project>{1904ccc6-ce97-4610-80fc-5349274e3c31}</Project>
-      <Name>SistemaInferencia</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

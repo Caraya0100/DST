@@ -12,9 +12,27 @@ namespace DST
     /// </summary>
     public class Perfil
     {
-        private List<Componente> hb;
-        private List<Componente> hd;
-        private List<Componente> cf;
+        // Diccionario con las habilidades blandas, duras, y caracteristicas fisicas.
+        private Dictionary<string, Componente> blandas;
+        private Dictionary<string, Componente> duras;
+        private Dictionary<string, Componente> fisicas;
+        // Componentes generales (HBs, HDs, CFs).
+        private Componente hb;
+        private Componente hd;
+        private Componente cf;
+
+        /// <summary>
+        /// Constructor, inicializa un perfil vacio.
+        /// </summary>
+        public Perfil()
+        {
+            blandas = new Dictionary<string, Componente>();
+            duras = new Dictionary<string, Componente>();
+            fisicas = new Dictionary<string, Componente>();
+            hb = new Componente("habilidades_blandas", "Habilidades blandas del perfil", "general");
+            hd = new Componente("habilidades_duras", "Habilidades duras del perfil", "general");
+            cf = new Componente("caracteristicas_fisicas", "Caracteristicas fisicas del perfil", "general");
+        }
 
         /// <summary>
         /// Constructor, recibe las habilidades blandas, duras y las caracteristicas fisica 
@@ -23,15 +41,40 @@ namespace DST
         /// <param name="hb"></param>
         /// <param name="hd"></param>
         /// <param name="cf"></param>
-        public Perfil(List<Componente> blandas, List<Componente> duras, List<Componente> fisicas)
+        public Perfil(Dictionary<string, Componente> blandas, Dictionary<string, Componente> duras, Dictionary<string, Componente> fisicas)
         {
-            hb = new List<Componente>();
-            hd = new List<Componente>();
-            cf = new List<Componente>();
+            this.blandas = new Dictionary<string, Componente>();
+            this.duras = new Dictionary<string, Componente>();
+            this.fisicas = new Dictionary<string, Componente>();
 
-            IniciarComponentes(hb, blandas);
-            IniciarComponentes(hd, duras);
-            IniciarComponentes(cf, fisicas);
+            IniciarComponentes(this.blandas, blandas);
+            IniciarComponentes(this.duras, duras);
+            IniciarComponentes(this.fisicas, fisicas);
+
+            hb = new Componente("habilidades_blandas", "Habilidades blandas del perfil", "general");
+            hd = new Componente("habilidades_duras", "Habilidades duras del perfil", "general");
+            cf = new Componente("caracteristicas_fisicas", "Caracteristicas fisicas del perfil", "general");
+        }
+
+        /// <summary>
+        /// Constructor, inicializa un perfil a partir de otro (copia). 
+        /// </summary>
+        /// <param name="hb"></param>
+        /// <param name="hd"></param>
+        /// <param name="cf"></param>
+        public Perfil(Perfil perfil)
+        {
+            this.blandas = new Dictionary<string, Componente>();
+            this.duras = new Dictionary<string, Componente>();
+            this.fisicas = new Dictionary<string, Componente>();
+
+            IniciarComponentes(this.blandas, perfil.Blandas);
+            IniciarComponentes(this.duras, perfil.Duras);
+            IniciarComponentes(this.fisicas, perfil.Fisicas);
+
+            hb = new Componente("habilidades_blandas", "Habilidades blandas del perfil", "general");
+            hd = new Componente("habilidades_duras", "Habilidades duras del perfil", "general");
+            cf = new Componente("caracteristicas_fisicas", "Caracteristicas fisicas del perfil", "general");
         }
 
         /// <summary>
@@ -39,36 +82,112 @@ namespace DST
         /// </summary>
         /// <param name="inicializar">Componentes a inicializar</param>
         /// <param name="inicializados">Componentes inicializados</param>
-        private void IniciarComponentes(List<Componente> inicializar, List<Componente> inicializados)
+        private void IniciarComponentes(Dictionary<string, Componente> inicializar, Dictionary<string, Componente> inicializados)
         {
-            foreach (Componente inicilizada in inicializados)
+            foreach (KeyValuePair<string, Componente> inicilizada in inicializados)
             {
-                inicializar.Add(new Componente(
-                    inicilizada.Nombre, 
-                    inicilizada.Descripcion, 
-                    inicilizada.Tipo, 
-                    inicilizada.Puntaje, 
-                    inicilizada.Importancia
+                inicializar.Add(inicilizada.Key, new Componente(
+                    inicilizada.Value.Nombre,
+                    inicilizada.Value.Descripcion,
+                    inicilizada.Value.Tipo,
+                    inicilizada.Value.Puntaje,
+                    inicilizada.Value.Importancia
                 ));
             }
         }
 
-        public List<Componente> HB
+
+        /// <summary>
+        /// Agrega un componente al perfil.
+        /// </summary>
+        /// <param name="componente"></param>
+        public void AgregarComponente(Componente componente)
+        {
+            if (componente.Tipo == "hb")
+            {
+                Blandas.Add(componente.Nombre, new Componente(
+                    componente.Nombre,
+                    componente.Descripcion,
+                    componente.Tipo,
+                    componente.Puntaje,
+                    componente.Importancia
+                ));
+            } else if (componente.Tipo == "hd")
+            {
+                Duras.Add(componente.Nombre, new Componente(
+                    componente.Nombre, 
+                    componente.Descripcion, 
+                    componente.Tipo, 
+                    componente.Puntaje, 
+                    componente.Importancia
+                ));
+            } else if (componente.Tipo == "cf")
+            {
+                Fisicas.Add(componente.Nombre, new Componente(
+                    componente.Nombre,
+                    componente.Descripcion,
+                    componente.Tipo,
+                    componente.Puntaje,
+                    componente.Importancia
+                ));
+            }
+        }
+
+        /// <summary>
+        /// Elimina un componente del perfil.
+        /// </summary>
+        /// <param name="componente">Nombre del componente</param>
+        /// <returns></returns>
+        public bool EliminarComponente(string componente)
+        {
+            if (Blandas.ContainsKey(componente))
+            {
+                Blandas.Remove(componente);
+                return true;
+            } else if (Duras.ContainsKey(componente))
+            {
+                Duras.Remove(componente);
+                return true;
+            } else if (Fisicas.ContainsKey(componente))
+            {
+                Fisicas.Remove(componente);
+                return true;
+            }
+
+            return false;
+        }
+
+        public Dictionary<string, Componente> Blandas
+        {
+            get { return blandas; }
+            set { blandas = value; }
+        }
+
+        public Dictionary<string, Componente> Duras
+        {
+            get { return duras; }
+            set { duras = value; }
+        }
+
+        public Dictionary<string, Componente> Fisicas
+        {
+            get { return fisicas; }
+            set { fisicas = value; }
+        }
+
+        public Componente HB
         {
             get { return hb; }
-            set { hb = value; }
         }
 
-        public List<Componente> HD
+        public Componente HD
         {
             get { return hd; }
-            set { hd = value; }
         }
 
-        public List<Componente> CF
+        public Componente CF
         {
             get { return cf; }
-            set { cf = value; }
         }
     }
 }

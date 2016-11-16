@@ -18,14 +18,14 @@ namespace DST
         private string nombre;
         private int idSeccion;
         private Perfil perfil;
-        private Dictionary<string, Trabajador> trabajadoresSeccion;
+        private Dictionary<string, Trabajador> trabajadores;
 
-        public Seccion( string nombre, int idSeccion, Perfil perfil, Dictionary<string, Trabajador> trabajadoresSeccion)
+        public Seccion( string nombre, int idSeccion, Perfil perfil, Dictionary<string, Trabajador> trabajadores)
         {
             this.nombre = nombre;
             this.idSeccion = idSeccion;
             this.perfil = perfil;
-            this.trabajadoresSeccion = trabajadoresSeccion;
+            this.trabajadores = trabajadores;
         }
 
         public string Nombre
@@ -46,10 +46,10 @@ namespace DST
             set { perfil = value; }
         }
 
-        public Dictionary<string, Trabajador> TrabajadoresSeccion
+        public Dictionary<string, Trabajador> Trabajadores
         {
-            get { return trabajadoresSeccion; }
-            set { trabajadoresSeccion = value; }
+            get { return trabajadores; }
+            set { trabajadores = value; }
         }
     }
 }

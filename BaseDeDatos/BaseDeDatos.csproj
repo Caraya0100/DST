@@ -42,8 +42,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminBD.cs" />
+    <Compile Include="AdminLD.cs" />
+    <Compile Include="AdminReglas.cs" />
     <Compile Include="BaseDeDatos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
+      <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
+      <Name>LogicaDifusa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Perfiles\Perfil.csproj">
+      <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
+      <Name>Perfil</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
