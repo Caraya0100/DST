@@ -28,6 +28,7 @@ namespace DST
             this.nombre = nombre;
             this.descripcion = descripcion;
             this.tipo = tipo;
+            this.importancia = -1;
         }
 
         /// <summary>

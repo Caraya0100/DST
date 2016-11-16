@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>505bbfb4-82ad-4446-b55a-57cb479668e9</ProjectGuid>
+    <ProjectGuid>{505BBFB4-82AD-4446-B55A-57CB479668E9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Evaluaciones</RootNamespace>
@@ -30,24 +30,38 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="EvaluacionCapacidad.cs" />
+    <Compile Include="EvaluacionPerfil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BaseDeDatos\BaseDeDatos.csproj">
+      <Project>{5b24a143-1bd9-4e73-a31f-dd6577a6886e}</Project>
+      <Name>BaseDeDatos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
+      <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
+      <Name>LogicaDifusa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Perfiles\Perfil.csproj">
+      <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
+      <Name>Perfil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SistemaInferencia\SistemaInferencia.csproj">
+      <Project>{1904ccc6-ce97-4610-80fc-5349274e3c31}</Project>
+      <Name>SistemaInferencia</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -57,5 +71,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
- </Project>
+</Project>

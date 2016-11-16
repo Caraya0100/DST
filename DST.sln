@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pruebas", "Pruebas\Pruebas.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaInferencia", "SistemaInferencia\SistemaInferencia.csproj", "{1904CCC6-CE97-4610-80FC-5349274E3C31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReglasMatching", "ReglasMatching\ReglasMatching.csproj", "{8CCFDDD9-4371-4B8F-922B-476D609B782F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1904CCC6-CE97-4610-80FC-5349274E3C31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CCFDDD9-4371-4B8F-922B-476D609B782F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CCFDDD9-4371-4B8F-922B-476D609B782F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CCFDDD9-4371-4B8F-922B-476D609B782F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CCFDDD9-4371-4B8F-922B-476D609B782F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

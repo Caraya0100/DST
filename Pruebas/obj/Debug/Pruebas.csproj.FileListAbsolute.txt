@@ -26,3 +26,7 @@ C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\BaseD
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\MySql.Data.dll
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\BaseDeDatos.pdb
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\MySql.Data.xml
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\BaseDeDatos.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\MySql.Data.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\BaseDeDatos.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\MySql.Data.xml

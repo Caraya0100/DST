@@ -45,6 +45,26 @@ namespace SistemaInferencia
         }
 
         /// <summary>
+        /// Ejecuta la inferencia difusa, con valores de importancia para los datos a fuzzificar, retornando un valor defuzzificado.
+        /// </summary>
+        /// <param name="datos"></param>
+        /// <returns></returns>
+        public double Ejecutar(Dictionary<string, Tuple<double, double>> datos)
+        {
+            double defuzzificacion = 0;
+
+            Fuzzificacion(datos);
+
+            Dictionary<string, List<ValorLinguistico>> consecuentes = EvaluacionReglas();
+
+            List<ValorLinguistico> conjuntoDifuso = Agregacion.Ejecutar(consecuentes);
+
+            defuzzificacion = Centroide.Ejecutar(conjuntoDifuso);
+
+            return defuzzificacion;
+        }
+
+        /// <summary>
         /// Fuzzifica las variables.
         /// </summary>
         /// <param name="datos"></param>
@@ -55,6 +75,37 @@ namespace SistemaInferencia
                 if (VariablesLinguisticas.ContainsKey(dato.Key))
                 {
                     VariablesLinguisticas[dato.Key].Fuzzificar(dato.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fuzzifica las variables aplicando la importancia definida para cada una de ellas.
+        /// </summary>
+        /// <param name="datos"></param>
+        public void Fuzzificacion(Dictionary<string, Tuple<double, double>> datos)
+        {
+            double totalImportancia = 0;
+            // Obtenemos el total de las importancias.
+            foreach (KeyValuePair<string, Tuple<double, double>> dato in datos)
+            {
+                totalImportancia += dato.Value.Item2;
+            }
+            // Fuzzificamos y normalizamos el grado de pertenencia resultante.
+            foreach (KeyValuePair<string, Tuple<double, double>> dato in datos)
+            {
+                if (VariablesLinguisticas.ContainsKey(dato.Key))
+                {
+                    double importancia = dato.Value.Item2;
+                    VariablesLinguisticas[dato.Key].Fuzzificar(dato.Value.Item1);
+
+                    // Normalizamos.
+                    foreach (KeyValuePair<string, ValorLinguistico > val in VariablesLinguisticas[dato.Key].Valores)
+                    {
+                        double normalizacion = val.Value.GradoPertenencia * (importancia / totalImportancia);
+
+                        val.Value.GradoPertenencia = normalizacion;
+                    }
                 }
             }
         }
