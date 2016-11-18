@@ -26,10 +26,12 @@ namespace Pruebas
             prueba.insertarUsuario("Ivan Ibarra", "14263145-4", "1234", "JEFE_SECCION", true);
             */
 
-            
+
             /*prueba.insertarSeccion("casa", "17263145-4");
             prueba.insertarSeccion("electro", "15263145-4");
             prueba.insertarSeccion("carniceria", "14263145-4");*/
+
+            new PruebaEvaluacionCapacidad();
         }
     }
 }

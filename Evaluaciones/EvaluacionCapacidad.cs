@@ -3,14 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DST;
+using LogicaDifusa;
 
 namespace DST
 {
     /// <summary>
     /// Clase para evaluar la capacidad de un trabajador.
     /// </summary>
-    public static class EvaluacionCapacidad
+    public class EvaluacionCapacidad
     {
+        private double compatibilidadHB;
+        private double compatibilidadHD;
+        private double compatibilidadCF;
+        private double capacidad;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public EvaluacionCapacidad()
+        {
+            compatibilidadHB = -1;
+            compatibilidadHD = -1;
+            compatibilidadCF = -1;
+            capacidad = -1;
+        }
+
         /// <summary>
         /// Evalua la capacidad de un trabajador con respecto a una seccion. 
         /// Retorna la capacidad del trabajador.
@@ -18,21 +36,110 @@ namespace DST
         /// <param name="perfil"></param>
         /// <param name="reglas"></param>
         /// <returns></returns>
-        public static double Ejecutar(Perfil seccion, Perfil trabajador)
+        public double Ejecutar(Componente HBS, Componente HDS, Componente CFS, Componente HBT, Componente HDT, Componente CFT)
         {
-            double capacidad = 0;
+            Dictionary<string, string> reglas = new Dictionary<string, string>();
+            ReglasMatching reglasM = new ReglasMatching();
+            VariablesMatching variablesM = new VariablesMatching();
+            Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
+            List<VariableLinguistica> variables = new List<VariableLinguistica>();
 
-            // REALIZAR PROCESO PARA LAS HB, HD, Y CF
+            // Evaluamos la compatibilidad de las HB, HD, Y CF.
+            compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
+            datos.Add("HB", new Tuple<double, double>(compatibilidadHB, HBS.Importancia));
+            compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
+            datos.Add("HD", new Tuple<double, double>(compatibilidadHD, HDS.Importancia));
+            compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
+            datos.Add("CF", new Tuple<double, double>(compatibilidadCF, CFS.Importancia));
 
-            // obtengo las variables linguisticas.
-            // agrego las reglas a la inferencia.
-            // agrego las variables a la inferencia.
-            // realizo la inferencia.
-            // asigno el resultado de la inferencia a las HB/HD/CF.
+            reglas = reglasM.Capacidad;
+            variables.Add(variablesM.HB);
+            variables.Add(variablesM.HD);
+            variables.Add(variablesM.CF);
+            variables.Add(variablesM.Trabajador); // Consecuente.
 
-            // FIN PROCESO.
+            capacidad = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             return capacidad;
+        }
+
+        /// <summary>
+        /// Evalua la compatibilidad entre dos componentes.
+        /// </summary>
+        /// <param name="seccion"></param>
+        /// <param name="trabajador"></param>
+        /// <returns></returns>
+        private double EvaluarCompatibilidad(Componente seccion, Componente trabajador)
+        {
+            Dictionary<string, string> reglas = new Dictionary<string, string>();
+            ReglasMatching reglasM = new ReglasMatching();
+            Dictionary<string, double> datos = new Dictionary<string, double>();
+            List<VariableLinguistica> variables = new List<VariableLinguistica>();
+
+            if (seccion.Nombre == "HBS" && trabajador.Nombre == "HBT")
+            {
+                Console.WriteLine("Flag HB");
+                VariablesMatching variablesM = new VariablesMatching();
+                VariableLinguistica HBS = variablesM.HBPerfil;
+                VariableLinguistica HBT = variablesM.HBPerfil;
+                reglas = reglasM.HB;
+                HBS.Nombre = "HBS";
+                HBT.Nombre = "HBT";
+                variables.Add(HBS);
+                variables.Add(HBT);
+                variables.Add(variablesM.HB); // Consecuente.
+            }
+            else if (seccion.Nombre == "HDS" && trabajador.Nombre == "HDT")
+            {
+                Console.WriteLine("Flag HD");
+                VariablesMatching variablesM = new VariablesMatching();
+                VariableLinguistica HDS = variablesM.HDPerfil;
+                VariableLinguistica HDT = variablesM.HDPerfil;
+                reglas = reglasM.HD;
+                HDS.Nombre = "HDS";
+                HDT.Nombre = "HDT";
+                variables.Add(HDS);
+                variables.Add(HDT);
+                variables.Add(variablesM.HD); // Consecuente.
+            }
+            else if (seccion.Nombre == "CFS" && trabajador.Nombre == "CFT")
+            {
+                Console.WriteLine("Flag CF");
+                VariablesMatching variablesM = new VariablesMatching();
+                VariableLinguistica CFS = variablesM.CFPerfil;
+                VariableLinguistica CFT = variablesM.CFPerfil;
+                reglas = reglasM.CF;
+                CFS.Nombre = "CFS";
+                CFT.Nombre = "CFT";
+                variables.Add(CFS);
+                variables.Add(CFT);
+                variables.Add(variablesM.CF); // Consecuente.
+            }
+
+            datos.Add(seccion.Nombre, seccion.Puntaje);
+            datos.Add(trabajador.Nombre, trabajador.Puntaje);
+
+            return EvaluacionDifusa.Evaluacion(datos, variables, reglas);
+        }
+
+        public double CompatibilidadHB
+        {
+            get { return compatibilidadHB; }
+        }
+
+        public double CompatibilidadHD
+        {
+            get { return compatibilidadHD; }
+        }
+
+        public double CompatibilidadCF
+        {
+            get { return compatibilidadCF; }
+        }
+
+        public double Capaciddad
+        {
+            get { return capacidad; }
         }
     }
 }

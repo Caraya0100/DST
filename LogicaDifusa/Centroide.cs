@@ -35,6 +35,8 @@ namespace LogicaDifusa
 
                 denominador += SimpsonIntegrator.Integrate(x => valor.Fp.GradoPertenencia(x), a,
                     b, epsilon);
+                Console.WriteLine("Numerador: " + numerador);
+                Console.WriteLine("Denominador: " + denominador);
             }
             // Se divide el resultado de las integrales para obtener el centroide.
             resultado = numerador / denominador;

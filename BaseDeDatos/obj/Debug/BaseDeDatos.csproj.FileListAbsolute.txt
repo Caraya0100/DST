@@ -5,3 +5,16 @@ C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\M
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.csprojResolveAssemblyReference.cache
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.dll
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\BaseDeDatos.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\BaseDeDatos.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\LogicaDifusa.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\MySql.Data.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\Perfiles.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\Integracion.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\LogicaDifusa.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\Perfiles.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\MySql.Data.xml
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\bin\Debug\Integracion.pdb
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.csprojResolveAssemblyReference.cache
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.dll
+C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\BaseDeDatos\obj\Debug\BaseDeDatos.pdb
