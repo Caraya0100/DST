@@ -22,6 +22,7 @@ namespace DST
         /// <returns></returns>
         public static Perfil Ejecutar(Perfil perfil, int idSeccion)
         {
+            VariablesMatching variablesM = new VariablesMatching();
             Perfil p = new Perfil(perfil);
             Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
@@ -30,44 +31,23 @@ namespace DST
             // Evaluamos las HB, HD, Y CF.
             datos = Datos(p.Blandas);
             variables = AdminLD.VariablesLinsguisticas(p.Blandas);
+            variables.Add(variablesM.HBPerfil); // Consecuente.
             reglas = AdminReglas.ReglasSeccion(idSeccion, "HB");
-            p.HB.Puntaje = Evaluacion(datos, variables, reglas);
+            p.HB.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             datos = Datos(p.Duras);
             variables = AdminLD.VariablesLinsguisticas(p.Duras);
+            variables.Add(variablesM.HDPerfil); // Consecuente.
             reglas = AdminReglas.ReglasSeccion(idSeccion, "HD");
-            p.HD.Puntaje = Evaluacion(datos, variables, reglas);
+            p.HD.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             datos = Datos(p.Fisicas);
             variables = AdminLD.VariablesLinsguisticas(p.Fisicas);
+            variables.Add(variablesM.CFPerfil); // Consecuente.
             reglas = AdminReglas.ReglasSeccion(idSeccion, "CF");
-            p.CF.Puntaje = Evaluacion(datos, variables, reglas);
+            p.CF.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             return p;
-        }
-
-        /// <summary>
-        /// Realiza la inferencia para evaluar las HB/HD/CF del perifl.
-        /// </summary>
-        /// <param name="datos"></param>
-        /// <param name="variables"></param>
-        /// <param name="reglas"></param>
-        /// <returns></returns>
-        public static double Evaluacion(Dictionary<string, Tuple<double, double>> datos, List<VariableLinguistica> variables, Dictionary<string, string> reglas)
-        {
-            Inferencia inferencia = new Inferencia();
-
-            foreach (VariableLinguistica variable in variables)
-            {
-                inferencia.AgregarVariable(variable);
-            }
-
-            foreach (KeyValuePair<string, string> regla in reglas)
-            {
-                inferencia.AgregarRegla(regla.Key, regla.Value);
-            }
-
-            return inferencia.Ejecutar(datos);
         }
 
         /// <summary>

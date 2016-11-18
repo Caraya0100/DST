@@ -36,10 +36,11 @@ namespace SistemaInferencia
             Fuzzificacion(datos);
 
             Dictionary<string, List<ValorLinguistico>> consecuentes = EvaluacionReglas();
-
+            Console.WriteLine("Consecuentes: " + consecuentes.Count);
             List<ValorLinguistico> conjuntoDifuso = Agregacion.Ejecutar(consecuentes);
 
             defuzzificacion = Centroide.Ejecutar(conjuntoDifuso);
+            Console.WriteLine("checkpoint");
 
             return defuzzificacion;
         }
@@ -56,7 +57,7 @@ namespace SistemaInferencia
             Fuzzificacion(datos);
 
             Dictionary<string, List<ValorLinguistico>> consecuentes = EvaluacionReglas();
-
+            
             List<ValorLinguistico> conjuntoDifuso = Agregacion.Ejecutar(consecuentes);
 
             defuzzificacion = Centroide.Ejecutar(conjuntoDifuso);
@@ -72,8 +73,10 @@ namespace SistemaInferencia
         {
             foreach (KeyValuePair<string, double> dato in datos)
             {
+                Console.WriteLine("Dato " + dato.Key + ": " + dato.Value);
                 if (VariablesLinguisticas.ContainsKey(dato.Key))
                 {
+                    Console.WriteLine("Fuzzificacion");
                     VariablesLinguisticas[dato.Key].Fuzzificar(dato.Value);
                 }
             }
@@ -123,6 +126,7 @@ namespace SistemaInferencia
                 // Si se obtuve la regla a partir del string, se evalua.
                 if (regla != null)
                 {
+                    Console.WriteLine("Consecuente regla: " + regla.Consecuente.Item1);
                     string valorLinguistico = regla.Consecuente.Item2.Nombre;
                     // Se agrega el valor linguistico del consecuente si no ha sido agregado al diccionario.
                     if (!consecuentes.ContainsKey(valorLinguistico))

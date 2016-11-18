@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pruebas", "Pruebas\Pruebas.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaInferencia", "SistemaInferencia\SistemaInferencia.csproj", "{1904CCC6-CE97-4610-80FC-5349274E3C31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReglasMatching", "ReglasMatching\ReglasMatching.csproj", "{8CCFDDD9-4371-4B8F-922B-476D609B782F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matching", "ReglasMatching\Matching.csproj", "{8CCFDDD9-4371-4B8F-922B-476D609B782F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

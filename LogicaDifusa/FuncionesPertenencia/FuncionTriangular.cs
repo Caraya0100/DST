@@ -79,6 +79,8 @@ namespace LogicaDifusa
             {
                 resultado = ValorCorte;
             }
+
+            //Console.WriteLine("Fuzzificacion: " + resultado);
             return resultado;
         }
 
