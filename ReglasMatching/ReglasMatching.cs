@@ -19,9 +19,9 @@ namespace DST
         public ReglasMatching()
         {
             hb = ReglasHB();
-            hd = new Dictionary<string, string>();
-            cf = new Dictionary<string, string>();
-            capacidad = new Dictionary<string, string>();
+            hd = ReglasHD();
+            cf = ReglasCF();
+            capacidad = ReglasCapacidad();
         }
 
         /// <summary>

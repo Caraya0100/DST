@@ -36,11 +36,9 @@ namespace SistemaInferencia
             Fuzzificacion(datos);
 
             Dictionary<string, List<ValorLinguistico>> consecuentes = EvaluacionReglas();
-            Console.WriteLine("Consecuentes: " + consecuentes.Count);
             List<ValorLinguistico> conjuntoDifuso = Agregacion.Ejecutar(consecuentes);
 
             defuzzificacion = Centroide.Ejecutar(conjuntoDifuso);
-            Console.WriteLine("checkpoint");
 
             return defuzzificacion;
         }
@@ -76,7 +74,6 @@ namespace SistemaInferencia
                 Console.WriteLine("Dato " + dato.Key + ": " + dato.Value);
                 if (VariablesLinguisticas.ContainsKey(dato.Key))
                 {
-                    Console.WriteLine("Fuzzificacion");
                     VariablesLinguisticas[dato.Key].Fuzzificar(dato.Value);
                 }
             }
@@ -126,7 +123,7 @@ namespace SistemaInferencia
                 // Si se obtuve la regla a partir del string, se evalua.
                 if (regla != null)
                 {
-                    Console.WriteLine("Consecuente regla: " + regla.Consecuente.Item1);
+                    //Console.WriteLine("Consecuente regla: " + regla.Consecuente.Item1);
                     string valorLinguistico = regla.Consecuente.Item2.Nombre;
                     // Se agrega el valor linguistico del consecuente si no ha sido agregado al diccionario.
                     if (!consecuentes.ContainsKey(valorLinguistico))
@@ -134,6 +131,7 @@ namespace SistemaInferencia
                         consecuentes.Add(valorLinguistico, new List<ValorLinguistico>());
                     }
                     // Evaluamos la regla y agregamos el valor linguistico resultante.
+                    Console.Write("Regla: " + r.Key);
                     ValorLinguistico evaluacion = EvaluacionRegla(regla);
                     consecuentes[valorLinguistico].Add(evaluacion);
                 }
@@ -155,18 +153,21 @@ namespace SistemaInferencia
                el minimo o el maximo grado de pertenencia, depdendiendo del operador. */
             foreach (KeyValuePair<string, ValorLinguistico> actual in regla.Antecedente)
             {
+                Console.Write(" Valor: " + actual.Value.GradoPertenencia);
                 valoresLinguisticos.Add(actual.Value.GradoPertenencia);
             }
 
             if (regla.Operador == "y")
             {
+                Console.Write(" Min");
                 resultadOperador = valoresLinguisticos.Min();
             }
             else if (regla.Operador == "o")
             {
+                Console.Write(" Max");
                 resultadOperador = valoresLinguisticos.Max();
             }
-
+            Console.WriteLine(" Resultado Operador: " + resultadOperador);
             return Implicacion.Ejecutar(resultadOperador, regla.Consecuente.Item2);
         }
 

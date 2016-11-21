@@ -42,15 +42,19 @@ namespace DST
             ReglasMatching reglasM = new ReglasMatching();
             VariablesMatching variablesM = new VariablesMatching();
             Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
+            //Dictionary<string, double> datos = new Dictionary<string, double>();
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
 
             // Evaluamos la compatibilidad de las HB, HD, Y CF.
             compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
             datos.Add("HB", new Tuple<double, double>(compatibilidadHB, HBS.Importancia));
+            //datos.Add("HB", compatibilidadHB);
             compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
             datos.Add("HD", new Tuple<double, double>(compatibilidadHD, HDS.Importancia));
+            //datos.Add("HD", compatibilidadHD);
             compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
             datos.Add("CF", new Tuple<double, double>(compatibilidadCF, CFS.Importancia));
+            //datos.Add("CF", compatibilidadCF);
 
             reglas = reglasM.Capacidad;
             variables.Add(variablesM.HB);
@@ -80,8 +84,8 @@ namespace DST
             {
                 Console.WriteLine("Flag HB");
                 VariablesMatching variablesM = new VariablesMatching();
-                VariableLinguistica HBS = variablesM.HBPerfil;
-                VariableLinguistica HBT = variablesM.HBPerfil;
+                VariableLinguistica HBS = new VariableLinguistica(variablesM.HBPerfil);
+                VariableLinguistica HBT = new VariableLinguistica(variablesM.HBPerfil);
                 reglas = reglasM.HB;
                 HBS.Nombre = "HBS";
                 HBT.Nombre = "HBT";
@@ -93,8 +97,8 @@ namespace DST
             {
                 Console.WriteLine("Flag HD");
                 VariablesMatching variablesM = new VariablesMatching();
-                VariableLinguistica HDS = variablesM.HDPerfil;
-                VariableLinguistica HDT = variablesM.HDPerfil;
+                VariableLinguistica HDS = new VariableLinguistica(variablesM.HDPerfil);
+                VariableLinguistica HDT = new VariableLinguistica(variablesM.HDPerfil);
                 reglas = reglasM.HD;
                 HDS.Nombre = "HDS";
                 HDT.Nombre = "HDT";
@@ -106,8 +110,8 @@ namespace DST
             {
                 Console.WriteLine("Flag CF");
                 VariablesMatching variablesM = new VariablesMatching();
-                VariableLinguistica CFS = variablesM.CFPerfil;
-                VariableLinguistica CFT = variablesM.CFPerfil;
+                VariableLinguistica CFS = new VariableLinguistica(variablesM.CFPerfil);
+                VariableLinguistica CFT = new VariableLinguistica(variablesM.CFPerfil);
                 reglas = reglasM.CF;
                 CFS.Nombre = "CFS";
                 CFT.Nombre = "CFT";

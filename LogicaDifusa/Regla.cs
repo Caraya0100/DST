@@ -11,7 +11,6 @@ namespace LogicaDifusa
     /// </summary>
     public class Regla
     {
-        private string id;
         private string operador;
         private Dictionary<string, ValorLinguistico> antecedente;
         private Tuple<string, ValorLinguistico> consecuente;
@@ -84,12 +83,6 @@ namespace LogicaDifusa
             }
 
             return resultado;
-        }
-
-        public string Id
-        {
-            get { return id; }
-            set { id = value; }
         }
 
         public string Operador
