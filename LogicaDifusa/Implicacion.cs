@@ -23,7 +23,8 @@ namespace LogicaDifusa
             // Obtenemos el grado de pertenencia y cortamos la funcion de pertenencia en ese grado.
             //resultado.CalcularGradoPertenencia(resultadOperador);
             resultado.Fp.CortarFuncion(resultadOperador);
-
+            resultado.GradoPertenencia = resultado.Fp.ValorCorte;
+            
             return resultado;
         }
     }

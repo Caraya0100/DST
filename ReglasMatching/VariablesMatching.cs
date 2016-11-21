@@ -23,7 +23,7 @@ namespace DST
         public VariablesMatching()
         {
             ValorLinguistico muy_bajas = new ValorLinguistico("muy_bajas", new FuncionTrapezoidal(0.0, 0.0, 0.1, 0.3));
-            ValorLinguistico bajas = new ValorLinguistico("bajas", new FuncionTriangular(0.1, 0.3, 5.0));
+            ValorLinguistico bajas = new ValorLinguistico("bajas", new FuncionTriangular(0.1, 0.3, 0.5));
             ValorLinguistico promedio = new ValorLinguistico("promedio", new FuncionTriangular(0.3, 0.5, 0.7));
             ValorLinguistico altas = new ValorLinguistico("altas", new FuncionTriangular(0.5, 0.7, 0.9));
             ValorLinguistico muy_altas = new ValorLinguistico("muy_altas", new FuncionTrapezoidal(0.7, 0.9, 1.0, 1.0));

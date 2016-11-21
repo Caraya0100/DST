@@ -80,13 +80,12 @@ namespace LogicaDifusa
                 resultado = ValorCorte;
             }
 
-            //Console.WriteLine("Fuzzificacion: " + resultado);
             return resultado;
         }
 
         public override bool CortarFuncion(double gradoPertenencia)
         {
-            if (gradoPertenencia >= 0  && gradoPertenencia <= 1)
+            if (gradoPertenencia >= 0 && gradoPertenencia <= 1)
             {
                 ValorCorte = gradoPertenencia;
                 Cortada = true;

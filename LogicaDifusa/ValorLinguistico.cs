@@ -16,7 +16,7 @@ namespace LogicaDifusa
         private double gradoPertenencia;
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         /// <param name="nombre"></param>
         /// <param name="fp"></param>
@@ -25,6 +25,19 @@ namespace LogicaDifusa
             Nombre = nombre;
             Fp = fp;
             GradoPertenencia = -1; // grado de pertenencia por defecto.
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="fp"></param>
+        /// <param name="grado"></param>
+        public ValorLinguistico(string nombre, FuncionPertenencia fp, double grado)
+        {
+            Nombre = nombre;
+            Fp = fp;
+            GradoPertenencia = grado; // grado de pertenencia por defecto.
         }
 
         /// <summary>

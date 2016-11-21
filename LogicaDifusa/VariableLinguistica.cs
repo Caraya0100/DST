@@ -69,7 +69,7 @@ namespace LogicaDifusa
         public bool AgregarValorLinguistico(ValorLinguistico valor)
         {
             // IMPLEMENTAR: COMPROBAR QUE EL VALOR LINGUISTICO NO SE SALGA DEL RANGO DE LA VARIABLE LINGUISTICA.
-            ValorLinguistico vl = new ValorLinguistico(valor.Nombre, valor.Fp);
+            ValorLinguistico vl = new ValorLinguistico(valor.Nombre, valor.Fp, valor.GradoPertenencia);
             valores.Add(vl.Nombre, vl);
             return true;
         }
