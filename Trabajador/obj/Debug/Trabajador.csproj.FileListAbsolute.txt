@@ -1,0 +1,7 @@
+C:\Users\PC\Documents\GitHub\DST\Trabajador\bin\Debug\Trabajador.dll
+C:\Users\PC\Documents\GitHub\DST\Trabajador\bin\Debug\Trabajador.pdb
+C:\Users\PC\Documents\GitHub\DST\Trabajador\bin\Debug\Perfiles.dll
+C:\Users\PC\Documents\GitHub\DST\Trabajador\bin\Debug\Perfiles.pdb
+C:\Users\PC\Documents\GitHub\DST\Trabajador\obj\Debug\Trabajador.csprojResolveAssemblyReference.cache
+C:\Users\PC\Documents\GitHub\DST\Trabajador\obj\Debug\Trabajador.dll
+C:\Users\PC\Documents\GitHub\DST\Trabajador\obj\Debug\Trabajador.pdb

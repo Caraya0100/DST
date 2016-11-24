@@ -36,3 +36,7 @@ C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Reg
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Evaluaciones.pdb
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Perfiles.pdb
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\ReglasMatching.pdb
+C:\Users\PC\Documents\GitHub\DST\Pruebas\bin\Debug\Pruebas.exe.config
+C:\Users\PC\Documents\GitHub\DST\Pruebas\obj\Debug\Pruebas.exe
+C:\Users\PC\Documents\GitHub\DST\Pruebas\obj\Debug\Pruebas.pdb
+C:\Users\PC\Documents\GitHub\DST\Pruebas\obj\Debug\Pruebas.csprojResolveAssemblyReference.cache

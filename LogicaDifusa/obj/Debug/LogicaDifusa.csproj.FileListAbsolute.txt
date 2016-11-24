@@ -12,3 +12,10 @@ C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\LogicaDifusa\bin\Debug\
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\LogicaDifusa\obj\Debug\LogicaDifusa.csprojResolveAssemblyReference.cache
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\LogicaDifusa\obj\Debug\LogicaDifusa.dll
 C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\LogicaDifusa\obj\Debug\LogicaDifusa.pdb
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\bin\Debug\LogicaDifusa.dll
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\bin\Debug\LogicaDifusa.pdb
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\bin\Debug\Integracion.dll
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\bin\Debug\Integracion.pdb
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\obj\Debug\LogicaDifusa.csprojResolveAssemblyReference.cache
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\obj\Debug\LogicaDifusa.dll
+C:\Users\PC\Documents\GitHub\DST\LogicaDifusa\obj\Debug\LogicaDifusa.pdb

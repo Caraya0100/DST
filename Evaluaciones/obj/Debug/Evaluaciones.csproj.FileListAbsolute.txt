@@ -17,3 +17,22 @@ C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Evaluaciones\bin\Debu
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Evaluaciones\obj\Debug\Evaluaciones.csprojResolveAssemblyReference.cache
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Evaluaciones\obj\Debug\Evaluaciones.dll
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Evaluaciones\obj\Debug\Evaluaciones.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\Evaluaciones.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\Evaluaciones.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\BaseDeDatos.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\LogicaDifusa.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\Perfiles.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\ReglasMatching.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\SistemaInferencia.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\MySql.Data.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\Integracion.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\BaseDeDatos.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\LogicaDifusa.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\Perfiles.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\ReglasMatching.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\SistemaInferencia.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\MySql.Data.xml
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\bin\Debug\Integracion.pdb
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\obj\Debug\Evaluaciones.csprojResolveAssemblyReference.cache
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\obj\Debug\Evaluaciones.dll
+C:\Users\PC\Documents\GitHub\DST\Evaluaciones\obj\Debug\Evaluaciones.pdb

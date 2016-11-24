@@ -5,7 +5,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"  
         xmlns:wf="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
-        Title="Compatibilidad de Habilidades" Height="500" Width="800" ResizeMode="NoResize" IsWindowDraggable="False" BorderBrush="DarkGray" Background="#FF726F6F">
+        Title="Compatibilidad de Habilidades" Height="500" Width="800" ResizeMode="NoResize" IsWindowDraggable="False" BorderBrush="DarkGray" Background="#FFFBFBFB">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="32*"/>
@@ -21,14 +21,14 @@
         </Grid.RowDefinitions>
         <TabControl HorizontalAlignment="Left" Height="444" Margin="10,5,0,0" VerticalAlignment="Top" Width="721" Grid.Column="1" Grid.Row="1" SelectionChanged="seleccionHabilidades" Grid.RowSpan="4" >
             <TabItem x:Name="tabGeneral" Header="General">
-                <Grid Background="#FF726F6F">
+                <Grid Background="#FFFBFBFB">
                     <WindowsFormsHost HorizontalAlignment="Left" Height="373" Margin="10,10,0,0" VerticalAlignment="Top" Width="545">
-                        <wf:Chart x:Name="GraficoGeneral" BackColor="#FF726F6F" Height="231" Width="252">
+                        <wf:Chart x:Name="GraficoGeneral" BackColor="#FFFBFBFB" Height="231" Width="252">
                             <wf:Chart.Series>
                                 <wf:Series Name="Default" ChartType="Line"/>
                             </wf:Chart.Series>
                             <wf:Chart.ChartAreas>
-                                <wf:ChartArea AlignmentOrientation="All" >
+                                <wf:ChartArea AlignmentOrientation="All" BackColor="Transparent">
                                 </wf:ChartArea>
                             </wf:Chart.ChartAreas>
                         </wf:Chart>
@@ -43,14 +43,14 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabHB" Header="Habilidades Blandas">
-                <Grid Background="#FF726F6F">
+                <Grid Background="#FFFBFBFB">
                     <WindowsFormsHost HorizontalAlignment="Left" Height="373" Margin="10,10,0,0" VerticalAlignment="Top" Width="545">
-                        <wf:Chart x:Name="GraficoHB" BackColor="#FF726F6F" Height="231" Width="252">
+                        <wf:Chart x:Name="GraficoHB" BackColor="#FFFBFBFB" Height="231" Width="252">
                             <wf:Chart.Series>
                                 <wf:Series Name="Default" ChartType="Line"/>
                             </wf:Chart.Series>
                             <wf:Chart.ChartAreas>
-                                <wf:ChartArea AlignmentOrientation="All" >
+                                <wf:ChartArea AlignmentOrientation="All" BackColor="Transparent">
                                 </wf:ChartArea>
                             </wf:Chart.ChartAreas>
                         </wf:Chart>
@@ -65,14 +65,14 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabHD" Header="Habilidades Duras">
-                <Grid Background="#FF726F6F">
+                <Grid Background="#FFFBFBFB">
                     <WindowsFormsHost HorizontalAlignment="Left" Height="373" Margin="10,10,0,0" VerticalAlignment="Top" Width="545">
-                        <wf:Chart x:Name="GraficoHD" BackColor="#FF726F6F" Height="231" Width="252">
+                        <wf:Chart x:Name="GraficoHD" BackColor="#FFFBFBFB" Height="231" Width="252">
                             <wf:Chart.Series>
                                 <wf:Series Name="Default" ChartType="Line"/>
                             </wf:Chart.Series>
                             <wf:Chart.ChartAreas>
-                                <wf:ChartArea  AlignmentOrientation="All" >
+                                <wf:ChartArea  AlignmentOrientation="All" BackColor="Transparent">
                                 </wf:ChartArea>
                             </wf:Chart.ChartAreas>
                         </wf:Chart>
@@ -87,14 +87,14 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabCF" Header="Caracteristicas Fisicas">
-                <Grid Background="#FF726F6F">
+                <Grid Background="#FFFBFBFB">
                     <WindowsFormsHost HorizontalAlignment="Left" Height="373" Margin="10,10,0,0" VerticalAlignment="Top" Width="545">
-                        <wf:Chart x:Name="GraficoCF" BackColor="#FF726F6F" Height="231" Width="252">
+                        <wf:Chart x:Name="GraficoCF" BackColor="#FFFBFBFB" Height="231" Width="252">
                             <wf:Chart.Series>
                                 <wf:Series Name="Default" ChartType="Line"/>
                             </wf:Chart.Series>
                             <wf:Chart.ChartAreas>
-                                <wf:ChartArea AlignmentOrientation="All" >
+                                <wf:ChartArea AlignmentOrientation="All" BackColor="Transparent">
                                 </wf:ChartArea>
                             </wf:Chart.ChartAreas>
                         </wf:Chart>

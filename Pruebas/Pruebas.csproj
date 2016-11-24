@@ -67,6 +67,10 @@
       <Project>{bbef19d7-d718-4057-88ca-10e8ad56b980}</Project>
       <Name>Integracion</Name>
     </ProjectReference>
+    <ProjectReference Include="..\InterfazGrafica\InterfazGrafica.csproj">
+      <Project>{9f952a0b-0afe-4683-b792-4b7dcc57d551}</Project>
+      <Name>InterfazGrafica</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
       <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
       <Name>LogicaDifusa</Name>

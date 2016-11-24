@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Windows.Forms.DataVisualization.Design" />
@@ -76,13 +77,37 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnimacionScroll.cs" />
+    <Compile Include="DatosDePrueba.cs" />
     <Compile Include="GraficoRadar.cs" />
+    <Compile Include="Mensajes.cs" />
+    <Compile Include="PanelHabilidades.cs" />
+    <Compile Include="Rutificador.cs" />
     <Compile Include="VentanaAdministrador.xaml.cs">
       <DependentUpon>VentanaAdministrador.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VentanaAgregarTrabajador.xaml.cs">
+      <DependentUpon>VentanaAgregarTrabajador.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VentanaAsignacionHabilidades.xaml.cs">
+      <DependentUpon>VentanaAsignacionHabilidades.xaml</DependentUpon>
     </Compile>
     <Compile Include="VentanaDetalleHabilidades.xaml.cs">
       <DependentUpon>VentanaDetalleHabilidades.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaEncuesta.xaml.cs">
+      <DependentUpon>VentanaEncuesta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VentanaEvaluadores.xaml.cs">
+      <DependentUpon>VentanaEvaluadores.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VentanaJefeSeccion.xaml.cs">
+      <DependentUpon>VentanaJefeSeccion.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VisorEncuestados.cs" />
+    <Compile Include="VisorEvaluacion.cs" />
+    <Compile Include="VisorRanking.cs" />
+    <Compile Include="VisorTrabajador.cs" />
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,7 +123,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="VentanaAgregarTrabajador.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaAsignacionHabilidades.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="VentanaDetalleHabilidades.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaEncuesta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaEvaluadores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaJefeSeccion.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,6 +175,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\Business-Man.png" />
+    <Resource Include="Iconos\configuracion.png" />
+    <Resource Include="Iconos\encuestaRealizada.png" />
+    <Resource Include="Iconos\flecha_derecha.png" />
+    <Resource Include="Iconos\flecha_izquierda.png" />
+    <Resource Include="Iconos\User-Female.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\herramientas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Perfiles\Perfil.csproj">
+      <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
+      <Name>Perfil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trabajador\Trabajador.csproj">
+      <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
+      <Name>Trabajador</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\guardar.png" />
+    <Resource Include="Iconos\guardar2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\flechaAbajo.png" />
+    <Resource Include="Iconos\flechaArriba.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

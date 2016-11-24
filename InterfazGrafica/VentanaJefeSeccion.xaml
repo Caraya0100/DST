@@ -1,0 +1,310 @@
+﻿<Controls:MetroWindow x:Class="InterfazGrafica.VentanaJefeSeccion"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"                      
+        xmlns:wf="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"                     
+        Title="DST" Height="635.527" Width="1071.184" ResizeMode="CanMinimize" IsWindowDraggable="False" Loaded="EventosIniciales" Closing="CerrarSesion">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TabControl HorizontalAlignment="Left" Height="503" Margin="10,93,0,0" VerticalAlignment="Top" Width="1043" TabStripPlacement="Left" SelectionChanged="seleccionItem">
+            <TabItem Name="itemTrabajadores" Header="Trabajadores">
+                <Grid Background="#FFFBFBFB">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="145*"/>
+                        <ColumnDefinition Width="282*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="18*"/>
+                        <RowDefinition Height="128*"/>
+                        <RowDefinition Height="141*"/>
+                        <RowDefinition Height="208*"/>
+                    </Grid.RowDefinitions>
+                    <Button  HorizontalAlignment="Left" Margin="84,38,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="1" Click="eventoMovimientoIzquierda" MouseLeave="eventoDejaBotonMovIzquierdo">
+                        <DockPanel>
+                            <Image Source="Iconos/flecha_izquierda.png" Height="24" Width="34"/>
+                        </DockPanel>
+                    </Button>
+                    <Button  HorizontalAlignment="Left" Margin="423,38,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="1" Click="eventoMovimientoDerecha" MouseLeave="eventoDejaBotonMovDerecho" Grid.Column="1">
+                        <DockPanel>
+                            <Image Source="Iconos/flecha_derecha.png" Height="24" Width="34"/>
+                        </DockPanel>
+                    </Button>
+                    <ScrollViewer x:Name="scrollTrabajadores" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Width="506" HorizontalAlignment="Left" MouseEnter="EntroScrollTrabajador" MouseLeave="DejoScrollTrabajador" Margin="166,0,0,0" Grid.Row="1" Grid.ColumnSpan="2" Height="112" VerticalAlignment="Top">
+                        <StackPanel x:Name="panelTrabajadores" Orientation="Horizontal">
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Name="imagenTrabajador" HorizontalAlignment="Left" Height="169" Margin="46,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="198" Grid.RowSpan="2">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="Iconos/Business-Man.png"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Button Name="botonEliminarTrabajador" Content="Eliminar" HorizontalAlignment="Left" Margin="62,62,0,0" Grid.Row="3" VerticalAlignment="Top" Width="160" Height="29" Click="eventoEliminarTrabajador" IsEnabled="False"/>
+                    <Button Name="botonAgregarTrabajador" Content="Agregar Trabajador" HorizontalAlignment="Left" Margin="62,96,0,0" Grid.Row="3" VerticalAlignment="Top" Width="160" Height="29" Click="eventoAgregaTrabajador"/>
+                    <Label Content="Nombre :" HorizontalAlignment="Left" Margin="17,22,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="60"/>
+                    <Label Name="nombreTrabajador" Content="" HorizontalAlignment="Left" Margin="77,22,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="187"/>
+                    <Label Content="Edad      :" HorizontalAlignment="Left" Margin="17,48,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="60"/>
+                    <Label Name="edadTrabajador" Content="" HorizontalAlignment="Left" Margin="77,48,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="187"/>
+                    <Label Content="Sexo      :" HorizontalAlignment="Left" Margin="17,74,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="60"/>
+                    <Label Name="sexoTrabajador" Content="" HorizontalAlignment="Left" Margin="77,74,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="187"/>
+                    <Label Content="NIVEL DE CAPACIDAD" Grid.Column="1" HorizontalAlignment="Left" Margin="319,32,0,0" Grid.Row="3" VerticalAlignment="Top" Width="154" FontWeight="Bold" Height="26" HorizontalContentAlignment="Center" FontSize="10"/>
+
+                    <lvc:Gauge Grid.Row="2" Uses360Mode="True" From="0" To="2" FromColor="Lime"
+                        Value="{Binding ValorGraficoCircular}" LabelFormatter= "{Binding Formato}" Margin="309,42,60,176" Grid.Column="1" Grid.RowSpan="2" />
+                    <Button x:Name="botonDetalle" Content="Ver Detalle" HorizontalAlignment="Left" Margin="62,28,0,0" Grid.Row="3" VerticalAlignment="Top" Width="160" Height="29" Click="detalleTrabajador" IsEnabled="False"/>
+                    <WindowsFormsHost Name="hostTrabajadores" HorizontalAlignment="Left" Height="225" Margin="10,114,0,0" VerticalAlignment="Top" Width="257" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Visibility="Hidden">
+                        <wf:Chart x:Name="GraficoTrabajadores" BackColor="#FFFBFBFB" Height="231" Width="252">
+                            <wf:Chart.Series>
+                                <wf:Series Name="Default" ChartType="Line"/>
+                            </wf:Chart.Series>
+                            <wf:Chart.ChartAreas>
+                                <wf:ChartArea BackColor="Transparent" AlignmentOrientation="All" >
+                                </wf:ChartArea>
+                            </wf:Chart.ChartAreas>
+                        </wf:Chart>
+                    </WindowsFormsHost>
+                    <Rectangle Name="colorSeccion" Fill="#FF4B7ABF" HorizontalAlignment="Left" Height="12" Margin="342,147,0,0" Stroke="Black" VerticalAlignment="Top" Width="25" Grid.Column="1" Grid.Row="3"/>
+                    <Rectangle Name="colorTrabajador" Fill="#FFD6A80B" HorizontalAlignment="Left" Height="12" Margin="342,165,0,0" Stroke="Black" VerticalAlignment="Top" Width="25" Grid.Column="1" Grid.Row="3"/>
+                    <Label Name="etiquetaSeccion" Content="Hab. Sección" Grid.Column="1" HorizontalAlignment="Left" Margin="367,139,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="0.513,2.308"/>
+                    <Label Name="etiquetaTrabajador" Content="Hab. Trabajador" Grid.Column="1" HorizontalAlignment="Left" Margin="367,159,0,0" Grid.Row="3" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Name="itemEvaluacion" Header="Evaluación">
+                <Grid Background="#FFFBFBFB">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="121*"/>
+                        <ColumnDefinition Width="584*"/>
+                        <ColumnDefinition Width="121*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="140*"/>
+                        <RowDefinition Height="289*"/>
+                        <RowDefinition Height="66*"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Name="scrollEvaluacion" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Grid.Column="1" HorizontalAlignment="Left" Height="112" Margin="10,21,0,0" VerticalAlignment="Top" Width="564" MouseEnter="EntroScrollEvaluacion" MouseLeave="DejoScrollEvaluacion">
+                        <StackPanel Name="panelEvaluacion" Orientation="Horizontal" />
+                    </ScrollViewer>
+                    <Button Name="botonIzquierdaEvaluacion"  HorizontalAlignment="Left" Margin="71,57,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Click="MovimientoIzquierdaEvaluacion" MouseLeave="DejaBotonMovimientoEvaluacion">
+                        <DockPanel>
+                            <Image Source="Iconos/flecha_izquierda.png" Height="24" Width="34"/>
+                        </DockPanel>
+                    </Button>
+                    <Button Name="botonDerechoEvaluacion"  HorizontalAlignment="Left" Margin="0,57,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Click="MovimientoDerechaEvaluacion" MouseLeave="DejaBotonMovimientoEvaluacion" Grid.Column="2">
+                        <DockPanel>
+                            <Image Source="Iconos/flecha_derecha.png" Height="24" Width="34"/>
+                        </DockPanel>
+                    </Button>
+                    <Label Content="Seleccione al Evaluador:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,92,0,0" Grid.Row="1" VerticalAlignment="Top"  HorizontalContentAlignment="Center" Width="564" FontSize="22" Height="45"/>
+                    <Controls:Tile Name="encuestaJefeSeccion" Title="Jefe de Sección" Content="NO CONSTESTADA" Grid.Column="1" Margin="111,213,100,0" Grid.Row="1" Width="Auto" Height="66" VerticalAlignment="Top" Click="SeleccionEncuestaJefeSeccion" >
+                    </Controls:Tile>
+                    <Controls:Tile Name="encuestaTrabajador" Title="Trabajadores (0)" Content="NO CONTESTADA" Grid.Column="1" Margin="111,142,100,0" Grid.Row="1" Width="Auto" Height="66" VerticalAlignment="Top" Click="SeleccionEncuestaTrabajador"/>
+                    <Label Content="Trabajador a Evaluar:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top"  HorizontalContentAlignment="Center" Width="564" FontSize="22" Height="45"/>
+                    <Label Name="nombreEvaluado" Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="10,55,0,0" Grid.Row="1" VerticalAlignment="Top"  HorizontalContentAlignment="Center" Width="564" FontSize="16" Height="45"/>
+                    <PasswordBox Name="password" Grid.Column="1" HorizontalAlignment="Left" Margin="204,30,0,0" Grid.Row="2" VerticalAlignment="Top" Width="189" KeyDown="verificarPassword"/>
+                    <Label Content="Contraseña" Grid.Column="1" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="204,4,0,0" Grid.Row="2" VerticalAlignment="Top" Width="189"/>
+                </Grid>
+            </TabItem>
+            <TabItem Name="itemPerfil" Header="Perfil de sección">
+                <Grid Background="#FFFBFBFB" Margin="3,0,-3,0">
+                    <TabControl HorizontalAlignment="Left" Height="473" Margin="43,10,0,0" VerticalAlignment="Top" Width="770" SelectionChanged="eventoTabHabilidades">
+                        <TabItem Header="General">
+                            <Grid Background="#FFFBFBFB">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="60*"/>
+                                    <RowDefinition Height="83*"/>
+                                    <RowDefinition Height="83*"/>
+                                    <RowDefinition Height="83*"/>
+                                    <RowDefinition Height="76*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110*"/>
+                                    <ColumnDefinition Width="255*"/>
+                                    <ColumnDefinition Width="231*"/>
+                                    <ColumnDefinition Width="166*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Descripción" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="235" Height="40" FontSize="16" FontWeight="Bold"/>
+                                <Label Content="Cantidad" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="97" Height="40" FontSize="16"  FontWeight="Bold"/>
+                                <Label Content="Importancia" HorizontalContentAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="211" Height="40" FontSize="16" FontWeight="Bold"/>
+                                <Slider Name="slider_HB" Grid.Column="2" HorizontalAlignment="Left" Margin="10,43,0,0" Grid.Row="1" VerticalAlignment="Top" Width="192" Height="16" ValueChanged="asignacionValorHabilidadGeneral"/>
+                                <Label Content="Habilidades Blandas" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="235" Height="71" FontSize="16"  />
+                                <Separator HorizontalAlignment="Left" Height="4" Margin="10,87,0,0" Grid.Row="1" VerticalAlignment="Top" Width="740" Grid.ColumnSpan="4"/>
+                                <Separator HorizontalAlignment="Left" Height="4" Margin="10,55,0,0" VerticalAlignment="Top" Width="740" Grid.ColumnSpan="4"/>
+                                <Label Content="Habilidades Duras" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="235" Height="70" FontSize="16" />
+                                <Slider Name="slider_CF" Grid.Column="2" HorizontalAlignment="Left" Margin="11,43,0,0" Grid.Row="3" VerticalAlignment="Top" Width="192" Height="16" ValueChanged="asignacionValorHabilidadGeneral"/>
+                                <Separator HorizontalAlignment="Left" Height="4" Margin="12,85,0,0" Grid.Row="2" VerticalAlignment="Top" Width="740" Grid.ColumnSpan="4"/>
+                                <Separator HorizontalAlignment="Left" Height="4" Margin="10,87,0,0" Grid.Row="3" VerticalAlignment="Top" Width="740" Grid.ColumnSpan="4"/>
+                                <Label Content="Caracteristicas Fisicas" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="235" Height="72" FontSize="16" />
+                                <Slider Name="slider_HD" Grid.Column="2" HorizontalAlignment="Left" Margin="10,43,0,0" Grid.Row="2" VerticalAlignment="Top" Width="192" Height="16" ValueChanged="asignacionValorHabilidadGeneral"/>
+                                <Label Content="11" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="12,24,0,0" Grid.Row="1" VerticalAlignment="Top" Width="88" Height="35" FontSize="22" FontStyle="Italic"/>
+                                <Label Content="9" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="12,24,0,0" Grid.Row="2" VerticalAlignment="Top" Width="88" Height="35"  FontSize="22" FontStyle="Italic"/>
+                                <Label Content="2" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="12,23,0,0" Grid.Row="3" VerticalAlignment="Top" Width="88" Height="36"  FontSize="22" FontStyle="Italic"/>
+                                <Label Name="grado_importancia_HB" Content="0.0" HorizontalContentAlignment="Center" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="144" Height="71" Foreground="#CCA4C400" FontSize="36" FontStyle="Italic"/>
+                                <Label Name="grado_importancia_HD" Content="0.0" HorizontalContentAlignment="Center" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="144" Height="70" Foreground="#CCA4C400" FontSize="36" FontStyle="Italic"/>
+                                <Label Name="grado_importancia_CF" Content="0.0" HorizontalContentAlignment="Center" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="144" Height="71" Foreground="#CCA4C400" FontSize="36" FontStyle="Italic"/>
+                                <Button Name="guardarCambiosGeneral" HorizontalAlignment="Left" Margin="44,22,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="GuardarCambiosPerfil" Grid.Row="4">
+                                    <DockPanel>
+                                        <Image Source="Iconos/guardar.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Name="pestania_HB" Header="Habilidades Blandas">
+                            <Grid Background="#FFFBFBFB" Margin="4,0,-4,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="168*"/>
+                                    <RowDefinition Height="0*"/>
+                                    <RowDefinition Height="43*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="372*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <ScrollViewer Name="scroll_HB" HorizontalAlignment="Left" Height="280" Margin="6,49,0,0" VerticalAlignment="Top" Width="728" Grid.Column="1" SizeChanged="eventoTamanioCanvas">
+                                    <Canvas Name="contenedor_HB" Height="258" Width="699"/>
+                                </ScrollViewer>
+                                <Button  HorizontalAlignment="Left" Margin="30,25,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="GuardarCambiosPerfil" Grid.Column="1" Grid.Row="2">
+                                    <DockPanel>
+                                        <Image Source="Iconos/guardar.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                                <Button  HorizontalAlignment="Left" Margin="77,25,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="eventoIrAConfiguracion" Grid.Row="2" Grid.Column="1">
+                                    <DockPanel>
+                                        <Image Source="Iconos/configuracion.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                                <Label Content="Habilidades" Grid.Column="1" HorizontalAlignment="Left" Margin="148,10,0,0" VerticalAlignment="Top" Width="104" FontSize="16"  FontWeight="Bold" />
+                                <Label Content="Grado de Importancia" Grid.Column="1" HorizontalAlignment="Left" Margin="392,13,0,0" VerticalAlignment="Top" Width="185" FontSize="16"  FontWeight="Bold" />
+                            </Grid>
+                        </TabItem>
+                        <TabItem Name="pestania_HD" Header="Habilidades Duras">
+                            <Grid Background="#FFFBFBFB" Margin="4,0,-4,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="168*"/>
+                                    <RowDefinition Height="0*"/>
+                                    <RowDefinition Height="43*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="372*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <ScrollViewer Name="scroll_HD" HorizontalAlignment="Left" Height="280" Margin="6,49,0,0" VerticalAlignment="Top" Width="728" Grid.Column="1" SizeChanged="eventoTamanioCanvas">
+                                    <Canvas Name="contenedor_HD" Height="258" Width="699"/>
+                                </ScrollViewer>
+                                <Button  HorizontalAlignment="Left" Margin="30,25,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="GuardarCambiosPerfil" Grid.Column="1" Grid.Row="2">
+                                    <DockPanel>
+                                        <Image Source="Iconos/guardar.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                                <Button  HorizontalAlignment="Left" Margin="77,25,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="eventoIrAConfiguracion" Grid.Row="2" Grid.Column="1">
+                                    <DockPanel>
+                                        <Image Source="Iconos/configuracion.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                                <Label Content="Habilidades" Grid.Column="1" HorizontalAlignment="Left" Margin="148,10,0,0" VerticalAlignment="Top" Width="104" FontSize="16"  FontWeight="Bold" />
+                                <Label Content="Grado de Importancia" Grid.Column="1" HorizontalAlignment="Left" Margin="392,13,0,0" VerticalAlignment="Top" Width="185" FontSize="16"  FontWeight="Bold"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Name="pestania_CF" Header="Caracteristicas Fisicas">
+                            <Grid Background="#FFFBFBFB" Margin="4,0,-4,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="168*"/>
+                                    <RowDefinition Height="0*"/>
+                                    <RowDefinition Height="43*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="372*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <ScrollViewer Name="scroll_CF" HorizontalAlignment="Left" Height="280" Margin="6,49,0,0" VerticalAlignment="Top" Width="728" Grid.Column="1" SizeChanged="eventoTamanioCanvas">
+                                    <Canvas Name="contenedor_CF" Height="258" Width="699"/>
+                                </ScrollViewer>
+                                <Button  HorizontalAlignment="Left" Margin="30,25,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="GuardarCambiosPerfil" Grid.Column="1" Grid.Row="2">
+                                    <DockPanel>
+                                        <Image Source="Iconos/guardar.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                                <Button  HorizontalAlignment="Left" Margin="77,25,0,0" VerticalAlignment="Top" Width="42" Style="{DynamicResource MetroCircleButtonStyle}" Height="42" Click="eventoIrAConfiguracion" Grid.Row="2" Grid.Column="1">
+                                    <DockPanel>
+                                        <Image Source="Iconos/configuracion.png" Height="40" Width="40"/>
+                                    </DockPanel>
+                                </Button>
+                                <Label Content="Habilidades" Grid.Column="1" HorizontalAlignment="Left" Margin="148,10,0,0" VerticalAlignment="Top" Width="104" FontSize="16"  FontWeight="Bold" />
+                                <Label Content="Grado de Importancia" Grid.Column="1" HorizontalAlignment="Left" Margin="392,13,0,0" VerticalAlignment="Top" Width="185" FontSize="16"  FontWeight="Bold" />
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+            <TabItem Name="itemRanking" Header="Ranking">
+                <Grid Background="#FFFBFBFB" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19*"/>
+                        <RowDefinition Height="26*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="315*"/>
+                        <ColumnDefinition Width="183*"/>
+                        <ColumnDefinition Width="83*"/>
+                        <ColumnDefinition Width="245*"/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer x:Name="scrollRanking" HorizontalAlignment="Left" Margin="10,44,0,0" Width="294" RenderTransformOrigin="0.5,0.5" Height="385" VerticalAlignment="Top" Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden" MouseEnter="EntroScrollRanking" MouseLeave="DejoScrollRanking">
+                        <StackPanel Name="panel_principal" Orientation="Vertical">
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Canvas Grid.Column="1" HorizontalAlignment="Left" Height="206" Margin="10,70,0,0" VerticalAlignment="Top" Width="360" Grid.ColumnSpan="3" Grid.Row="1">
+                        <WindowsFormsHost x:Name="hostRanking" Background="#FFFBFBFB" Height="200" Width="360">
+                            <wf:Chart x:Name="graficoRadarRanking" BackColor="#FFFBFBFB" Height="231" Width="252" AccessibleName="" Text="" SuppressExceptions="True" TextAntiAliasingQuality="High">
+                                <wf:Chart.Series>
+                                    <wf:Series Name="Default" ChartType="Line"/>
+                                </wf:Chart.Series>
+                                <wf:Chart.ChartAreas>
+                                    <wf:ChartArea BackColor="Transparent" AlignmentOrientation="All" >
+                                    </wf:ChartArea>
+                                </wf:Chart.ChartAreas>
+                            </wf:Chart>
+                        </WindowsFormsHost>
+                    </Canvas>
+                    <Button Name="solicitaReubicacionRanking" Content="Solicitar Reubicación" Grid.Column="3" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Top" Width="158" Grid.Row="1" Height="29" Click="solicitaReubicacion" IsEnabled="False"/>
+                    <Button Name="detalleRanking" Content="Ver Detalle" Grid.Column="3" HorizontalAlignment="Left" Margin="38,175,0,0" VerticalAlignment="Top" Width="158" Height="29" Click="DetalleRanking" IsEnabled="False"/>
+                    <Label Content="Edad      :" Grid.Column="1" HorizontalAlignment="Left" Margin="23,178,0,0" VerticalAlignment="Top" Width="65" Height="26"/>
+                    <Label Content="Sexo      :" Grid.Column="1" HorizontalAlignment="Left" Margin="23,204,0,0" VerticalAlignment="Top" Width="65" Height="26" Grid.RowSpan="2"/>
+                    <Label Content="Nombre :" Grid.Column="1" HorizontalAlignment="Left" Margin="23,147,0,0" VerticalAlignment="Top" Width="65" Height="26"/>
+                    <Label Content="Sección :" Grid.Column="1" HorizontalAlignment="Left" Margin="23,21,0,0" VerticalAlignment="Top" Width="65" Grid.Row="1" Height="26"/>
+                    <Rectangle HorizontalAlignment="Left" Height="121" Margin="31,21,0,0" VerticalAlignment="Top" Width="152" Grid.Column="1">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="Iconos/Business-Man.png" Stretch="UniformToFill"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <TextBlock Name="nombreRanking" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="93,152,0,0" TextWrapping="Wrap"  VerticalAlignment="Top"  Width="201"/>
+                    <TextBlock Name="edadRanking" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="93,183,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="201"/>
+                    <TextBlock Name="sexoRanking" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="93,0,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="184" Grid.Row="1"/>
+                    <TextBlock Name="seccionRanking" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="28" Margin="93,26,0,0" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Top" Width="184"/>
+                    <lvc:Gauge Uses360Mode="True" From="0" To="2" FromColor="Lime"
+                        Value="{Binding ValorGraficoCircular}" LabelFormatter= "{Binding Formato}" Margin="10,21,32,57" Grid.Column="3" />
+                    <Rectangle Name="colorSeccionRanking" Fill="#FF4B7ABF" HorizontalAlignment="Left" Height="12" Margin="109,159,0,0" Stroke="Black" VerticalAlignment="Top" Width="25" Grid.Column="3" Grid.Row="1"/>
+                    <Rectangle Name="colorTrabajadorRanking" Fill="#FFD6A80B" HorizontalAlignment="Left" Height="12" Margin="109,176,0,0" Stroke="Black" VerticalAlignment="Top" Width="25" Grid.Column="3" Grid.Row="1"/>
+                    <Label Name="etiquetaSeccionRanking" Content="Hab. Sección" Grid.Column="3" HorizontalAlignment="Left" Margin="139,153,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0.513,2.308"/>
+                    <Label Name="etiquetaTrabajadorRanking" Content="Hab. Trabajador" Grid.Column="3" HorizontalAlignment="Left" Margin="139,170,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+                    <Button Name="botonArribaRanking"  HorizontalAlignment="Left" Margin="0,70,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Click="MovimientoAbajoRanking" MouseEnter="EntroScrollRanking" MouseLeave="DejoScrollRanking" Grid.Column="1">
+                        <DockPanel>
+                            <Image Source="Iconos/flechaAbajo.png" Height="24" Width="34"/>
+                        </DockPanel>
+                    </Button>
+                    <Button Name="botonAbajoRanking"  HorizontalAlignment="Left" Margin="0,21,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Click="MovimientoArribaRanking" MouseLeave="DejoScrollRanking" MouseEnter="EntroScrollRanking" Grid.Column="1">
+                        <DockPanel>
+                            <Image Source="Iconos/flechaArriba.png" Height="24" Width="34"/>
+                        </DockPanel>
+                    </Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Controls:MetroWindow>
+

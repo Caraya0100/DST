@@ -2,3 +2,8 @@ C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Perfiles\bin\Debug\Pe
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Perfiles\bin\Debug\Perfiles.pdb
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Perfiles\obj\Debug\Perfiles.dll
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Perfiles\obj\Debug\Perfiles.pdb
+C:\Users\PC\Documents\GitHub\DST\Perfiles\bin\Debug\Perfiles.dll
+C:\Users\PC\Documents\GitHub\DST\Perfiles\bin\Debug\Perfiles.pdb
+C:\Users\PC\Documents\GitHub\DST\Perfiles\obj\Debug\Perfil.csprojResolveAssemblyReference.cache
+C:\Users\PC\Documents\GitHub\DST\Perfiles\obj\Debug\Perfiles.dll
+C:\Users\PC\Documents\GitHub\DST\Perfiles\obj\Debug\Perfiles.pdb

@@ -31,7 +31,7 @@ namespace Pruebas
             prueba.insertarSeccion("electro", "15263145-4");
             prueba.insertarSeccion("carniceria", "14263145-4");*/
 
-            new PruebaEvaluacionCapacidad();
+            new PruebaEvaluacionCapacidad();            
         }
     }
 }
