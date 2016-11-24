@@ -41,20 +41,20 @@ namespace DST
             Dictionary<string, string> reglas = new Dictionary<string, string>();
             ReglasMatching reglasM = new ReglasMatching();
             VariablesMatching variablesM = new VariablesMatching();
-            Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
-            //Dictionary<string, double> datos = new Dictionary<string, double>();
+            //Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
+            Dictionary<string, double> datos = new Dictionary<string, double>();
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
 
             // Evaluamos la compatibilidad de las HB, HD, Y CF.
             compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
-            datos.Add("HB", new Tuple<double, double>(compatibilidadHB, HBS.Importancia));
-            //datos.Add("HB", compatibilidadHB);
+            //datos.Add("HB", new Tuple<double, double>(compatibilidadHB, HBS.Importancia));
+            datos.Add("HB", compatibilidadHB);
             compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
-            datos.Add("HD", new Tuple<double, double>(compatibilidadHD, HDS.Importancia));
-            //datos.Add("HD", compatibilidadHD);
+            //datos.Add("HD", new Tuple<double, double>(compatibilidadHD, HDS.Importancia));
+            datos.Add("HD", compatibilidadHD);
             compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
-            datos.Add("CF", new Tuple<double, double>(compatibilidadCF, CFS.Importancia));
-            //datos.Add("CF", compatibilidadCF);
+            //datos.Add("CF", new Tuple<double, double>(compatibilidadCF, CFS.Importancia));
+            datos.Add("CF", compatibilidadCF);
 
             reglas = reglasM.Capacidad;
             variables.Add(variablesM.HB);

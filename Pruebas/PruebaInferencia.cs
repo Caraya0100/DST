@@ -42,10 +42,10 @@ namespace Pruebas
             tips.AgregarValorLinguistico("generosa", new FuncionTriangular(20.0, 25.0, 30.0));
             inferencia.AgregarVariable(tips);
 
-            inferencia.AgregarRegla("R1", "Si servicio es pobre o espera es larga o comida es rancia entonces propina es poca");
+            inferencia.AgregarRegla("R1", "Si servicio es pobre y espera es larga y comida es rancia entonces propina es poca");
             //inferencia.AgregarRegla("R2", "Si servicio es good entonces tips es average");
-            inferencia.AgregarRegla("R2", "Si servicio es excelente o comida es deliciosa entonces propina es generosa");
-            inferencia.AgregarRegla("R3", "Si servicio es bueno o espera es poca o comida es deliciosa entonces propina es promedio");
+            inferencia.AgregarRegla("R2", "Si servicio es excelente y comida es deliciosa entonces propina es generosa");
+            inferencia.AgregarRegla("R3", "Si servicio es bueno y espera es poca o comida es deliciosa entonces propina es promedio");
 
             Dictionary<string, double> datos = new Dictionary<string, double>();
             datos.Add("servicio", datoServicio);
