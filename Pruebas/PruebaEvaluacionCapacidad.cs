@@ -12,12 +12,12 @@ namespace Pruebas
         public PruebaEvaluacionCapacidad()
         {
             EvaluacionCapacidad evaluacion = new EvaluacionCapacidad();
-            Componente HBS = new Componente("HBS", "Habilidades blandas de la seccion.", "General", 0.5, 0.2);
-            Componente HDS = new Componente("HDS", "Habilidades duras de la seccion.", "General", 0.7, 0.5);
-            Componente CFS = new Componente("CFS", "Caracteristicas fisicas de la seccion.", "General", 0.4, 0.1);
-            Componente HBT = new Componente("HBT", "Habilidades blandas del trabajador.", "General", 0.42, 0.2);
-            Componente HDT = new Componente("HDT", "Habilidades duras del trabajador.", "General", 0.61, 0.5);
-            Componente CFT = new Componente("CFT", "Caracteristicas fisicas del trabajador.", "General", 0.3, 0.1);
+            Componente HBS = new Componente("HBS", "Habilidades blandas de la seccion.", "General", 0.62, 0.2);
+            Componente HDS = new Componente("HDS", "Habilidades duras de la seccion.", "General", 0.72, 0.5);
+            Componente CFS = new Componente("CFS", "Caracteristicas fisicas de la seccion.", "General", 0.65, 0.1);
+            Componente HBT = new Componente("HBT", "Habilidades blandas del trabajador.", "General", 0.62, 0.2);
+            Componente HDT = new Componente("HDT", "Habilidades duras del trabajador.", "General", 0.72, 0.5);
+            Componente CFT = new Componente("CFT", "Caracteristicas fisicas del trabajador.", "General", 0.65, 0.1);
 
             evaluacion.Ejecutar(HBS, HDS, CFS, HBT, HDT, CFT);
 
