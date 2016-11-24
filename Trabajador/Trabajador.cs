@@ -15,7 +15,10 @@ namespace DST
     {
         private string rut;
         private string nombre;
+        private string apellidoPaterno;
+        private string apellidoMaterno;
         private string fechaNacimiento;
+        private string sexo;
         private Perfil perfil;
 
         /// <summary>
@@ -26,10 +29,13 @@ namespace DST
         /// <param name="nombre"></param>
         /// <param name="fechaNacimiento"></param>
         /// <param name="perfil"></param>
-        public Trabajador(string rut, string nombre, string fechaNacimiento, Perfil perfil)
+        public Trabajador(string rut, string nombre, string apellidoPaterno, string apellidoMaterno, 
+            string fechaNacimiento, string sexo, Perfil perfil)
         {
-            this.nombre = nombre;
             this.rut = rut;
+            this.nombre = nombre;
+            this.apellidoPaterno = apellidoPaterno;
+            this.apellidoMaterno = apellidoMaterno;
             this.fechaNacimiento = fechaNacimiento;
             this.perfil = new Perfil(perfil.Blandas, perfil.Duras, perfil.Fisicas);
         }
@@ -38,6 +44,18 @@ namespace DST
         {
             get { return nombre; }
             set { nombre = value; }
+        }
+
+        public string ApellidoPaterno
+        {
+            get { return apellidoPaterno; }
+            set { apellidoPaterno = value; }
+        }
+
+        public string ApellidoMaterno
+        {
+            get { return apellidoMaterno; }
+            set { apellidoMaterno = value; }
         }
 
         public string Rut
@@ -50,6 +68,12 @@ namespace DST
         {
             get { return fechaNacimiento; }
             set { fechaNacimiento = value; }
+        }
+
+        public string Sexo
+        {
+            get { return sexo; }
+            set { sexo = value; }
         }
 
         public Perfil Perfil
