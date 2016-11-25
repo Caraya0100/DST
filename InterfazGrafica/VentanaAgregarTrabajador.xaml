@@ -1,0 +1,55 @@
+﻿<Controls:MetroWindow x:Class="InterfazGrafica.VentanaAgregarTrabajador"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        Title="NUEVO TRABAJADOR" Height="500" Width="800" ResizeMode="NoResize" IsWindowDraggable="False" BorderBrush="DarkGray" Background="#FFFBFBFB">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="95*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="33*"/>
+            <ColumnDefinition Width="117*"/>
+            <ColumnDefinition Width="215*"/>
+            <ColumnDefinition Width="32*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Nombre" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="44" Width="214"/>
+        <Label Content="Apellidos" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="214" Height="44"/>
+        <Label Content="Fecha de Nacimiento" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Height="44" Width="214"/>
+        <Label Content="Rut" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="4" VerticalAlignment="Top" Width="214" Height="44"/>
+        <Label Content="Sexo" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="5" VerticalAlignment="Top" Width="214" Height="44"/>
+        <TextBox Name="nombre" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,11,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="191"/>
+        <TextBox Name="apellidoPaterno" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,11,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="191"/>
+        <TextBox Name="apellidoMaterno" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="216,11,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="176"/>
+        <TextBox Name="rut" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="12,11,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="189"/>
+        <TextBox Name="digitoVerificador" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="216,12,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="28" RenderTransformOrigin="0.643,0.038"/>
+        <Label Content="-" Grid.Column="2" HorizontalAlignment="Left" Margin="201,12,0,0" Grid.Row="4" VerticalAlignment="Top"/>
+        <ComboBox Name="sexo" Grid.Column="2" HorizontalAlignment="Left" Margin="12,10,0,0" Grid.Row="5" VerticalAlignment="Top" Width="189" SelectedIndex="0">
+            <ComboBoxItem Name="masculino" Content="Masculino"></ComboBoxItem>
+            <ComboBoxItem Name="femenino" Content="Femenino"></ComboBoxItem>
+        </ComboBox>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="1" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="2" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="3" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="4" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="5" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
+        <Label Content="Ej. 11.111.111 - 1" Grid.Column="2" HorizontalAlignment="Left" Margin="268,11,0,0" Grid.Row="4" VerticalAlignment="Top" Width="124"/>
+        <Button Name="agregarTrabajador" Content="Agregar" Grid.Column="2" HorizontalAlignment="Left" Margin="12,34,0,0" Grid.Row="6" VerticalAlignment="Top" Width="189" Click="agregarNuevoTrabajador"/>
+        <Label Content="Apellido Paterno" Grid.Column="2" HorizontalAlignment="Left" Margin="60,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="110"/>
+        <Label Content="Apellido Materno" Grid.Column="2" HorizontalAlignment="Left" Margin="247,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="113"/>
+        <Button x:Name="seleccionFechaNacimiento" Content="Seleccionar" Grid.Column="2" HorizontalAlignment="Left" Margin="247,20,0,0" Grid.Row="3" VerticalAlignment="Top" Width="107" Click="despliegueFechaNacimiento"/>
+        <Label Name="etiquetaFechaNacimiento" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="12,19,0,0" Grid.Row="3" VerticalAlignment="Top" Width="189"/>
+        <Controls:Flyout Name="despliegueCalendario" Grid.ColumnSpan="2" Margin="0,27,0,15" Grid.RowSpan="5" Width="278" Grid.Column="2" Grid.Row="1" Position="Right" Background="DarkGreen">
+            <Canvas HorizontalAlignment="Left" Height="219" Margin="42,-73,0,0" VerticalAlignment="Top" Width="236">
+                <Calendar Name="calendario" Height="184" Width="189" MouseDoubleClick="SeleccionFechaNacimiento" Canvas.Left="27" Canvas.Top="10" />
+            </Canvas>
+        </Controls:Flyout>
+    </Grid>
+</Controls:MetroWindow>

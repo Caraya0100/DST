@@ -1,0 +1,56 @@
+﻿<Controls:MetroWindow x:Class="InterfazGrafica.VentanaEncuesta"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        Title="Evaluación" Height="635.527" Width="1071.184" Background="#FFFBFBFB" ResizeMode="NoResize" IsWindowDraggable="False" BorderBrush="DarkGray" Closing="CerrarEncuesta">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="94*"/>
+            <ColumnDefinition Width="424*"/>
+            <ColumnDefinition Width="453*"/>
+            <ColumnDefinition Width="94*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="57*"/>
+            <RowDefinition Height="57*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="59*"/>
+            <RowDefinition Height="48*"/>
+            <RowDefinition Height="46*"/>
+            <RowDefinition Height="46*"/>
+            <RowDefinition Height="46*"/>
+            <RowDefinition Height="46*"/>
+            <RowDefinition Height="60*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Nombre De Evaluado" HorizontalAlignment="Left" Margin="151,27,0,0" VerticalAlignment="Top" Width="207" Height="46" Grid.Column="1" FontSize="20" VerticalContentAlignment="Center"/>
+        <Label Content="Tipo De Habilidad" Grid.Column="1" HorizontalAlignment="Left" Margin="151,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="207" Height="46" FontSize="20" VerticalContentAlignment="Center"/>
+        <Label Content="Habilidad" Grid.Column="1" HorizontalAlignment="Left" Margin="151,10,0,0" Grid.Row="2" VerticalAlignment="Top" Height="46" Width="207" FontSize="20" VerticalContentAlignment="Center"/>
+        <Label Content=":" Grid.Column="1" HorizontalAlignment="Left" Margin="363,27,0,0" VerticalAlignment="Top" Height="46" Width="24" FontSize="20" VerticalContentAlignment="Center"/>
+        <Label Content=":" Grid.Column="1" HorizontalAlignment="Left" Margin="363,10,0,0" VerticalAlignment="Top" Height="46" Width="24" FontSize="20" VerticalContentAlignment="Center" Grid.Row="1"/>
+        <Label Content=":" Grid.Column="1" HorizontalAlignment="Left" Margin="363,5,0,0" VerticalAlignment="Top" Height="46" Width="24" FontSize="20" VerticalContentAlignment="Center" Grid.Row="2"/>
+        <Label Name="nombreTrabajador" Content="José Martínez Álvarez" Grid.Column="2" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Height="46" Width="433" VerticalContentAlignment="Center" FontSize="20"/>
+        <Label Content="Habilidad Blanda" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="46" Width="433" VerticalContentAlignment="Center" FontSize="20" Grid.Row="1"/>
+        <Label Content="Proactividad" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="46" Width="526" VerticalContentAlignment="Center" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="855" Grid.ColumnSpan="2"/>
+        <TextBlock Name="textoPregunta" Grid.Column="1" HorizontalAlignment="Left" Margin="10,8,0,0" Grid.Row="4" TextWrapping="Wrap" Text="¿Alguna Pregunta relacionada con alguna habilidad?" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="857" Height="43" FontSize="20" TextAlignment="Center"/>
+        <Button Name="botonDerecho"  HorizontalAlignment="Left" Margin="202,0,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="7" Grid.Column="2" Click="MovimientoDerecha" Grid.RowSpan="2">
+            <DockPanel>
+                <Image Source="Iconos/flecha_derecha.png" Height="24" Width="34"/>
+            </DockPanel>
+        </Button>
+        <Button Name="botonIzquierdo"  HorizontalAlignment="Left" Margin="101,0,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="7"  Click="MovimientoIzquierda" Grid.Column="1" Grid.RowSpan="2">
+            <DockPanel>
+                <Image Source="Iconos/flecha_izquierda.png" Height="24" Width="34"/>
+            </DockPanel>
+        </Button>
+        <RadioButton Name="alternativaTDA" Content="Totalmente De acuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="5" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaDA" Content="De Acuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="6" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaNDND" Content="Ni De acuerdo, Ni en Desacuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,9,351,0" Grid.Row="7" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaEDS" Content="En Desacuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="8" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaTDS" Content="Totalmente en Desacuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="9" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
+
+    </Grid>
+</Controls:MetroWindow>
+
