@@ -37,6 +37,7 @@ namespace DST
             this.apellidoPaterno = apellidoPaterno;
             this.apellidoMaterno = apellidoMaterno;
             this.fechaNacimiento = fechaNacimiento;
+            this.sexo = sexo;
             this.perfil = new Perfil(perfil.Blandas, perfil.Duras, perfil.Fisicas);
         }
 

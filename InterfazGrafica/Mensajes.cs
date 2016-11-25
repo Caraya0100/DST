@@ -32,6 +32,7 @@ namespace InterfazGrafica
         private VentanaAgregarTrabajador ventanaTrabajador;
         private VentanaEncuesta ventanaEncuesta;
         private VentanaLogin ventanaLogin;
+        private VentanaAdministrador ventanaAdministrador;
 
         public Mensajes(VentanaJefeSeccion ventana)
         {
@@ -57,6 +58,13 @@ namespace InterfazGrafica
         {
             inicializacionVariables();
             this.ventanaLogin = ventana;
+            MensajesPorDefecto();
+        }
+
+        public Mensajes(VentanaAdministrador ventana)
+        {
+            inicializacionVariables();
+            this.ventanaAdministrador = ventana;
             MensajesPorDefecto();
         }
         private void inicializacionVariables()
@@ -178,6 +186,12 @@ namespace InterfazGrafica
         async public Task<MessageDialogResult> VerificacionUsuarioIncorrecta()
         {
             MessageDialogResult resultado = await this.ventanaLogin.ShowMessageAsync(nombreSoftware, verificacionUsuarioIncorrecta, MessageDialogStyle.Affirmative);
+            return resultado;
+        }
+
+        async public Task<MessageDialogResult> CerrarSesionAdministrador()
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, cerrarSesion, MessageDialogStyle.AffirmativeAndNegative);
             return resultado;
         }
     }

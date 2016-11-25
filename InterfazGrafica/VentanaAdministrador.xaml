@@ -1,12 +1,60 @@
-﻿<Window x:Class="InterfazGrafica.VentanaAdministrador"
+﻿<Controls:MetroWindow x:Class="InterfazGrafica.VentanaAdministrador"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:InterfazGrafica"
-        mc:Ignorable="d"
-        Title="VentanaAdministrador" Height="300" Width="300">
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"        
+        Title="DST" Height="635.527" Width="1071.184" ResizeMode="CanMinimize" IsWindowDraggable="False" Closing="CerrarSesion" Loaded="EventosIniciales">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="18*"/>
+            <ColumnDefinition Width="1021*"/>
+            <ColumnDefinition Width="26*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="53*"/>
+            <RowDefinition Height="539*"/>
+            <RowDefinition Height="16*"/>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="519" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="1001" TabStripPlacement="Left" SelectionChanged="seleccionItem">
+            <TabItem Name="itemDesempenio" Header="Desempeño" Width="194">
+                <Grid Background="#FFE5E5E5" Margin="-2,-5,0,0"/>
+            </TabItem>
+            <TabItem Name="itemTrabajadores" Header="Trabajadores">
+                <Grid Background="#FFE5E5E5" Margin="-6,1,6,-1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="202*"/>
+                        <ColumnDefinition Width="591*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="163*"/>
+                        <RowDefinition Height="348*"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Name="scrollTrabajadores" HorizontalAlignment="Left" Height="145" Margin="153,10,0,0" VerticalAlignment="Top" Width="519" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Name="panelTrabajadores" Height="144" Width="504" Orientation="Horizontal"/>
+                    </ScrollViewer>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="217" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="483"/>
+                </Grid>
+            </TabItem>
+            <TabItem Name="itemSecciones" Header="Secciones">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Name="itemEvaluacion" Header="Evaluación">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Name="itemSolicitudes" Header="Solicitudes">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Name="itemReglas" Header="Reglas">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Name="itemComponentes" Header="Componentes">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Name="itemUsuarios" Header="Usuarios">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
     </Grid>
-</Window>
+</Controls:MetroWindow>
