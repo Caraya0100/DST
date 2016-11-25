@@ -76,13 +76,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnimacionScroll.cs" />
+    <Compile Include="DatosDePrueba.cs" />
     <Compile Include="GraficoRadar.cs" />
+    <Compile Include="Mensajes.cs" />
+    <Compile Include="PanelHabilidades.cs" />
+    <Compile Include="Rutificador.cs" />
     <Compile Include="VentanaAdministrador.xaml.cs">
       <DependentUpon>VentanaAdministrador.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaAgregarTrabajador.xaml.cs" />
+    <Compile Include="VentanaAsignacionHabilidades.xaml.cs" />
     <Compile Include="VentanaDetalleHabilidades.xaml.cs">
       <DependentUpon>VentanaDetalleHabilidades.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaEncuesta.xaml.cs" />
+    <Compile Include="VentanaEvaluadores.xaml.cs" />
+    <Compile Include="VentanaJefeSeccion.xaml.cs" />
+    <Compile Include="VentanaLogin.xaml.cs" />
+    <Compile Include="VisorEncuestados.cs" />
+    <Compile Include="VisorEvaluacion.cs" />
+    <Compile Include="VisorHabilidades.cs" />
+    <Compile Include="VisorRanking.cs" />
+    <Compile Include="VisorTrabajador.cs" />
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,9 +114,33 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="VentanaAgregarTrabajador.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaAsignacionHabilidades.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="VentanaDetalleHabilidades.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaEncuesta.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaEvaluadores.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaJefeSeccion.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaLogin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +170,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Perfiles\Perfil.csproj">
+      <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
+      <Name>Perfil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trabajador\Trabajador.csproj">
+      <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
+      <Name>Trabajador</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\Business-Man.png" />
+    <Resource Include="Iconos\configuracion.png" />
+    <Resource Include="Iconos\encuestaRealizada.png" />
+    <Resource Include="Iconos\flechaAbajo.png" />
+    <Resource Include="Iconos\flechaArriba.png" />
+    <Resource Include="Iconos\flecha_derecha.png" />
+    <Resource Include="Iconos\flecha_izquierda.png" />
+    <Resource Include="Iconos\guardar.png" />
+    <Resource Include="Iconos\guardar2.png" />
+    <Resource Include="Iconos\herramientas.png" />
+    <Resource Include="Iconos\logotipo.png" />
+    <Resource Include="Iconos\User-Female.png" />
+    <Resource Include="Iconos\usuarios.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
