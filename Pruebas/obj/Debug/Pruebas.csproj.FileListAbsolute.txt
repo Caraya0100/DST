@@ -36,3 +36,11 @@ C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Reg
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Evaluaciones.pdb
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Perfiles.pdb
 C:\Users\Sefirot\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\ReglasMatching.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Evaluaciones.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Perfiles.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Trabajador.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\ReglasMatching.dll
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Evaluaciones.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Perfiles.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\Trabajador.pdb
+C:\Users\Ariel\Documents\Visual Studio 2015\Projects\DST\Pruebas\bin\Debug\ReglasMatching.pdb

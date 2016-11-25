@@ -14,10 +14,12 @@ namespace DST
         private MySqlDataReader consulta;
         private MySqlCommand cmd;
 
-        public AdminBD (string servidor, string usuario, string password, string nombreBD)
+        //public AdminBD (string servidor, string usuario, string password, string nombreBD)
+        public AdminBD()
         {
             bd = new BaseDeDatos();
-            conn = bd.conectarBD(servidor, usuario, password, nombreBD);
+            //conn = bd.conectarBD(servidor, usuario, password, nombreBD);
+            conn = bd.conectarBD();
             cmd = conn.CreateCommand();
             
         }
@@ -46,7 +48,13 @@ namespace DST
 
         }*/
 
-        public void insertarEmpresa( string nombre, string razonSocial, string direccion)
+        /// <summary>
+        /// Consulta para insertar una empresa. En nuestro caso es una sola.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="razonSocial"></param>
+        /// <param name="direccion"></param>
+        public void InsertarEmpresa( string nombre, string razonSocial, string direccion)
         {
             conn.Open();
 
@@ -57,7 +65,15 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarUsuario(string nombre, string rut, string clave, string tipoUsuario, bool estado)
+        /// <summary>
+        /// Consulta para insertar un nuevo usuario, se reciben los paramatros necesarios para la creacion.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="rut"></param>
+        /// <param name="clave"></param>
+        /// <param name="tipoUsuario"></param>
+        /// <param name="estado"></param>
+        public void InsertarUsuario(string nombre, string rut, string clave, string tipoUsuario, bool estado)
         {
             conn.Open();
 
@@ -69,7 +85,12 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarSeccion( string nombre, string rutJefe )
+        /// <summary>
+        /// Consulta para insertar una nueva seccion. Se reciben como parametros el nombre y el rut del jefe encargado
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="rutJefe"></param>
+        public void InsertarSeccion( string nombre, string rutJefe )
         {
             conn.Open();
 
@@ -80,7 +101,18 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarTrabajador(string nombre, string apellidoPaterno, string apellidoMaterno, string rut, 
+        /// <summary>
+        /// Consulta para insertar un nuevo trabajador, se deben pasar todos los parametros necesarios para agregar.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="apellidoPaterno"></param>
+        /// <param name="apellidoMaterno"></param>
+        /// <param name="rut"></param>
+        /// <param name="fechaNacimiento"></param>
+        /// <param name="idSeccion"></param>
+        /// <param name="sexo"></param>
+        /// <param name="estado"></param>
+        public void InsertarTrabajador(string nombre, string apellidoPaterno, string apellidoMaterno, string rut, 
             string fechaNacimiento, int idSeccion, string sexo, bool estado)
         {
             conn.Open();
@@ -93,7 +125,14 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarComponente(string nombre, string descripcion, string tipo, bool estado)
+        /// <summary>
+        /// Consulta para insertar una nueva componente, puede ser hb,hd o cf
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="descripcion"></param>
+        /// <param name="tipo"></param>
+        /// <param name="estado"></param>
+        public void InsertarComponente(string nombre, string descripcion, string tipo, bool estado)
         {
             conn.Open();
 
@@ -104,7 +143,15 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarComponentePerfilSeccion(int idSeccion, string nombre, float puntaje, float importancia)
+        /// <summary>
+        /// Consulta para insertar un componente de un perfil de seccion. Se debe indicar el id de la seccion
+        /// y el puntaje e importancia asociados a la hb,hd o cf
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="nombre"></param>
+        /// <param name="puntaje"></param>
+        /// <param name="importancia"></param>
+        public void InsertarComponentePerfilSeccion(int idSeccion, string nombre, float puntaje, float importancia)
         {
             conn.Open();
 
@@ -116,7 +163,14 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarComponentePerfilTrabajador(string rut, string nombre, float puntaje)
+        /// <summary>
+        /// Consulta para insertar componentes de los perfiles de trabajador, se debe indicar el rut del trabajador y
+        /// el puntaje asociado a la hb,hd o cf
+        /// </summary>
+        /// <param name="rut"></param>
+        /// <param name="nombre"></param>
+        /// <param name="puntaje"></param>
+        public void InsertarComponentePerfilTrabajador(string rut, string nombre, float puntaje)
         {
             conn.Open();
 
@@ -127,7 +181,18 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarDesempeñoMensual(int idSeccion, string fecha, float ventasAñoActual, float ventasAñoAnterior,
+        /// <summary>
+        /// Consulta para insertar los datos asociados al desempeño de la seccion de trabajo
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="fecha"></param>
+        /// <param name="ventasAñoActual"></param>
+        /// <param name="ventasAñoAnterior"></param>
+        /// <param name="ventasPlan"></param>
+        /// <param name="reubicaciones"></param>
+        /// <param name="totalEmpleados"></param>
+        /// <param name="empleadosConAdvertencia"></param>
+        public void InsertarDesempeñoMensual(int idSeccion, string fecha, float ventasAñoActual, float ventasAñoAnterior,
             float ventasPlan, int reubicaciones, int totalEmpleados, int empleadosConAdvertencia)
         {
             conn.Open();
@@ -142,7 +207,14 @@ namespace DST
             conn.Close();
         }
         
-        public void insertarReubicacion( string rut, int idSeccionAnterior, int idSeccionNueva, string fecha)
+        /// <summary>
+        /// Consulta para guardar los datos asociados a una reubicacion, esto para tener un historial.
+        /// </summary>
+        /// <param name="rut"></param>
+        /// <param name="idSeccionAnterior"></param>
+        /// <param name="idSeccionNueva"></param>
+        /// <param name="fecha"></param>
+        public void InsertarReubicacion( string rut, int idSeccionAnterior, int idSeccionNueva, string fecha)
         {
             conn.Open();
 
@@ -154,7 +226,13 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarPreguntaComponente( string nombre, string pregunta, bool estado)
+        /// <summary>
+        /// Consulta para insertar preguntas asociadas a un componente
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="pregunta"></param>
+        /// <param name="estado"></param>
+        public void InsertarPreguntaComponente( string nombre, string pregunta, bool estado)
         {
             conn.Open();
 
@@ -165,7 +243,12 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarAlternativaPreguntaComponente( int idPregunta, string alternativa )
+        /// <summary>
+        /// Consulta para insertar las alternativas asociadas a las preguntas de las componentes.
+        /// </summary>
+        /// <param name="idPregunta"></param>
+        /// <param name="alternativa"></param>
+        public void InsertarAlternativaPreguntaComponente( int idPregunta, string alternativa )
         {
             conn.Open();
 
@@ -176,7 +259,16 @@ namespace DST
             conn.Close();
         }
 
-        public void insertarRespuesta(int idPregunta, string rutTrabajadorAsociado, string rutRespuesta, 
+        /// <summary>
+        /// Consulta para guardar las respuestas, se guarda el rut del trabajador que esta siendo evaluado
+        /// y el rut de la persona que respondio para de esta manera evitar que una persona evalue mas de una vez
+        /// a un trabajador
+        /// </summary>
+        /// <param name="idPregunta"></param>
+        /// <param name="rutTrabajadorAsociado"></param>
+        /// <param name="rutRespuesta"></param>
+        /// <param name="alternativaRespuesta"></param>
+        public void InsertarRespuesta(int idPregunta, string rutTrabajadorAsociado, string rutRespuesta, 
             string alternativaRespuesta)
         {
             conn.Open();
@@ -189,7 +281,12 @@ namespace DST
             conn.Close();
         }
 
-        public void modificarPuntajePerfilTrabajador( string rutTrabajador, float nuevoPuntaje )
+        /// <summary>
+        /// Consulta para modificar el puntaje de una componente del perfil del trabajador.
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <param name="nuevoPuntaje"></param>
+        public void ModificarPuntajePerfilTrabajador( string rutTrabajador, float nuevoPuntaje )
         {
             conn.Open();
 
@@ -200,7 +297,12 @@ namespace DST
             conn.Close();
         }
 
-        public void modificarPuntajePerfilSeccion( int idSeccion, float nuevoPuntaje )
+        /// <summary>
+        /// Consulta para modificar el puntaje de una componente del perfil de la secccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="nuevoPuntaje"></param>
+        public void ModificarPuntajePerfilSeccion( int idSeccion, float nuevoPuntaje )
         {
             conn.Open();
 
@@ -211,7 +313,12 @@ namespace DST
             conn.Close();
         }
 
-        public void modificarImportanciaPerfilSeccion(int idSeccion, float nuevaImportancia )
+        /// <summary>
+        /// Consulta para modificar la importancia de una componente del perfil de la seccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="nuevaImportancia"></param>
+        public void ModificarImportanciaPerfilSeccion(int idSeccion, float nuevaImportancia )
         {
             conn.Open();
 
@@ -222,6 +329,11 @@ namespace DST
             conn.Close();
         }
 
+        /// <summary>
+        /// Consulta para obtener el id de la seccion. Es necesario el rut del jefe de seccion
+        /// </summary>
+        /// <param name="rutJefeSeccion"></param>
+        /// <returns></returns>
         public int ObtenerIdSeccion( string rutJefeSeccion )
         {
             int idSeccion = 0;
@@ -242,6 +354,11 @@ namespace DST
             return idSeccion;
         }
 
+        /// <summary>
+        /// Consulta para obtener el nombre de la seccion, es necesario el rut del jefe de seccion.
+        /// </summary>
+        /// <param name="rutJefeSeccion"></param>
+        /// <returns></returns>
         public string ObtenerNombreSeccion(string rutJefeSeccion)
         {
             string nombreSeccion = "";
@@ -262,6 +379,11 @@ namespace DST
             return nombreSeccion;
         }
 
+        /// <summary>
+        /// Consulta para obtener el perfil de la seccion. Es necesario el id de dicha seccion.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
         public Perfil ObtenerPerfilSeccion( int idSeccion )
         {
             Perfil perfilSeccion = new Perfil();
@@ -282,6 +404,11 @@ namespace DST
             return perfilSeccion;
         }
 
+        /// <summary>
+        /// Consulta para obtener el perfil del trabajador. Es necesario el rut de dicho trbajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
         public Perfil ObtenerPerfilTrabajador( string rutTrabajador)
         {
             Perfil perfilTrabajador = new Perfil();
@@ -302,9 +429,14 @@ namespace DST
             return perfilTrabajador;
         }
 
+        /// <summary>
+        /// Consulta para obtener los trabajadores de una seccion. Es necesario el id de la seccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
         public Dictionary<string,Trabajador> ObtenerTrabajadoresSeccion( int idSeccion )
         {
-            Dictionary<string, Trabajador> trabajadores = new Dictionary<string, Trabajador>;
+            Dictionary<string, Trabajador> trabajadores = new Dictionary<string, Trabajador>();
 
             conn.Open();
             cmd.CommandText = "SELECT * FROM trabajadores WHERE idSeccion=" + idSeccion.ToString() + ";";
@@ -322,5 +454,61 @@ namespace DST
 
             return trabajadores;
         }
+
+        /// <summary>
+        /// Consulta para verificar si el rut del usuario esta registrado y habilitado para el login.
+        /// </summary>
+        /// <param name="rutUsuario"></param>
+        /// <returns></returns>
+        public bool VerificarUsuario( string rutUsuario)
+        {
+            bool verificador = false;
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM usuarios WHERE rut='" + rutUsuario + "';";
+            consulta = cmd.ExecuteReader();
+
+            if( consulta.Read() )
+            {
+                verificador = true;
+            }
+            else
+            {
+                verificador = false;
+            }
+
+            conn.Close();
+
+            return verificador;
+        }
+
+        /// <summary>
+        /// Consulta para verificar si  la clave del usuario fue ingresada correctamente
+        /// </summary>
+        /// <param name="clave"></param>
+        /// <returns></returns>
+        public bool VerificarClave( string clave)
+        {
+            bool verificador = false;
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM usuarios WHERE clave='" + clave + "';";
+            consulta = cmd.ExecuteReader();
+
+            if ( consulta.Read() )
+            {
+                verificador = true;
+            }
+            else
+            {
+                verificador = false;
+            }
+
+            conn.Close();
+
+            return verificador;
+        }
+
+
     }
 }
