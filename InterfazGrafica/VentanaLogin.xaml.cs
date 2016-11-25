@@ -82,7 +82,7 @@ namespace InterfazGrafica
                 rutVerificado = true;
             }
             if (rutVerificado && passVerificada)
-                DeterminacionUsuario("JefeSeccion");
+                DeterminacionUsuario("Administrador");
             else
             {
                 await cuadroMensajes.VerificacionUsuarioIncorrecta();
@@ -97,6 +97,9 @@ namespace InterfazGrafica
             if (tipoUsuario.Equals("Administrador"))
             {
                 /*abre ventana admin*/
+                VentanaAdministrador administrador = new VentanaAdministrador();
+                administrador.ShowDialog();
+                this.Close();
             }
             else if (tipoUsuario.Equals("JefeSeccion"))
             {                

@@ -60,7 +60,7 @@ namespace InterfazGrafica
                 componente.Puntaje = Convert.ToDouble(i);
                 componente.Descripcion = "alguna descripcion";
                 componente.Tipo = "un tipo" +i;
-                Trabajador unTrabajador = new Trabajador("12.111.222-"+i,"","","","trabajador "+i,"09/11/1990",perfil);
+                Trabajador unTrabajador = new Trabajador("12.111.222-"+i,"Nombre","Apellido1","Apellido2","09/11/1990","M",perfil);
                 trabajador.Add(unTrabajador);     
             }            
             
