@@ -54,7 +54,7 @@ namespace InterfazGrafica
             string rut = string.Empty;
             if (rutificador.ValidaRut(this.rut.Text, this.digitoVerificador.Text))
             {
-                rut = rutificador.formatoRut(this.rut.Text) + "-" + this.digitoVerificador;
+                rut = rutificador.formatoRut(this.rut.Text) + "-" + this.digitoVerificador.Text;//agrego text
                 this.rut.Text = rutificador.formatoRut(this.rut.Text);
                 camposCompletos++;                
             }

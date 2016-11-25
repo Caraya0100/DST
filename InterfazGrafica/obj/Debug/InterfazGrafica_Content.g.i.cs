@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("iconos/flechaabajo.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("iconos/flechaarriba.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("iconos/usuarios.png")]
 
 

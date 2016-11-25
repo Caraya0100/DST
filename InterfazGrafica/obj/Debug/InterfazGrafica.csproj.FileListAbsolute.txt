@@ -60,3 +60,5 @@ C:\Users\PC\Documents\GitHub\DST\InterfazGrafica\bin\Debug\Perfiles.dll
 C:\Users\PC\Documents\GitHub\DST\InterfazGrafica\bin\Debug\Trabajador.dll
 C:\Users\PC\Documents\GitHub\DST\InterfazGrafica\bin\Debug\Perfiles.pdb
 C:\Users\PC\Documents\GitHub\DST\InterfazGrafica\bin\Debug\Trabajador.pdb
+C:\Users\PC\Documents\GitHub\DST\InterfazGrafica\obj\Debug\VentanaLogin.baml
+C:\Users\PC\Documents\GitHub\DST\InterfazGrafica\obj\Debug\VentanaLogin.g.cs

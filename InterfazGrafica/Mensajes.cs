@@ -27,9 +27,11 @@ namespace InterfazGrafica
         private string cerrarEncuesta;
         private string guardarCambiosPerfilAlSalir;
         private string guardarCambiosPerfil;
+        private string verificacionUsuarioIncorrecta;
         private VentanaJefeSeccion ventanaPrincipal;
         private VentanaAgregarTrabajador ventanaTrabajador;
         private VentanaEncuesta ventanaEncuesta;
+        private VentanaLogin ventanaLogin;
 
         public Mensajes(VentanaJefeSeccion ventana)
         {
@@ -51,6 +53,12 @@ namespace InterfazGrafica
             this.ventanaEncuesta = ventana;
             MensajesPorDefecto();
         }
+        public Mensajes(VentanaLogin ventana)
+        {
+            inicializacionVariables();
+            this.ventanaLogin = ventana;
+            MensajesPorDefecto();
+        }
         private void inicializacionVariables()
         {
             this.nombreSoftware = string.Empty;
@@ -68,6 +76,7 @@ namespace InterfazGrafica
             this.cerrarEncuesta = string.Empty;
             this.guardarCambiosPerfilAlSalir = string.Empty;
             this.guardarCambiosPerfil = string.Empty;
+            this.verificacionUsuarioIncorrecta = string.Empty;
         }
 
 
@@ -88,6 +97,7 @@ namespace InterfazGrafica
             this.cerrarEncuesta = "Antes de salir debe completar la evaluación.";
             this.guardarCambiosPerfilAlSalir = "¿Desea Guardar los cambios realizados en el Perfil antes de salir?.";
             this.guardarCambiosPerfil = "¿Desea Guardar los cambios realizados?.";
+            this.verificacionUsuarioIncorrecta = "Usuario o Contraseña incorrectos, Vuelva a intentarlo.";
         }
 
         async public Task<MessageDialogResult> ConsultaEliminarTrabajador()
@@ -162,6 +172,12 @@ namespace InterfazGrafica
         async public Task<MessageDialogResult> GuardarCambiosPerfil()
         {
             MessageDialogResult resultado = await this.ventanaPrincipal.ShowMessageAsync(nombreSoftware, guardarCambiosPerfil, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public Task<MessageDialogResult> VerificacionUsuarioIncorrecta()
+        {
+            MessageDialogResult resultado = await this.ventanaLogin.ShowMessageAsync(nombreSoftware, verificacionUsuarioIncorrecta, MessageDialogStyle.Affirmative);
             return resultado;
         }
     }

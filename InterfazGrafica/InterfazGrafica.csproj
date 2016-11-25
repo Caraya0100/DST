@@ -104,8 +104,12 @@
     <Compile Include="VentanaJefeSeccion.xaml.cs">
       <DependentUpon>VentanaJefeSeccion.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaLogin.xaml.cs">
+      <DependentUpon>VentanaLogin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VisorEncuestados.cs" />
     <Compile Include="VisorEvaluacion.cs" />
+    <Compile Include="VisorHabilidades.cs" />
     <Compile Include="VisorRanking.cs" />
     <Compile Include="VisorTrabajador.cs" />
     <Page Include="Login.xaml">
@@ -144,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="VentanaJefeSeccion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -207,6 +215,12 @@
   <ItemGroup>
     <Resource Include="Iconos\flechaAbajo.png" />
     <Resource Include="Iconos\flechaArriba.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\logotipo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Iconos\usuarios.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
