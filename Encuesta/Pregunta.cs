@@ -11,6 +11,7 @@ namespace DST
     /// </summary>
     public class Pregunta
     {
+        private string descripcion;
         private Dictionary<string, double> alternativas; // <id, valor>
         private Tuple<double, double, double> respuesta; // <grado, frecuencia, resultado>
         private List<string> componentes; // HB/HD/CF.
@@ -21,6 +22,7 @@ namespace DST
         public Pregunta()
         {
             alternativas = new Dictionary<string, double>();
+            respuesta = new Tuple<double, double, double>(-1, -1, -1);
         }
 
         /// <summary>
@@ -59,6 +61,29 @@ namespace DST
             }
         }
 
+        /// <summary>
+        /// Responde la pregunta, calculando el resultado final a partir 
+        /// del grado y la frecuencia.
+        /// </summary>
+        /// <param name="grado"></param>
+        /// <param name="frecuencia"></param>
+        /// <returns></returns>
+        public double Responder(double grado, double frecuencia)
+        {
+            double resultado = -1;
+            if (frecuencia >= 0)
+            {
+                resultado = grado * frecuencia;
+                Respuesta = new Tuple<double, double, double>(grado, frecuencia, resultado);
+            } else
+            {
+                // Si la pregunta no tiene frecuencia.
+                resultado = grado;
+            }
+
+            return resultado;
+        }
+
         public Dictionary<string, double> Alternativas
         {
             get { return alternativas; }
@@ -75,6 +100,12 @@ namespace DST
         {
             get { return componentes; }
             set { componentes = value; }
+        }
+
+        public string Descripcion
+        {
+            get { return descripcion; }
+            set { descripcion = value; }
         }
     }
 }
