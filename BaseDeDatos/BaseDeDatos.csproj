@@ -46,6 +46,9 @@
     <Compile Include="AdminLD.cs" />
     <Compile Include="AdminReglas.cs" />
     <Compile Include="BaseDeDatos.cs" />
+    <Compile Include="AdminTrabajador.cs" />
+    <Compile Include="AdminSeccion.cs" />
+    <Compile Include="AdminUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

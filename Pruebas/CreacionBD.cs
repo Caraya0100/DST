@@ -33,7 +33,11 @@ namespace Pruebas
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS secciones("
             + "id MEDIUMINT NOT NULL AUTO_INCREMENT,"
             + "nombre text,"
-            + "primary key(id)"
+            + "descripcion text,"
+            + "rutJefe varchar(12),"
+            + "primary key(id),"
+            + "foreign key(rutJefe) references usuarios(rut)"
+            + "on delete no action on update no action"
             + ");";
             cmd.ExecuteNonQuery();
 
