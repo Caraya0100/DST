@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DST;
 
-namespace Pruebas
+namespace DST
 {
     public class PruebaEvaluacion360
     {

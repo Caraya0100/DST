@@ -43,6 +43,8 @@ namespace DST
 
             consulta = cmd.ExecuteReader();
 
+
+
             while (consulta.Read())
             {
                 if (consulta.GetString(3).Equals("antecedente"))
@@ -56,13 +58,6 @@ namespace DST
                 }
                 else if (consulta.GetString(3).Equals("consecuente"))
                 {
-                    /*
-                    regla = regla.Remove( regla.Length - 3 );
-                    regla += " ENTONCES ";
-
-                    regla += consulta.GetString(1);
-                    regla += " ES ";
-                    //regla += consulta.GetString(2);*/
                     regla = sb.ToString();
                     regla = regla.Remove(regla.Length - 3);
 
@@ -97,7 +92,7 @@ namespace DST
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO regla (idRegla,operador,nombreVariable,nombreValor,tipoVariable,"
+            cmd.CommandText = "INSERT INTO regla(idRegla,operador,nombreVariable,nombreValor,tipoVariable,"
                 + "idSeccion,tipoComponente) VALUES("+ idRegla.ToString() + ",'" + operador + "','" + nombreVariable + "','"
                 + nombreValor + "','" + tipoVariable + "'," + idSeccion.ToString() + ",'" + tipoComponente + "');";
             
@@ -110,11 +105,29 @@ namespace DST
         /// Devuelve las reglas de inferencia de una seccion desde la base de datos.
         /// </summary>
         /// <param name="idSeccion"></param>
-        /// <param name="tipo"></param>
+        /// <param name="tipoComponente"></param>
         /// <returns></returns>
-        public static Dictionary<string, string> ReglasSeccion(int idSeccion, string tipo)
+        public Dictionary<string, string> ReglasSeccion(int idSeccion, string tipoComponente)
         {
             Dictionary<string, string> reglas = new Dictionary<string, string>();
+
+            conn.Open();
+
+            cmd.CommandText = "SELECT DISTINCT idRegla FROM regla WHERE idSeccion=" + idSeccion.ToString() 
+                + "AND tipoComponente='" + tipoComponente +"';";
+
+            consulta = cmd.ExecuteReader();
+
+            while (consulta.Read())
+            {
+                //string nuevaRegla = "";
+
+                //nuevaRegla = ObtenerRegla(consulta.GetInt16( 0 ));
+
+                reglas.Add( consulta.GetInt16(0).ToString(), ObtenerRegla( consulta.GetInt16(0) ) );
+            }
+
+            conn.Close();
 
             return reglas;
         }

@@ -16,6 +16,7 @@ namespace Pruebas
             //new PruebaInferencia().PruebaPropina(3.0, 8.0, 1.0);
             AdminBD prueba = new AdminBD();
             //prueba.obtenerEmpresa();
+
             /*
             prueba.InsertarEmpresa("lider milagro","8765432-1","la otra esquina");
 
@@ -28,10 +29,12 @@ namespace Pruebas
             
 
 
-            prueba.InsertarSeccion("casa", "17263145-4");
-            prueba.InsertarSeccion("electro", "15263145-4");
-            prueba.InsertarSeccion("carniceria", "14263145-4");
+            prueba.InsertarSeccion("casa", "descripcion seccion casa", "17263145-4");
+            prueba.InsertarSeccion("electro", "descripcion seccion electro", "15263145-4");
+            prueba.InsertarSeccion("carniceria", "descripcion seccion carniceria", "14263145-4");
+            
 
+            
             //new PruebaEvaluacionCapacidad();
 
             
@@ -120,8 +123,8 @@ namespace Pruebas
             Console.WriteLine("{0}", pruebaConcatenacion);
             Console.ReadKey();
             */
-            
-            AdminReglas pruebaAdminReglas = new AdminReglas();
+
+            //AdminReglas pruebaAdminReglas = new AdminReglas();
 
             /*
             pruebaAdminReglas.GuardarRegla(1,"Y","Autocontrol","promedio","antecedente",1,"hb");
@@ -131,9 +134,15 @@ namespace Pruebas
             pruebaAdminReglas.GuardarRegla(1, "Y", "Habilidades Blandas", "altas", "consecuente", 1, "general");
             */
 
+            /*
             string reglaObtenida = pruebaAdminReglas.ObtenerRegla( 1 );
             Console.WriteLine("{0}", reglaObtenida);
             Console.ReadKey();
+
+            prueba.ObtenerRutJefeSeccion( "electro" );
+            */
+
+            prueba.ModificarPuntajePerfilSeccion(1,"Afabilidad",40);
         }
     }
 }
