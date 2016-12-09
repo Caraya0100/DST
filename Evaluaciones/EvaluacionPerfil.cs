@@ -28,23 +28,26 @@ namespace DST
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
             Dictionary<string, string> reglas = new Dictionary<string, string>();
 
+            AdminLD adminLD = new AdminLD();
+            AdminReglas adminReglas = new AdminReglas();
+
             // Evaluamos las HB, HD, Y CF.
             datos = Datos(p.Blandas);
-            variables = AdminLD.VariablesLinsguisticas(p.Blandas);
+            variables = adminLD.VariablesLinsguisticas(p.Blandas);
             variables.Add(variablesM.HBPerfil); // Consecuente.
-            reglas = AdminReglas.ReglasSeccion(idSeccion, "HB");
+            reglas = adminReglas.ReglasSeccion(idSeccion, "HB");
             p.HB.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             datos = Datos(p.Duras);
-            variables = AdminLD.VariablesLinsguisticas(p.Duras);
+            variables = adminLD.VariablesLinsguisticas(p.Duras);
             variables.Add(variablesM.HDPerfil); // Consecuente.
-            reglas = AdminReglas.ReglasSeccion(idSeccion, "HD");
+            reglas = adminReglas.ReglasSeccion(idSeccion, "HD");
             p.HD.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             datos = Datos(p.Fisicas);
-            variables = AdminLD.VariablesLinsguisticas(p.Fisicas);
+            variables = adminLD.VariablesLinsguisticas(p.Fisicas);
             variables.Add(variablesM.CFPerfil); // Consecuente.
-            reglas = AdminReglas.ReglasSeccion(idSeccion, "CF");
+            reglas = adminReglas.ReglasSeccion(idSeccion, "CF");
             p.CF.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             return p;

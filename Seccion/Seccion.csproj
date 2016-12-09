@@ -45,6 +45,10 @@
     <Compile Include="Seccion.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Evaluaciones\Evaluaciones.csproj">
+      <Project>{505bbfb4-82ad-4446-b55a-57cb479668e9}</Project>
+      <Name>Evaluaciones</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Perfiles\Perfil.csproj">
       <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
       <Name>Perfil</Name>

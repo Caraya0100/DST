@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="EvaluacionCapacidad.cs" />
+    <Compile Include="EvaluacionDesempeno.cs" />
     <Compile Include="EvaluacionDifusa.cs" />
     <Compile Include="EvaluacionPerfil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

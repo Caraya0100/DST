@@ -77,7 +77,7 @@ namespace InterfazGrafica
             {
                 passVerificada = true;
             }
-            if (rutFormateado.Equals("17.626.128-5"))
+            if (rutFormateado.Equals("17.980.134-5"))
             {
                 rutVerificado = true;
             }
@@ -98,14 +98,14 @@ namespace InterfazGrafica
             {
                 /*abre ventana admin*/
                 VentanaAdministrador administrador = new VentanaAdministrador();
-                administrador.ShowDialog();
-                this.Close();
+                administrador.Show();
+                this.Visibility = Visibility.Hidden;
             }
             else if (tipoUsuario.Equals("JefeSeccion"))
             {                
                 VentanaJefeSeccion jefeSeccion = new VentanaJefeSeccion();
-                jefeSeccion.ShowDialog();
-                this.Close();
+                jefeSeccion.Show();
+                this.Visibility = Visibility.Hidden;
             }
             else if (tipoUsuario.Equals("Psicologo"))
             {

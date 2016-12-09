@@ -48,13 +48,11 @@ namespace DST
         /// <param name="minimo"></param>
         /// <param name="maximo"></param>
         /// <param name="tipo"></param>
-        public void InsertarVariableLinguistica( int idRegla, string nombre, double minimo, double maximo, 
-            string tipo)
+        public void InsertarVariableLinguistica(string nombre, double minimo, double maximo)
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO variablesLing(idRegla,nombre,minimo,maximo,tipo) VALUES(" + idRegla.ToString()
-                + ",'" + nombre + "'," + minimo.ToString() + "," + maximo.ToString() + ",'" + tipo + "');";
+            cmd.CommandText = "INSERT INTO variablesLing(nombre,minimo,maximo) VALUES('" + nombre + "'," + minimo.ToString() + "," + maximo.ToString() + ");";
 
             cmd.ExecuteNonQuery();
 
@@ -116,13 +114,160 @@ namespace DST
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO funcionTrapezoide(nombreVariableLing,nombreValorLing,valorIzquierda,"
+            cmd.CommandText = "INSERT INTO funcionTriangular(nombreVariableLing,nombreValorLing,valorIzquierda,"
                 + "valorCentro,valorDerecha) VALUES('" + nombreVariableLing + "','" + nombreValorLing + "'," 
                 + valorIzquierda + "," + valorCentro + "," + valorDerecha + ");";
 
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+
+        /// <summary>
+        /// Obtiene una función de pertenencia a partir del nombre de la 
+        /// variable linguistica y el nombre del valor linguistico.
+        /// </summary>
+        /// <param name="nombreVariable"></param>
+        /// <param name="nombreValor"></param>
+        /// <returns>Retorna null si no se encontro ninguna funcion de pertenencia</returns>
+        public FuncionTriangular ObtenerFuncionTriangular(string nombreVariable, string nombreValor)
+        {
+            FuncionTriangular fp = null;
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM funciontrapezoide WHERE nombreVariableLing='" + nombreVariable + " ' AND " + "nombreValorLing='" + nombreValor + ";";
+            consulta = cmd.ExecuteReader();
+
+            if (consulta.Read())
+            {
+                fp = new FuncionTriangular(
+                    consulta.GetDouble("valorIzquierda"),
+                    consulta.GetDouble("valorCentro"),
+                    consulta.GetDouble("valorDerecha")
+                );
+            }
+
+            conn.Close();
+
+            return fp;
+        }
+
+        /// <summary>
+        /// Obtiene una función de pertenencia a partir del nombre de la 
+        /// variable linguistica y el nombre del valor linguistico.
+        /// </summary>
+        /// <param name="nombreVariable"></param>
+        /// <param name="nombreValor"></param>
+        /// <returns>Retorna null si no se encontro ninguna funcion de pertenencia</returns>
+        public FuncionTrapezoidal ObtenerFuncionTrapezoidal(string nombreVariable, string nombreValor)
+        {
+            FuncionTrapezoidal fp = null;
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM funciontrapezoide WHERE nombreVariableLing='" + nombreVariable + " ' AND " + "nombreValorLing='" + nombreValor + ";";
+            consulta = cmd.ExecuteReader();
+
+            if (consulta.Read())
+            {
+                fp = new FuncionTrapezoidal(
+                    consulta.GetDouble("valorInferiorIzquierdo"),
+                    consulta.GetDouble("valorSuperiorIzquierdo"),
+                    consulta.GetDouble("valorSuperiorDerecho"),
+                    consulta.GetDouble("valorInferiorDerecho")
+                );
+            }
+
+            conn.Close();
+
+            return fp;
+        }
+
+        public ValorLinguistico ObtenerValor(string nombre)
+        {
+            ValorLinguistico valor = null;
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM usuarios WHERE nombre='" + nombre + "';";
+            consulta = cmd.ExecuteReader();
+
+            if (consulta.Read())
+            {
+                
+            }
+
+            conn.Close();
+
+            return valor;
+        }
+
+        /// <summary>
+        /// Obtiene los valores linguisticos a partir del nombre de la 
+        /// variable linguistica.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <returns></returns>
+        public List<ValorLinguistico> ObtenerValores(string nombreVariable)
+        {
+            List<ValorLinguistico> valores = new List<ValorLinguistico>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM valoresLing WHERE nombreVariableLing='" + nombreVariable + "';";
+            consulta = cmd.ExecuteReader();
+
+            if (consulta.Read())
+            {
+                string nombreValor = consulta.GetString("nombre");
+                if (consulta.GetString("tipoFuncion") == "trapezoidal")
+                {
+                    FuncionTrapezoidal fp = ObtenerFuncionTrapezoidal(nombreVariable, nombreValor);
+                    valores.Add(new ValorLinguistico(nombreValor, fp));
+
+                }
+                else if (consulta.GetString("tipoFuncion") == "trapezoidal")
+                {
+                    FuncionTriangular fp = ObtenerFuncionTriangular(nombreVariable, nombreValor);
+                    valores.Add(new ValorLinguistico(nombreValor, fp));
+
+                }
+            }
+
+            conn.Close();
+
+            return valores;
+        }
+
+        /// <summary>
+        /// Obtiene una variable linguistica a partir de su nombre.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <returns></returns>
+        public VariableLinguistica ObtenerVariable(string nombre)
+        {
+            VariableLinguistica variable = null;
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM variablesling WHERE nombre='" + nombre + "';";
+            consulta = cmd.ExecuteReader();
+
+            if (consulta.Read())
+            {
+                // Instanceamos la variable linguistica.
+                variable = new VariableLinguistica(
+                    consulta.GetString("nombre"),
+                    consulta.GetDouble("minimo"),
+                    consulta.GetDouble("maximo")
+                );
+                // Agregamos los valores linguisticos.
+                List<ValorLinguistico> valores = ObtenerValores(nombre);
+                foreach (ValorLinguistico valor in valores)
+                {
+                    variable.AgregarValorLinguistico(valor);
+                }
+            }
+
+            conn.Close();
+
+            return variable;
         }
     }
 }

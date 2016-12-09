@@ -194,5 +194,16 @@ namespace InterfazGrafica
             MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, cerrarSesion, MessageDialogStyle.AffirmativeAndNegative);
             return resultado;
         }
+
+        /// <summary>
+        /// Muestra un dialogo para confirmar (botones si/no).
+        /// </summary>
+        /// <param name="mensaje"></param>
+        /// <returns></returns>
+        async public Task<MessageDialogResult> Confirmar(string mensaje, string subMensaje)
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(mensaje, subMensaje, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
     }
 }
