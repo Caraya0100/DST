@@ -7,19 +7,24 @@ using MySql.Data.MySqlClient;
 
 namespace DST
 {
-    class AdminTrabajador
+    public class AdminTrabajador
     {
         private MySqlConnection conn;
+        private MySqlConnection conn2;
         private BaseDeDatos bd;
         private MySqlDataReader consulta;
+        private MySqlDataReader consulta2;
         private MySqlCommand cmd;
-        
+        private MySqlCommand cmd2;
+
         public AdminTrabajador()
         {
             bd = new BaseDeDatos();
             //conn = bd.conectarBD(servidor, usuario, password, nombreBD);
             conn = bd.conectarBD();
+            conn2 = bd.conectarBD();
             cmd = conn.CreateCommand();
+            cmd2 = conn2.CreateCommand();
 
         }
 
@@ -92,18 +97,20 @@ namespace DST
         {
             Perfil perfilTrabajador = new Perfil();
 
-            conn.Open();
-            cmd.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,t.puntaje FROM componentesPerfil AS c,"
+            //conn.Close();
+
+            conn2.Open();
+            cmd2.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,t.puntaje FROM componentesPerfil AS c,"
                 + "componentesPerfilTrabajadores AS t WHERE t.rut='" + rutTrabajador + "' AND c.nombre=t.nombre;";
-            consulta = cmd.ExecuteReader();
-            while (consulta.Read())
+            consulta2 = cmd2.ExecuteReader();
+            while (consulta2.Read())
             {
-                Componente nuevoComponente = new Componente(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
-                    consulta.GetDouble(3), -1);
+                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2),
+                    consulta2.GetDouble(3), -1);
                 perfilTrabajador.AgregarComponente(nuevoComponente);
             }
 
-            conn.Close();
+            conn2.Close();
 
             return perfilTrabajador;
         }

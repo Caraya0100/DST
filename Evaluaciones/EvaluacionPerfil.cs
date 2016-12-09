@@ -20,13 +20,15 @@ namespace DST
         /// <param name="perfil"></param>
         /// <param name="reglas"></param>
         /// <returns></returns>
-        public static Perfil Ejecutar(Perfil perfil, int idSeccion)
+        /*public static Perfil Ejecutar(Perfil perfil, int idSeccion)
         {
             VariablesMatching variablesM = new VariablesMatching();
             Perfil p = new Perfil(perfil);
             Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
             Dictionary<string, string> reglas = new Dictionary<string, string>();
+
+            
 
             // Evaluamos las HB, HD, Y CF.
             datos = Datos(p.Blandas);
@@ -48,7 +50,7 @@ namespace DST
             p.CF.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             return p;
-        }
+        }*/
 
         /// <summary>
         /// Devuelve los datos a partir
