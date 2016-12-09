@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminBD.cs" />
+    <Compile Include="AdminDesempeño.cs" />
     <Compile Include="AdminLD.cs" />
     <Compile Include="AdminPerfil.cs" />
     <Compile Include="AdminReglas.cs" />
@@ -61,9 +62,17 @@
       <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
       <Name>Perfil</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Seccion\Seccion.csproj">
+      <Project>{a2ff8f06-99d4-483c-b619-8e343947b23f}</Project>
+      <Name>Seccion</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Trabajador\Trabajador.csproj">
       <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
       <Name>Trabajador</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Usuario\Usuario.csproj">
+      <Project>{0d750954-5cc0-4800-8270-f28c79a86d86}</Project>
+      <Name>Usuario</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4CF96DAB-7C42-41E3-AFD7-0E1262655BFA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0D750954-5CC0-4800-8270-F28C79A86D86}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pruebas</RootNamespace>
-    <AssemblyName>Pruebas</AssemblyName>
+    <RootNamespace>Usuario</RootNamespace>
+    <AssemblyName>Usuario</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,69 +33,48 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreacionBD.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PruebaEvaluacion360.cs" />
-    <Compile Include="PruebaEvaluacionCapacidad.cs" />
-    <Compile Include="PruebaInferencia.cs" />
+    <Compile Include="Solicitud.cs" />
+    <Compile Include="Usuario.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BaseDeDatos\BaseDeDatos.csproj">
-      <Project>{5b24a143-1bd9-4e73-a31f-dd6577a6886e}</Project>
-      <Name>BaseDeDatos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Encuesta\Encuesta.csproj">
-      <Project>{5893d1de-c96f-44a4-8fa4-53870d8048d7}</Project>
-      <Name>Encuesta</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Evaluaciones\Evaluaciones.csproj">
-      <Project>{505bbfb4-82ad-4446-b55a-57cb479668e9}</Project>
-      <Name>Evaluaciones</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integracion\Integracion.csproj">
-      <Project>{bbef19d7-d718-4057-88ca-10e8ad56b980}</Project>
-      <Name>Integracion</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
-      <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
-      <Name>LogicaDifusa</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Perfiles\Perfil.csproj">
-      <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
-      <Name>Perfil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Seccion\Seccion.csproj">
-      <Project>{a2ff8f06-99d4-483c-b619-8e343947b23f}</Project>
-      <Name>Seccion</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SistemaInferencia\SistemaInferencia.csproj">
-      <Project>{1904ccc6-ce97-4610-80fc-5349274e3c31}</Project>
-      <Name>SistemaInferencia</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Trabajador\Trabajador.csproj">
-      <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
-      <Name>Trabajador</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Usuario\Usuario.csproj">
-      <Project>{0d750954-5cc0-4800-8270-f28c79a86d86}</Project>
-      <Name>Usuario</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

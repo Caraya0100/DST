@@ -7,12 +7,15 @@ using MySql.Data.MySqlClient;
 
 namespace DST
 {
-    class AdminSeccion
+    public class AdminSeccion
     {
         private MySqlConnection conn;
+        private MySqlConnection conn2;
         private BaseDeDatos bd;
         private MySqlDataReader consulta;
+        private MySqlDataReader consulta2;
         private MySqlCommand cmd;
+        private MySqlCommand cmd2;
 
         //public AdminBD (string servidor, string usuario, string password, string nombreBD)
         public AdminSeccion()
@@ -21,6 +24,8 @@ namespace DST
             //conn = bd.conectarBD(servidor, usuario, password, nombreBD);
             conn = bd.conectarBD();
             cmd = conn.CreateCommand();
+            conn2 = bd.conectarBD();
+            cmd2 = conn2.CreateCommand();
 
         }
 
@@ -178,20 +183,48 @@ namespace DST
         {
             Perfil perfilSeccion = new Perfil();
 
-            conn.Open();
-            cmd.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia FROM componentesPerfil AS c,"
-                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + "AND c.nombre=s.nombre;";
-            consulta = cmd.ExecuteReader();
-            while (consulta.Read())
+            conn2.Open();
+            cmd2.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia FROM componentesPerfil AS c,"
+                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.nombre=s.nombre;";
+            consulta2 = cmd2.ExecuteReader();
+            while (consulta2.Read())
             {
-                Componente nuevoComponente = new Componente(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
-                    consulta.GetDouble(3), consulta.GetDouble(4));
+                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), 
+                    consulta2.GetString(2),consulta2.GetDouble(3), consulta2.GetDouble(4));
                 perfilSeccion.AgregarComponente(nuevoComponente);
             }
 
-            conn.Close();
+            conn2.Close();
 
             return perfilSeccion;
+        }
+
+        /// <summary>
+        /// Funcion que retorna una lista de las secciones con todos sus campos.
+        /// Esta debe ser usada en la ventana del administrador.
+        /// </summary>
+        /// <returns></returns>
+        public List<Seccion> ObtenerSecciones()
+        {
+            List<Seccion> secciones = new List<Seccion>();
+
+            AdminTrabajador obtenerTrabajadores = new AdminTrabajador();
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM secciones;";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                Seccion nuevaSeccion = new Seccion( consulta.GetString(1), consulta.GetInt16(0),
+                    ObtenerPerfilSeccion(consulta.GetInt16(0)), 
+                    obtenerTrabajadores.ObtenerTrabajadoresSeccion( consulta.GetInt16(0) ) );
+                secciones.Add( nuevaSeccion );
+            }
+            
+
+            conn.Close();
+
+            return secciones;
         }
 
     }

@@ -14,7 +14,7 @@ namespace Pruebas
             //new CreacionBD();
 
             //new PruebaInferencia().PruebaPropina(3.0, 8.0, 1.0);
-            AdminBD prueba = new AdminBD();
+            //AdminBD prueba = new AdminBD();
             //prueba.obtenerEmpresa();
 
             /*
@@ -142,7 +142,29 @@ namespace Pruebas
             prueba.ObtenerRutJefeSeccion( "electro" );
             */
 
-            prueba.ModificarPuntajePerfilSeccion(1,"Afabilidad",40);
+            //prueba.ModificarPuntajePerfilSeccion(1,"Afabilidad",40);
+
+            /*
+            AdminTrabajador consultasTrabajador = new AdminTrabajador();*/
+            AdminTrabajador consultasTrabajador = new AdminTrabajador();
+
+            List<Trabajador> trabajadores = consultasTrabajador.ObtenerTrabajadoresEmpresa();
+
+            foreach (Trabajador trabajador in trabajadores)
+            {
+                Console.WriteLine("{0} {1} {2}", trabajador.Nombre, trabajador.ApellidoPaterno, trabajador.ApellidoMaterno );
+                Console.ReadKey();
+            }
+
+            AdminSeccion consultasSeccion = new AdminSeccion();
+
+            List<Seccion> secciones = consultasSeccion.ObtenerSecciones();
+
+            foreach(Seccion seccion in secciones)
+            {
+                Console.WriteLine("{0} {1}", seccion.IdSeccion, seccion.Nombre );
+                Console.ReadKey();
+            }
         }
     }
 }
