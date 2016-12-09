@@ -108,7 +108,7 @@ namespace DST
             List<string> listaNombreJefesDeSeccion = new List<string>();
 
             conn.Open();
-            cmd.CommandText = "SELECT * FROM usuarios WHERE tipoUsuario='JEFE_SECCION';";
+            cmd.CommandText = "SELECT * FROM usuarios WHERE tipoUsuario='JEFE_SECCION' AND estado=1;";
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
             {
@@ -136,6 +136,56 @@ namespace DST
 
             cmd.CommandText = "UPDATE usuarios SET nombre='" + nuevoNombre + "',rut='" + nuevoRut + "',clave='"
                 + nuevaClave + "' WHERE rut='" + rutActual + "';";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public List<Usuario> ObtenerUsuarios()
+        {
+            List<Usuario> usuarios = new List<Usuario>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM usuarios WHERE estado=1;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                Usuario nuevoUsuario = new Usuario(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
+                    consulta.GetString(3));
+                usuarios.Add( nuevoUsuario );
+            }
+
+            conn.Close();
+
+            return usuarios;
+        }
+
+        /// <summary>
+        /// Consulta para borrar a un usuario permanentemente
+        /// </summary>
+        /// <param name="rutUsuario"></param>
+        public void BorrarUsuario( string rutUsuario )
+        {
+            conn.Open();
+
+            cmd.CommandText = "DELETE FROM usuarios WHERE rut='" + rutUsuario + "';";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Funcion de la consulta que permite cambiar el estado de un usuario de true a false
+        /// true para cuando esta activo
+        /// false para cuando esta inactivo
+        /// </summary>
+        /// <param name="nuevoEstado"></param>
+        public void CambiarEstadoUsuario( string rutUsuario, bool nuevoEstado )
+        {
+            conn.Open();
+
+            cmd.CommandText = "UPDATE usuarios SET estado=" + nuevoEstado + " WHERE rut='" + rutUsuario + "';";
             cmd.ExecuteNonQuery();
 
             conn.Close();
