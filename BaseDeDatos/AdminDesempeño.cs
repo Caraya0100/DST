@@ -81,7 +81,7 @@ namespace DST
         /// <param name="mes"></param>
         /// <param name="año"></param>
         /// <param name="ventasAñoAnterior"></param>
-        public void InsertarVentasAñoAnterior(int idSeccion, string mes, string año, float ventasAñoAnterior)
+        public void InsertarVentasAñoAnterior(int idSeccion, string mes, string año, double ventasAñoAnterior)
         {
             conn.Open();
 
@@ -99,7 +99,7 @@ namespace DST
         /// <param name="mes"></param>
         /// <param name="año"></param>
         /// <param name="ventasPlan"></param>
-        public void InsertarVentasPlan(int idSeccion, string mes, string año, float ventasPlan)
+        public void InsertarVentasPlan(int idSeccion, string mes, string año, double ventasPlan)
         {
             conn.Open();
 
@@ -203,6 +203,20 @@ namespace DST
             conn.Close();
 
             return solicitudes;
+        }
+
+        public void InsertarEvaluacion( string rutTrabajador, int idSeccionEvaluacion, double capacidadTrabajador,
+            double gradoIgualdadHB, double gradoIgualdadHD, double gradoIgualdadCF)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO capacidadTrabajador(rutTrabajador,idSeccionEvaluacion,capacidadTrabajador,"
+                + "gradoIgualdadHB,gradoIgualdadHD,gradoIgualdadCF) VALUES ('" + rutTrabajador + "'," 
+                + idSeccionEvaluacion.ToString() + "," + gradoIgualdadHB.ToString() + "," + gradoIgualdadHD.ToString() 
+                + "," + gradoIgualdadCF.ToString() + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
         }
     }
 }
