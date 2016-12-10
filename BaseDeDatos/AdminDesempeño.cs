@@ -205,6 +205,15 @@ namespace DST
             return solicitudes;
         }
 
+        /// <summary>
+        /// Guarda los resultados de la evaluacion de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <param name="idSeccionEvaluacion"></param>
+        /// <param name="capacidadTrabajador"></param>
+        /// <param name="gradoIgualdadHB"></param>
+        /// <param name="gradoIgualdadHD"></param>
+        /// <param name="gradoIgualdadCF"></param>
         public void InsertarEvaluacion( string rutTrabajador, int idSeccionEvaluacion, double capacidadTrabajador,
             double gradoIgualdadHB, double gradoIgualdadHD, double gradoIgualdadCF)
         {
@@ -217,6 +226,91 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+
+        public void InsertarEvaluacionTrabajador( string fechaEvaluacion, string rutTrabajador, double hb, double hd,
+            double cf)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO evaluacionTrabajador(fechaEvaluacion,rutTrabajador,hb,hd,cf) VALUES ('" 
+                + fechaEvaluacion + "','"+ rutTrabajador + "'," + hb.ToString() + "," + hd.ToString()
+                + "," + cf.ToString() + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente para las habilidades blandas de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeHB( string rutTrabajador)
+        {
+            double puntajeHB = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)" 
+                + "FROM evaluaciontrabajador WHERE rutTrabajador ='" + rutTrabajador + "');" ;
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeHB = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeHB;
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente para las habilidades duras de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeHD(string rutTrabajador)
+        {
+            double puntajeHD = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT hd FROM evaluaciontrabajador WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE rutTrabajador ='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeHD = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeHD;
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente para las caracteristicas fisicas de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeCF(string rutTrabajador)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT cf FROM evaluaciontrabajador WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE rutTrabajador ='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
         }
     }
 }
