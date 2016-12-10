@@ -148,7 +148,32 @@ namespace DST
 
             return nombreSeccion;
         }
-        
+
+        /// <summary>
+        /// Obtiene el nombre de la seccion con el id de la seeccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
+        public string ObtenerNombreSeccion(int idSeccion)
+        {
+            string nombreSeccion = "";
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre FROM secciones WHERE id='" + idSeccion + "';";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nombreSeccion = consulta.GetString(0);
+            }
+
+            Console.WriteLine("Nombre: {0}", nombreSeccion);
+            Console.ReadKey();
+
+            conn.Close();
+
+            return nombreSeccion;
+        }
+
         /// <summary>
         /// Consulta para obtener el rut del jefe de seccion a partir del nombre de la seccion
         /// </summary>
