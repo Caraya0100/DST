@@ -14,41 +14,47 @@ namespace Pruebas
             //new CreacionBD();
 
             //new PruebaInferencia().PruebaPropina(3.0, 8.0, 1.0);
-            //AdminBD prueba = new AdminBD();
+
             //prueba.obtenerEmpresa();
 
-            /*
+            AdminBD prueba = new AdminBD();
+            AdminUsuario consultasUsuario = new AdminUsuario();
+            AdminSeccion consultasSeccion = new AdminSeccion();
+            AdminTrabajador consultasTrabajador = new AdminTrabajador();
+
+            
             prueba.InsertarEmpresa("lider milagro","8765432-1","la otra esquina");
 
             
-            prueba.InsertarUsuario("Jose Martinez","17167145-4","1234","ADMINISTRADOR",true);
-            prueba.InsertarUsuario("Jose Martinez","17163145-3","1234", "ADMINISTRADOR",false);
-            prueba.InsertarUsuario("Cristan Araya","17263145-4","1234", "JEFE_SECCION",true);
-            prueba.InsertarUsuario("Carlos Barraza", "15263145-4", "1234", "JEFE_SECCION", true);
-            prueba.InsertarUsuario("Ivan Ibarra", "14263145-4", "1234", "JEFE_SECCION", true);
+
+            consultasUsuario.InsertarUsuario("Jose Martinez","17167145-4","1234","ADMINISTRADOR",true);
+            consultasUsuario.InsertarUsuario("Jose Martinez","17163145-3","1234", "ADMINISTRADOR",false);
+            consultasUsuario.InsertarUsuario("Cristan Araya","17263145-4","1234", "JEFE_SECCION",true);
+            consultasUsuario.InsertarUsuario("Carlos Barraza", "15263145-4", "1234", "JEFE_SECCION", true);
+            consultasUsuario.InsertarUsuario("Ivan Ibarra", "14263145-4", "1234", "JEFE_SECCION", true);
             
 
 
-            prueba.InsertarSeccion("casa", "descripcion seccion casa", "17263145-4");
-            prueba.InsertarSeccion("electro", "descripcion seccion electro", "15263145-4");
-            prueba.InsertarSeccion("carniceria", "descripcion seccion carniceria", "14263145-4");
+            consultasSeccion.InsertarSeccion("casa", "17263145-4");
+            consultasSeccion.InsertarSeccion("electro", "15263145-4");
+            consultasSeccion.InsertarSeccion("carniceria", "14263145-4");
             
 
             
             //new PruebaEvaluacionCapacidad();
 
             
-           prueba.InsertarTrabajador("Juan", "Perez", "Contreras", "21394189-5","1996-12-10",1, "M",true);
-           prueba.InsertarTrabajador("Juan", "Pizarro", "Contreras", "21394182-3", "1993-12-10", 1, "M", true);
-           prueba.InsertarTrabajador("Juan", "Maganha", "Contreras", "11394189-4", "1991-12-10", 1, "M", true);
+           consultasTrabajador.InsertarTrabajador("Juan", "Perez", "Contreras", "21394189-5","1996-12-10",1, "M",true);
+           consultasTrabajador.InsertarTrabajador("Juan", "Pizarro", "Contreras", "21394182-3", "1993-12-10", 1, "M", true);
+           consultasTrabajador.InsertarTrabajador("Juan", "Maganha", "Contreras", "11394189-4", "1991-12-10", 1, "M", true);
 
-           prueba.InsertarTrabajador("Pedro", "Perez", "Contreras", "18628068-7", "1996-12-10", 2, "M", true);
-           prueba.InsertarTrabajador("Pedro", "Pizarro", "Contreras", "14628068-3", "1992-12-10", 2, "M", true);
-           prueba.InsertarTrabajador("Pedro", "Maganha", "Contreras", "13628068-4", "1990-12-10", 2, "M", true);
+           consultasTrabajador.InsertarTrabajador("Pedro", "Perez", "Contreras", "18628068-7", "1996-12-10", 2, "M", true);
+           consultasTrabajador.InsertarTrabajador("Pedro", "Pizarro", "Contreras", "14628068-3", "1992-12-10", 2, "M", true);
+           consultasTrabajador.InsertarTrabajador("Pedro", "Maganha", "Contreras", "13628068-4", "1990-12-10", 2, "M", true);
 
-           prueba.InsertarTrabajador("Pablo", "Perez", "Contreras", "12508974-5", "1980-12-10", 3, "M", true);
-           prueba.InsertarTrabajador("Pablo", "Pizarro", "Contreras", "22538974-3", "1986-12-10", 3, "M", true);
-           prueba.InsertarTrabajador("Pablo", "Maganha", "Contreras", "22208974-4", "1976-12-10", 3, "M", true);
+           consultasTrabajador.InsertarTrabajador("Pablo", "Perez", "Contreras", "12508974-5", "1980-12-10", 3, "M", true);
+           consultasTrabajador.InsertarTrabajador("Pablo", "Pizarro", "Contreras", "22538974-3", "1986-12-10", 3, "M", true);
+           consultasTrabajador.InsertarTrabajador("Pablo", "Maganha", "Contreras", "22208974-4", "1976-12-10", 3, "M", true);
            
 
             
@@ -73,28 +79,28 @@ namespace Pruebas
             
 
             
-            prueba.InsertarComponentePerfilSeccion(1, "Responsabilidad", 50, 30);
-            prueba.InsertarComponentePerfilSeccion(1, "Proactividad", 50, 30);
-            prueba.InsertarComponentePerfilSeccion(1, "Afabilidad", 50, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(1, "Responsabilidad", 50, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(1, "Proactividad", 50, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(1, "Afabilidad", 50, 30);
 
-            prueba.InsertarComponentePerfilSeccion(2, "Responsabilidad", 50, 30);
-            prueba.InsertarComponentePerfilSeccion(2, "Proactividad", 40, 30);
-            prueba.InsertarComponentePerfilSeccion(2, "Afabilidad", 50, 80);
+            consultasSeccion.InsertarComponentePerfilSeccion(2, "Responsabilidad", 50, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(2, "Proactividad", 40, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(2, "Afabilidad", 50, 80);
 
-            prueba.InsertarComponentePerfilSeccion(3, "Responsabilidad", 70, 30);
-            prueba.InsertarComponentePerfilSeccion(3, "Proactividad", 20, 50);
-            prueba.InsertarComponentePerfilSeccion(3, "Afabilidad", 50, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(3, "Responsabilidad", 70, 30);
+            consultasSeccion.InsertarComponentePerfilSeccion(3, "Proactividad", 20, 50);
+            consultasSeccion.InsertarComponentePerfilSeccion(3, "Afabilidad", 50, 30);
             
 
             
-            prueba.InsertarComponentePerfilTrabajador("21394189-5", "Responsabilidad",40);
-            prueba.InsertarComponentePerfilTrabajador("21394189-5", "Proactividad", 50);
-            prueba.InsertarComponentePerfilTrabajador("21394189-5", "Afabilidad", 20);
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394189-5", "Responsabilidad",40);
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394189-5", "Proactividad", 50);
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394189-5", "Afabilidad", 20);
 
-            prueba.InsertarComponentePerfilTrabajador("21394182-3", "Responsabilidad", 28);
-            prueba.InsertarComponentePerfilTrabajador("21394182-3", "Proactividad", 34);
-            prueba.InsertarComponentePerfilTrabajador("21394182-3", "Afabilidad", 55);
-            */
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Responsabilidad", 28);
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Proactividad", 34);
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Afabilidad", 55);
+            
 
             //prueba.ObtenerIdSeccion( "14263145-4" );
             //prueba.ObtenerNombreSeccion( "14263145-4" );
@@ -146,7 +152,7 @@ namespace Pruebas
 
             /*
             AdminTrabajador consultasTrabajador = new AdminTrabajador();*/
-            AdminTrabajador consultasTrabajador = new AdminTrabajador();
+            //AdminTrabajador consultasTrabajador = new AdminTrabajador();
 
             List<Trabajador> trabajadores = consultasTrabajador.ObtenerTrabajadoresEmpresa();
 
@@ -156,7 +162,7 @@ namespace Pruebas
                 Console.ReadKey();
             }
 
-            AdminSeccion consultasSeccion = new AdminSeccion();
+            //AdminSeccion consultasSeccion = new AdminSeccion();
 
             List<Seccion> secciones = consultasSeccion.ObtenerSecciones();
 
