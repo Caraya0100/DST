@@ -127,15 +127,16 @@ namespace DST
         /// </summary>
         /// <param name="nuevoNombre"></param>
         /// <param name="nuevoRut"></param>
+        /// <param name="nuevoTipoUsuario"></param>
         /// <param name="nuevaClave"></param>
         /// <param name="rutActual"></param>
-        public void ModificarDatosUsuario(string nuevoNombre, string nuevoRut, string nuevaClave,
+        public void ModificarDatosUsuario(string nuevoNombre, string nuevoRut, string nuevoTipoUsuario, string nuevaClave,
             string rutActual)
         {
             conn.Open();
 
-            cmd.CommandText = "UPDATE usuarios SET nombre='" + nuevoNombre + "',rut='" + nuevoRut + "',clave='"
-                + nuevaClave + "' WHERE rut='" + rutActual + "';";
+            cmd.CommandText = "UPDATE usuarios SET nombre='" + nuevoNombre + "',rut='" + nuevoRut + "',tipoUsuario='" 
+                + nuevoTipoUsuario + "',clave='" + nuevaClave + "' WHERE rut='" + rutActual + "';";
             cmd.ExecuteNonQuery();
 
             conn.Close();

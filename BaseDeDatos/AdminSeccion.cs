@@ -34,12 +34,11 @@ namespace DST
         /// </summary>
         /// <param name="nombre"></param>
         /// <param name="rutJefe"></param>
-        public void InsertarSeccion(string nombre, string descripcion, string rutJefe)
+        public void InsertarSeccion(string nombre, string rutJefe)
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO secciones (nombre,descripcion,rutJefe) VALUES('" + nombre + "','" + descripcion
-                + "','" + rutJefe + "');";
+            cmd.CommandText = "INSERT INTO secciones (nombre,rutJefe) VALUES('" + nombre + "','" + rutJefe + "');";
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -115,8 +114,9 @@ namespace DST
                 idSeccion = consulta.GetInt16(0);
             }
 
+            /*
             Console.WriteLine("Id: {0}", idSeccion);
-            Console.ReadKey();
+            Console.ReadKey();*/
 
             conn.Close();
 
@@ -141,8 +141,9 @@ namespace DST
                 nombreSeccion = consulta.GetString(0);
             }
 
+            /*
             Console.WriteLine("Nombre: {0}", nombreSeccion);
-            Console.ReadKey();
+            Console.ReadKey();*/
 
             conn.Close();
 
@@ -166,8 +167,9 @@ namespace DST
                 nombreSeccion = consulta.GetString(0);
             }
 
+            /*
             Console.WriteLine("Nombre: {0}", nombreSeccion);
-            Console.ReadKey();
+            Console.ReadKey();*/
 
             conn.Close();
 
@@ -191,8 +193,9 @@ namespace DST
                 rutJefeSeccion = consulta.GetString(0);
             }
 
+            /*
             Console.WriteLine("RUT: {0}", rutJefeSeccion);
-            Console.ReadKey();
+            Console.ReadKey();*/
 
             conn.Close();
 
