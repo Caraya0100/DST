@@ -46,8 +46,8 @@ namespace DST
             conn.Open();
 
             cmd.CommandText = "INSERT INTO trabajadores (nombre,apellidoPaterno,apellidoMaterno,rut,fechaNacimiento,idSeccion,"
-                + "estado) VALUES('" + nombre + "','" + apellidoPaterno + "','" + apellidoMaterno + "','" + rut + "','"
-                + fechaNacimiento + "'," + idSeccion.ToString() + "," + estado + ");";
+                + "sexo,estado) VALUES('" + nombre + "','" + apellidoPaterno + "','" + apellidoMaterno + "','" + rut + "','"
+                + fechaNacimiento + "'," + idSeccion.ToString() + ",'" + sexo + "'," + estado + ");";
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -60,7 +60,7 @@ namespace DST
         /// <param name="rut"></param>
         /// <param name="nombre"></param>
         /// <param name="puntaje"></param>
-        public void InsertarComponentePerfilTrabajador(string rut, string nombre, float puntaje)
+        public void InsertarComponentePerfilTrabajador(string rut, string nombre, double puntaje)
         {
             conn.Open();
 
@@ -77,7 +77,7 @@ namespace DST
         /// <param name="rutTrabajador"></param>
         /// <param name="nombreComponente"></param>
         /// <param name="nuevoPuntaje"></param>
-        public void ModificarPuntajePerfilTrabajador(string rutTrabajador, string nombreComponente, float nuevoPuntaje)
+        public void ModificarPuntajePerfilTrabajador(string rutTrabajador, string nombreComponente, double nuevoPuntaje)
         {
             conn.Open();
 
@@ -131,7 +131,7 @@ namespace DST
             while (consulta.Read())
             {
                 Trabajador nuevoTrabajador = new Trabajador(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
-                    consulta.GetString(3), consulta.GetString(4), consulta.GetString(5),
+                    consulta.GetString(3), consulta.GetString(4), consulta.GetString(6),
                     ObtenerPerfilTrabajador(consulta.GetString(0)));
                 trabajadores.Add(consulta.GetString(0), nuevoTrabajador);
             }
@@ -156,7 +156,7 @@ namespace DST
             while (consulta.Read())
             {
                 Trabajador nuevoTrabajador = new Trabajador(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
-                    consulta.GetString(3), consulta.GetString(4), consulta.GetString(5),
+                    consulta.GetString(3), consulta.GetString(4), consulta.GetString(6),
                     ObtenerPerfilTrabajador(consulta.GetString(0)));
                 listaTrabajadoresEmpresa.Add(nuevoTrabajador);
             }
