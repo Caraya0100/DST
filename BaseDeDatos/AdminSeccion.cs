@@ -227,5 +227,31 @@ namespace DST
             return secciones;
         }
 
+        /// <summary>
+        /// Modifica el nombre y el rut del jefe de seccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="nuevoNombre"></param>
+        /// <param name="nuevoRutJefe"></param>
+        public void ModificarDatosSeccion( int idSeccion, string nuevoNombre, string nuevoRutJefe )
+        {
+            conn.Open();
+
+            cmd.CommandText = "UPDATE secciones SET nombre='" + nuevoNombre + "', rutJefe='"
+                + nuevoRutJefe + " WHERE id=" + idSeccion.ToString() + ";";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void EliminarSeccion( int idSeccion)
+        {
+            conn.Open();
+
+            cmd.CommandText = "DELETE FROM secciones WHERE id=" + idSeccion.ToString() + ";";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
     }
 }
