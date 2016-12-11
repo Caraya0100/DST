@@ -205,5 +205,19 @@ namespace DST
 
             conn.Close();
         }
+
+        /// <summary>
+        /// Elimina el trabajador con el rut que se pasa como parametro
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        public void BorrarTrabajador( string rutTrabajador )
+        {
+            conn.Open();
+
+            cmd.CommandText = "DELETE FROM trabajadores WHERE rut='" + rutTrabajador + "';";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
     }
 }

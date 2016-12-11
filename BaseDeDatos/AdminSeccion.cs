@@ -370,5 +370,19 @@ namespace DST
 
             return puntajeCF;
         }
+
+        /// <summary>
+        /// Elimina la seccion con el id que se pasa como parametro
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        public void BorrarSeccion( int idSeccion)
+        {
+            conn.Open();
+
+            cmd.CommandText = "DELETE FROM secciones WHERE id=" + idSeccion.ToString() + ";";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
     }
 }
