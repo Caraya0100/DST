@@ -80,6 +80,77 @@ namespace DST
             conn.Close();
         }
 
+        /// <summary>
+        /// Guarda en la base de datos el rut del trabajador que respondio una encuesta y el rut del trabajador
+        /// al que evaluo en dicha encuesta.
+        /// </summary>
+        /// <param name="rutTrabajadorEvaluado"></param>
+        /// <param name="rutTrabajadorEvaluador"></param>
+        public void InsertarTrabajadorEncuestado( string rutTrabajadorEvaluado, string rutTrabajadorEvaluador)
+        {
+            conn.Open();
 
+            cmd.CommandText = "INSERT INTO listaTrabajadoresEncuestados (rutTrabajadorEvaluado,rutTrabajadorEvaluador)"
+                + "VALUES('" + rutTrabajadorEvaluado + "','" + rutTrabajadorEvaluador + "');";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Guarda en la base de datos el rut de un usuario que evaluo a un trabajador, guardando el rut de este ultimo
+        /// para saber si respondio
+        /// </summary>
+        /// <param name="rutTrabajadorEvaluado"></param>
+        /// <param name="rutUsuarioEvaluador"></param>
+        public void InsertarUsuarioEncuestado( string rutTrabajadorEvaluado, string rutUsuarioEvaluador)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO listaUsuariosEncuestados (rutTrabajadorEvaluado,rutUsuarioEvaluador)"
+                + "VALUES('" + rutTrabajadorEvaluado + "','" + rutUsuarioEvaluador + "');";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public Dictionary<string,string> UsuariosNoEncuestados( string rutTrabajador)
+        {
+            Dictionary<string,string> listaUsuariosNoEncuestados = new Dictionary<string,string>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre,rut FROM usuarios WHERE rut NOT IN( SELECT rutUsuarioEvaluador FROM"
+                + "listaUsuariosEncuestados WHERE rutTrabajadorEvaluado='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                listaUsuariosNoEncuestados.Add( consulta.GetString(1), consulta.GetString(0) );
+            }
+
+            conn.Close();
+
+            return listaUsuariosNoEncuestados;
+        }
+
+        public Dictionary<string,string> TrabajadoresNoEncuestados( string rutTrabajador )
+        {
+            Dictionary<string, string> listaTrabajadoresNoEncuestados = new Dictionary<string, string>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT rut,nombre,apellidoPaterno,apellidoMaterno FROM trabajadores WHERE rut NOT IN( SELECT" 
+                + " rutUsuarioEvaluador FROM listaTrabajadoresEncuestados WHERE rutTrabajadorEvaluado='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                listaTrabajadoresNoEncuestados.Add(consulta.GetString(0), consulta.GetString(1) + " " + consulta.GetString(2) + 
+                    " " + consulta.GetString(3) );
+            }
+
+            conn.Close();
+
+            return listaTrabajadoresNoEncuestados;
+        }
     }
 }
