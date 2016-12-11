@@ -302,6 +302,10 @@ namespace DST
             conn.Close();
         }
 
+        /// <summary>
+        /// Elimina una seccion y todo lo que este asociado a dicha seccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
         public void EliminarSeccion( int idSeccion)
         {
             conn.Open();
@@ -312,6 +316,11 @@ namespace DST
             conn.Close();
         }
 
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente de las hb
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
         public double ObtenerPuntajeHBSeccion(int idSeccion)
         {
             double puntajeHB = 0;
@@ -332,6 +341,11 @@ namespace DST
         }
 
 
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente de las hd
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
         public double ObtenerPuntajeHDSeccion(int idSeccion)
         {
             double puntajeHD = 0;
@@ -351,7 +365,11 @@ namespace DST
             return puntajeHD;
         }
 
-
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente de las cf
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
         public double ObtenerPuntajeCFSeccion(int idSeccion)
         {
             double puntajeCF = 0;
@@ -369,20 +387,6 @@ namespace DST
             conn2.Close();
 
             return puntajeCF;
-        }
-
-        /// <summary>
-        /// Elimina la seccion con el id que se pasa como parametro
-        /// </summary>
-        /// <param name="idSeccion"></param>
-        public void BorrarSeccion( int idSeccion)
-        {
-            conn.Open();
-
-            cmd.CommandText = "DELETE FROM secciones WHERE id=" + idSeccion.ToString() + ";";
-            cmd.ExecuteNonQuery();
-
-            conn.Close();
         }
     }
 }
