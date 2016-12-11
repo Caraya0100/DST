@@ -100,13 +100,12 @@ namespace DST
             //conn.Close();
 
             conn2.Open();
-            cmd2.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,t.puntaje FROM componentesPerfil AS c,"
-                + "componentesPerfilTrabajadores AS t WHERE t.rut='" + rutTrabajador + "' AND c.nombre=t.nombre;";
+            cmd2.CommandText = "SELECT c.id, c.nombre,c.descripcion,c.tipo,t.puntaje FROM componentesPerfil AS c,"
+                + "componentesPerfilTrabajadores AS t WHERE t.rut='" + rutTrabajador + "' AND c.id=t.nombre;";
             consulta2 = cmd2.ExecuteReader();
             while (consulta2.Read())
             {
-                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2),
-                    consulta2.GetDouble(3), -1);
+                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2), consulta2.GetString(3), consulta2.GetDouble(4), -1);
                 perfilTrabajador.AgregarComponente(nuevoComponente);
             }
 

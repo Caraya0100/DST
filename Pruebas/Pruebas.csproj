@@ -50,7 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PruebaEvaluacion360.cs" />
     <Compile Include="PruebaEvaluacionCapacidad.cs" />
+    <Compile Include="PruebaEvaluacionTrabajadores.cs" />
     <Compile Include="PruebaInferencia.cs" />
+    <Compile Include="PruebaInsercionReglas.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

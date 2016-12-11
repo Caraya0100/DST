@@ -48,6 +48,24 @@ namespace DST
             this.importancia = -1;
         }
 
+        
+
+        /// <summary>
+        /// Constructor, recibe el nombre, la descripcion, y el tipo del componente.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="descripcion"></param>
+        /// <param name="tipo"></param>
+        public Componente(string id, string nombre, string descripcion, string tipo, double puntaje, double importancia)
+        {
+            this.id = id;
+            this.nombre = nombre;
+            this.descripcion = descripcion;
+            this.tipo = tipo;
+            this.puntaje = puntaje;
+            this.importancia = importancia;
+        }
+
         /// <summary>
         /// Constructor, recibe el nombre, la descripcion, y el tipo del componente.
         /// </summary>

@@ -71,7 +71,7 @@ namespace SistemaInferencia
         {
             foreach (KeyValuePair<string, double> dato in datos)
             {
-                Console.WriteLine("Dato " + dato.Key + ": " + dato.Value);
+                //Console.WriteLine("Dato " + dato.Key + ": " + dato.Value);
                 if (VariablesLinguisticas.ContainsKey(dato.Key))
                 {
                     VariablesLinguisticas[dato.Key].Fuzzificar(dato.Value);
@@ -131,7 +131,7 @@ namespace SistemaInferencia
                         consecuentes.Add(valorLinguistico, new List<ValorLinguistico>());
                     }
                     // Evaluamos la regla y agregamos el valor linguistico resultante.
-                    Console.Write("Regla: " + r.Key);
+                    //Console.Write("Regla: " + r.Key);
                     ValorLinguistico evaluacion = EvaluacionRegla(regla);
                     consecuentes[valorLinguistico].Add(evaluacion);
                 }
@@ -153,21 +153,21 @@ namespace SistemaInferencia
                el minimo o el maximo grado de pertenencia, depdendiendo del operador. */
             foreach (KeyValuePair<string, ValorLinguistico> actual in regla.Antecedente)
             {
-                Console.Write(" Valor: " + actual.Value.GradoPertenencia);
+                //Console.Write(" Valor(" + actual.Key + "): " + actual.Value.GradoPertenencia);
                 valoresLinguisticos.Add(actual.Value.GradoPertenencia);
             }
 
             if (regla.Operador == "y")
             {
-                Console.Write(" Min");
+                //Console.Write(" Min");
                 resultadOperador = valoresLinguisticos.Min();
             }
             else if (regla.Operador == "o")
             {
-                Console.Write(" Max");
+                //Console.Write(" Max");
                 resultadOperador = valoresLinguisticos.Max();
             }
-            Console.WriteLine(" Resultado Operador: " + resultadOperador);
+            //Console.WriteLine(" Resultado Operador: " + resultadOperador);
             return Implicacion.Ejecutar(resultadOperador, regla.Consecuente.Item2);
         }
 
@@ -205,13 +205,17 @@ namespace SistemaInferencia
         {
             string operador = "";
             string[] r = regla.Split(' ');
-            // El tamaño minimo de una regla debe ser ocho.
-            if (r.Length >= 8)
+            // El tamaño minimo de una regla con mas de una variable en el antecedente.
+            if (r.Length >= 12)
             {
                 if (r[4] == "y" || r[4] == "o")
                 {
                     operador = r[4];
                 }
+            } else if (r.Length == 8)
+            {
+                // Regla con una sola variable linguistica en el antecedente.
+                operador = "y";
             }
 
             return operador;
@@ -227,17 +231,31 @@ namespace SistemaInferencia
             string[] r = regla.Split(' ');
             Dictionary<string, ValorLinguistico> antecedente = new Dictionary<string, ValorLinguistico>();
 
-            for (int i = 2; i < r.Length && r[i] != "entonces"; i++)
+            if (r.Length == 8)
             {
-                if ((r[i] == "es") && (i - 1 > 0) && (i + 1 < r.Length))
-                {
-                    string variable = r[i - 1];
-                    string valor = r[i + 1];
+                // Regla con una sola variable linguistica en el antecedente.
+                string variable = r[1];
+                string valor = r[3];
 
-                    if (VariablesLinguisticas.ContainsKey(variable))
+                if (VariablesLinguisticas.ContainsKey(variable))
+                {
+                    ValorLinguistico valorLinguistico = VariablesLinguisticas[variable].ValorLinguistico(valor);
+                    antecedente.Add(variable, valorLinguistico);
+                }
+            } else if (r.Length >=12) {
+                // Regla con una multiple svariables linguisticas en el antecedente.
+                for (int i = 2; i < r.Length && r[i] != "entonces"; i++)
+                {
+                    if ((r[i] == "es") && (i - 1 > 0) && (i + 1 < r.Length))
                     {
-                        ValorLinguistico valorLinguistico = VariablesLinguisticas[variable].ValorLinguistico(valor);
-                        antecedente.Add(variable, valorLinguistico);
+                        string variable = r[i - 1];
+                        string valor = r[i + 1];
+
+                        if (VariablesLinguisticas.ContainsKey(variable))
+                        {
+                            ValorLinguistico valorLinguistico = VariablesLinguisticas[variable].ValorLinguistico(valor);
+                            antecedente.Add(variable, valorLinguistico);
+                        }
                     }
                 }
             }

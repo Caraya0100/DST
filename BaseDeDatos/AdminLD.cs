@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DST;
 using LogicaDifusa;
 using MySql.Data.MySqlClient;
 
@@ -35,7 +34,11 @@ namespace DST
         {
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
 
-
+            foreach (KeyValuePair<string, Componente> componente in componentes)
+            {
+                //Console.WriteLine("Componente: " + componente.Key);
+                variables.Add(ObtenerVariable(componente.Key));
+            }
 
             return variables;
         }
@@ -133,21 +136,22 @@ namespace DST
         public FuncionTriangular ObtenerFuncionTriangular(string nombreVariable, string nombreValor)
         {
             FuncionTriangular fp = null;
+            BaseDeDatos bd = new BaseDeDatos();
 
-            conn.Open();
-            cmd.CommandText = "SELECT * FROM funciontrapezoide WHERE nombreVariableLing='" + nombreVariable + " ' AND " + "nombreValorLing='" + nombreValor + ";";
-            consulta = cmd.ExecuteReader();
+            bd.Open();
 
-            if (consulta.Read())
+            bd.ConsultaMySql("SELECT * FROM funcionTriangular WHERE nombreVariableLing='" + nombreVariable + "' AND nombreValorLing='" + nombreValor + "';");
+
+            if (bd.Consulta.Read())
             {
                 fp = new FuncionTriangular(
-                    consulta.GetDouble("valorIzquierda"),
-                    consulta.GetDouble("valorCentro"),
-                    consulta.GetDouble("valorDerecha")
+                    bd.Consulta.GetDouble("valorIzquierda"),
+                    bd.Consulta.GetDouble("valorCentro"),
+                    bd.Consulta.GetDouble("valorDerecha")
                 );
             }
 
-            conn.Close();
+            bd.Close();
 
             return fp;
         }
@@ -162,40 +166,59 @@ namespace DST
         public FuncionTrapezoidal ObtenerFuncionTrapezoidal(string nombreVariable, string nombreValor)
         {
             FuncionTrapezoidal fp = null;
+            BaseDeDatos bd = new BaseDeDatos();
 
-            conn.Open();
-            cmd.CommandText = "SELECT * FROM funciontrapezoide WHERE nombreVariableLing='" + nombreVariable + " ' AND " + "nombreValorLing='" + nombreValor + ";";
-            consulta = cmd.ExecuteReader();
+            bd.Open();
 
-            if (consulta.Read())
+            bd.ConsultaMySql("SELECT * FROM funciontrapezoide WHERE nombreVariableLing='" + nombreVariable + "' AND nombreValorLing='" + nombreValor + "';");
+
+            if (bd.Consulta.Read())
             {
                 fp = new FuncionTrapezoidal(
-                    consulta.GetDouble("valorInferiorIzquierdo"),
-                    consulta.GetDouble("valorSuperiorIzquierdo"),
-                    consulta.GetDouble("valorSuperiorDerecho"),
-                    consulta.GetDouble("valorInferiorDerecho")
+                    bd.Consulta.GetDouble("valorInferiorIzquierdo"),
+                    bd.Consulta.GetDouble("valorSuperiorIzquierdo"),
+                    bd.Consulta.GetDouble("valorSuperiorDerecho"),
+                    bd.Consulta.GetDouble("valorInferiorDerecho")
                 );
             }
 
-            conn.Close();
+            bd.Close();
 
             return fp;
         }
 
-        public ValorLinguistico ObtenerValor(string nombre)
+        /// <summary>
+        /// Obtiene el valor linguistico de una variable
+        /// </summary>
+        /// <param name="nombrevalor"></param>
+        /// <param name="nombreVariable"></param>
+        /// <returns></returns>
+        public ValorLinguistico ObtenerValor(string nombre, string nombreVariable)
         {
             ValorLinguistico valor = null;
+            BaseDeDatos bd = new BaseDeDatos();
 
-            conn.Open();
-            cmd.CommandText = "SELECT * FROM usuarios WHERE nombre='" + nombre + "';";
-            consulta = cmd.ExecuteReader();
+            bd.Open();
 
-            if (consulta.Read())
+            bd.ConsultaMySql("SELECT * FROM valoresLing WHERE nombre='" + nombre + "' AND nombreVariableLing='" + nombreVariable + "';");
+
+            if (bd.Consulta.Read())
             {
-                
+                string nombreValor = bd.Consulta.GetString("nombre");
+                if (bd.Consulta.GetString("tipoFuncion") == "trapezoidal")
+                {
+                    FuncionTrapezoidal fp = ObtenerFuncionTrapezoidal(nombreVariable, nombreValor);
+                    valor = new ValorLinguistico(nombreValor, fp);
+
+                }
+                else if (bd.Consulta.GetString("tipoFuncion") == "triangular")
+                {
+                    FuncionTriangular fp = ObtenerFuncionTriangular(nombreVariable, nombreValor);
+                    valor = new ValorLinguistico(nombreValor, fp);
+                }
             }
 
-            conn.Close();
+            bd.Close();
 
             return valor;
         }
@@ -209,21 +232,22 @@ namespace DST
         public List<ValorLinguistico> ObtenerValores(string nombreVariable)
         {
             List<ValorLinguistico> valores = new List<ValorLinguistico>();
+            BaseDeDatos bd = new BaseDeDatos();
 
-            conn.Open();
-            cmd.CommandText = "SELECT * FROM valoresLing WHERE nombreVariableLing='" + nombreVariable + "';";
-            consulta = cmd.ExecuteReader();
+            bd.Open();
 
-            if (consulta.Read())
+            bd.ConsultaMySql("SELECT * FROM valoresLing WHERE nombreVariableLing='" + nombreVariable + "';");
+
+            while (bd.Consulta.Read())
             {
-                string nombreValor = consulta.GetString("nombre");
-                if (consulta.GetString("tipoFuncion") == "trapezoidal")
+                string nombreValor = bd.Consulta.GetString("nombre");
+                if (bd.Consulta.GetString("tipoFuncion") == "trapezoidal")
                 {
                     FuncionTrapezoidal fp = ObtenerFuncionTrapezoidal(nombreVariable, nombreValor);
                     valores.Add(new ValorLinguistico(nombreValor, fp));
 
                 }
-                else if (consulta.GetString("tipoFuncion") == "trapezoidal")
+                else if (bd.Consulta.GetString("tipoFuncion") == "triangular")
                 {
                     FuncionTriangular fp = ObtenerFuncionTriangular(nombreVariable, nombreValor);
                     valores.Add(new ValorLinguistico(nombreValor, fp));
@@ -231,7 +255,7 @@ namespace DST
                 }
             }
 
-            conn.Close();
+            bd.Close();
 
             return valores;
         }
@@ -244,18 +268,19 @@ namespace DST
         public VariableLinguistica ObtenerVariable(string nombre)
         {
             VariableLinguistica variable = null;
+            BaseDeDatos bd = new BaseDeDatos();
 
-            conn.Open();
-            cmd.CommandText = "SELECT * FROM variablesling WHERE nombre='" + nombre + "';";
-            consulta = cmd.ExecuteReader();
+            bd.Open();
 
-            if (consulta.Read())
+            bd.ConsultaMySql("SELECT * FROM variablesling WHERE nombre='" + nombre + "';");
+
+            if (bd.Consulta.Read())
             {
                 // Instanceamos la variable linguistica.
                 variable = new VariableLinguistica(
-                    consulta.GetString("nombre"),
-                    consulta.GetDouble("minimo"),
-                    consulta.GetDouble("maximo")
+                    bd.Consulta.GetString("nombre"),
+                    bd.Consulta.GetDouble("minimo"),
+                    bd.Consulta.GetDouble("maximo")
                 );
                 // Agregamos los valores linguisticos.
                 List<ValorLinguistico> valores = ObtenerValores(nombre);
@@ -265,7 +290,7 @@ namespace DST
                 }
             }
 
-            conn.Close();
+            bd.Close();
 
             return variable;
         }

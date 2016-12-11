@@ -46,6 +46,7 @@
     <Compile Include="EvaluacionDesempeno.cs" />
     <Compile Include="EvaluacionDifusa.cs" />
     <Compile Include="EvaluacionPerfil.cs" />
+    <Compile Include="EvaluacionTrabajador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +66,17 @@
       <Project>{8ccfddd9-4371-4b8f-922b-476d609b782f}</Project>
       <Name>Matching</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Seccion\Seccion.csproj">
+      <Project>{a2ff8f06-99d4-483c-b619-8e343947b23f}</Project>
+      <Name>Seccion</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SistemaInferencia\SistemaInferencia.csproj">
       <Project>{1904ccc6-ce97-4610-80fc-5349274e3c31}</Project>
       <Name>SistemaInferencia</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trabajador\Trabajador.csproj">
+      <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
+      <Name>Trabajador</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

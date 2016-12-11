@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 
 namespace DST
 {
-    class AdminUsuario
+    public class AdminUsuario
     {
         private MySqlConnection conn;
         private BaseDeDatos bd;

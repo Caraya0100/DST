@@ -184,18 +184,18 @@ namespace DST
             Perfil perfilSeccion = new Perfil();
 
             conn2.Open();
-            cmd2.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia FROM componentesPerfil AS c,"
-                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.nombre=s.nombre;";
+            cmd2.CommandText = "SELECT c.id, c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia FROM componentesPerfil AS c,"
+                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.id=s.nombre;";
             consulta2 = cmd2.ExecuteReader();
             while (consulta2.Read())
             {
-                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), 
-                    consulta2.GetString(2),consulta2.GetDouble(3), consulta2.GetDouble(4));
+                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2), 
+                    consulta2.GetString(3),consulta2.GetDouble(4), consulta2.GetDouble(5));
                 perfilSeccion.AgregarComponente(nuevoComponente);
             }
 
             conn2.Close();
-
+            
             return perfilSeccion;
         }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DST;
 using LogicaDifusa;
 
 namespace DST
@@ -82,7 +81,7 @@ namespace DST
 
             if (seccion.Nombre == "HBS" && trabajador.Nombre == "HBT")
             {
-                Console.WriteLine("Flag HB");
+                //Console.WriteLine("Flag HB");
                 VariablesMatching variablesM = new VariablesMatching();
                 VariableLinguistica HBS = new VariableLinguistica(variablesM.HBPerfil);
                 VariableLinguistica HBT = new VariableLinguistica(variablesM.HBPerfil);
@@ -95,7 +94,7 @@ namespace DST
             }
             else if (seccion.Nombre == "HDS" && trabajador.Nombre == "HDT")
             {
-                Console.WriteLine("Flag HD");
+                //Console.WriteLine("Flag HD");
                 VariablesMatching variablesM = new VariablesMatching();
                 VariableLinguistica HDS = new VariableLinguistica(variablesM.HDPerfil);
                 VariableLinguistica HDT = new VariableLinguistica(variablesM.HDPerfil);
@@ -108,7 +107,7 @@ namespace DST
             }
             else if (seccion.Nombre == "CFS" && trabajador.Nombre == "CFT")
             {
-                Console.WriteLine("Flag CF");
+                //Console.WriteLine("Flag CF");
                 VariablesMatching variablesM = new VariablesMatching();
                 VariableLinguistica CFS = new VariableLinguistica(variablesM.CFPerfil);
                 VariableLinguistica CFT = new VariableLinguistica(variablesM.CFPerfil);

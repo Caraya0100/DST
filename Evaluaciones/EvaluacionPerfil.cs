@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DST;
 using LogicaDifusa;
-using SistemaInferencia;
 
 namespace DST
 {
@@ -24,7 +22,7 @@ namespace DST
         {
             VariablesMatching variablesM = new VariablesMatching();
             Perfil p = new Perfil(perfil);
-            Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
+            Dictionary<string, double> datos = new Dictionary<string, double>();
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
             Dictionary<string, string> reglas = new Dictionary<string, string>();
 
@@ -35,19 +33,19 @@ namespace DST
             datos = Datos(p.Blandas);
             variables = adminLD.VariablesLinsguisticas(p.Blandas);
             variables.Add(variablesM.HBPerfil); // Consecuente.
-            reglas = adminReglas.ReglasSeccion(idSeccion, "HB");
+            reglas = adminReglas.ReglasSeccion(idSeccion, PerfilConstantes.HB);
             p.HB.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             datos = Datos(p.Duras);
             variables = adminLD.VariablesLinsguisticas(p.Duras);
             variables.Add(variablesM.HDPerfil); // Consecuente.
-            reglas = adminReglas.ReglasSeccion(idSeccion, "HD");
+            reglas = adminReglas.ReglasSeccion(idSeccion, PerfilConstantes.HD);
             p.HD.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             datos = Datos(p.Fisicas);
             variables = adminLD.VariablesLinsguisticas(p.Fisicas);
             variables.Add(variablesM.CFPerfil); // Consecuente.
-            reglas = adminReglas.ReglasSeccion(idSeccion, "CF");
+            reglas = adminReglas.ReglasSeccion(idSeccion, PerfilConstantes.CF);
             p.CF.Puntaje = EvaluacionDifusa.Evaluacion(datos, variables, reglas);
 
             return p;
@@ -58,7 +56,24 @@ namespace DST
         /// </summary>
         /// <param name="componentes"></param>
         /// <returns></returns>
-        public static Dictionary<string, Tuple<double, double>> Datos(Dictionary<string, Componente> componentes)
+        public static Dictionary<string, double> Datos(Dictionary<string, Componente> componentes)
+        {
+            Dictionary<string, double> datos = new Dictionary<string, double>();
+
+            foreach (KeyValuePair<string, Componente> componente in componentes)
+            {
+                datos.Add(componente.Key, componente.Value.Puntaje);
+            }
+
+            return datos;
+        }
+
+        /// <summary>
+        /// Devuelve los datos a partir
+        /// </summary>
+        /// <param name="componentes"></param>
+        /// <returns></returns>
+        /*public static Dictionary<string, Tuple<double, double>> Datos(Dictionary<string, Componente> componentes)
         {
             Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
 
@@ -68,6 +83,6 @@ namespace DST
             }
 
             return datos;
-        }
+        }*/
     }
 }

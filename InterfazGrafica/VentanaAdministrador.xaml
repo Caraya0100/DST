@@ -115,7 +115,9 @@
                 <Grid Background="#FFFBFBFB">
                     <StackPanel x:Name="panelPreguntas">
                         <WrapPanel x:Name="wrapPreguntas">
-                            <DataGrid x:Name="tablaPreguntas" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="348" Width="758" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="20,20,-2,20">
+                            <Label x:Name="lblPreguntas" Content="Preguntas" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblInfoPreguntas" Content="En este panel podras editar las preguntas que luego serán usadas en la evaluacion de las competencias de los trabajdores." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
+                            <DataGrid x:Name="tablaPreguntas" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="348" Width="758" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="20,0,-2,20" BorderBrush="Gray" BorderThickness="1">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Pregunta" Binding="{Binding Descripcion}"></DataGridTextColumn>
                                 </DataGrid.Columns>
@@ -135,16 +137,13 @@
                                          ,0,0,0" Width="115"/>
                                 <TextBox x:Name="txtDescPregunta" Width="622" Margin="15,0,0,20" HorizontalAlignment="Right"/>
                                 <Label x:Name="lblTipoComponentes" Content="Tipo componentes:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="115"/>
-                                <ComboBox x:Name="boxTipoComponentes" Width="622" SelectedValuePath="Content" Margin="15,0,0,20" Height="18">
+                                <ComboBox x:Name="boxTipoComponentes" Width="622" SelectedValuePath="Content" Margin="15,0,0,20" Height="29">
                                     <ComboBoxItem Content="Habilidades blandas"/>
                                     <ComboBoxItem Content="Habilidades duras"/>
                                     <ComboBoxItem Content="Caracteristicas fisicas"/>
                                 </ComboBox>
                                 <Label x:Name="lblComponentePregunta" Content="Componentes:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="112"/>
-                                <ListBox SelectionMode="Multiple" SelectedValuePath="Content" Width="617" Margin="20,0,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible">
-                                    <ListBoxItem Content="Proactividad"/>
-                                    <ListBoxItem Content="Trabajo_en_equipo"/>
-                                    <ListBoxItem Content="Responsablidad"/>
+                                <ListBox x:Name="listComponentes" SelectionMode="Multiple" Width="617" Margin="20,0,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
                                 </ListBox>
                                 <Label x:Name="lblTipoPregunta" Content="Tipo pregunta:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="115"/>
                                 <ComboBox x:Name="boxTipoPregunta" Width="619" SelectedValuePath="Content" Margin="15,0,0,0">
@@ -152,25 +151,19 @@
                                     <ComboBoxItem Content="Normal"/>
                                     <ComboBoxItem Content="Ingreso de datos"/>
                                 </ComboBox>
-                                <WrapPanel x:Name="wrapAlternativas" Width="797" Height="193">
-                                    <DataGrid x:Name="tablaAlternativas" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="123" Width="758" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="20,20,-2,10">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}"></DataGridTextColumn>
-                                            <DataGridTextColumn Header="Alternativa" Binding="{Binding Alternativa}"></DataGridTextColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                    <Button x:Name="agregarAlternativa" Content="Agregar alternativa" Click="AgregarAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
-                                    <Button x:Name="editarAlternativa" Content="Editar alternativa" Click="EditarAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                                <WrapPanel x:Name="wrapAlternativas" Width="797" Height="226">
+                                    <Label x:Name="lblAlternativas" Content="Alternativas:" Margin="15,20,0,0" HorizontalAlignment="Right" Width="112"/>
+                                    <ListBox x:Name="listAlternativas" SelectionMode="Multiple" Width="617" Margin="20,20,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
+                                    </ListBox>
+                                    <Button x:Name="configurarAlternativas" Content="Configuración" Click="IrPanelAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
+                                    <Button x:Name="removerAlternativa" Content="Remover alternativa" Click="RemoverAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                                 </WrapPanel>
-                                <WrapPanel x:Name="wrapFrecuencias" Width="797" Height="193">
-                                    <DataGrid x:Name="tablaFrecuencias" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="123" Width="758" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="20,20,-2,10">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}"></DataGridTextColumn>
-                                            <DataGridTextColumn Header="Frecuencia" Binding="{Binding Alternativa}"></DataGridTextColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                    <Button x:Name="agregarFrecuencia" Content="Agregar alternativa" Click="AgregarAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
-                                    <Button x:Name="editarFrecuencia" Content="Editar alternativa" Click="EditarAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                                <WrapPanel x:Name="wrapFrecuencias" Width="797" Height="272">
+                                    <Label x:Name="lblFrecuencias" Content="Frecuencias:" Margin="15,20,0,0" HorizontalAlignment="Right" Width="112"/>
+                                    <ListBox x:Name="listFrecuencias" SelectionMode="Multiple" Width="617" Margin="20,20,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
+                                    </ListBox>
+                                    <Button x:Name="configurarFrecuencias" Content="Configuración" Click="IrPanelAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
+                                    <Button x:Name="removerFrecuencia" Content="Remover frecuencia" Click="RemoverAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                                 </WrapPanel>
                                 <Button x:Name="btnAceptarPregunta" Content="Aceptar" Click="AgregarPregunta" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
                                 <Button x:Name="btnVolverPreguntas" Content="Volver a las preguntas" Click="VolverPanelPreguntas" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
@@ -178,7 +171,19 @@
                         </ScrollViewer>
                     </StackPanel>
                     <StackPanel x:Name="panelAlternativa" Visibility="Hidden">
-                        <WrapPanel x:Name="wrapAlternativa">
+                        <WrapPanel x:Name="wrapAlternativa" Height="515">
+                            <Label x:Name="lblAlternativa" Content="Alternativa" Width="795" Height="44" FontSize="24" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblInfoAlternativa" Content="En este panel podras agregar o modificar la alternativa para la pregunta." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="34" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblBoxAlternativa" Content="Alternativa:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74"/>
+                            <ComboBox x:Name="boxAlternativa" Width="654" SelectedValuePath="Content" Margin="15,0,0,20" Height="29">
+                            </ComboBox>
+                            <Label x:Name="lblDescAlternativa" Content="Descripción:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
+                            <TextBox x:Name="txtDescAlternativa" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblValorAlternativa" Content="Valor:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
+                            <TextBox x:Name="txtValorAlternativa" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAceptarAlternativa" Content="Aceptar" Click="AceptarAlternativa" VerticalAlignment="Top" Width="143" Margin="290,10,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnEliminarAlternativa" Content="Eliminar" Click="EliminarAlternativa" VerticalAlignment="Top" Width="143" Margin="20,10,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnVolverPanelPregunta" Content="Volver" Click="VolverPanelPregunta" VerticalAlignment="Top" Width="143" Margin="20,10,0,20" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                 </Grid>
@@ -188,15 +193,65 @@
             </TabItem>
             <TabItem Name="itemReglas" Header="Reglas">
                 <Grid Background="#FFFBFBFB">
-                    <ScrollViewer Name="scrollPanelReglas" Grid.Column="1" HorizontalAlignment="Left" Height="286" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="545" VerticalScrollBarVisibility="Hidden" Visibility="Hidden">
+                    <ScrollViewer Name="scrollPanelReglas" HorizontalAlignment="Left" Height="286" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="545" VerticalScrollBarVisibility="Hidden" Visibility="Hidden">
                         <StackPanel Name="panelReglasSecciones" Orientation="Vertical" >
                         </StackPanel>
                     </ScrollViewer>
                     <StackPanel x:Name="panelReglasSeccion">
-                        <WrapPanel x:Name="wrapReglasSeccion">
-                            <Label x:Name="lblReglasSeccion" Content="Edición de Reglas" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
-                            <Label x:Name="lblInfoReglasSeccion" Content="En este panel podras editar las reglas que luego serán usadas en la evaluacion de la capacidad de los trabajdores." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
-
+                        <ScrollViewer Height="514">
+                            <WrapPanel x:Name="wrapReglasSeccion" Height="815">
+                                <Label x:Name="lblReglasSeccion" Content="Edición de Reglas" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
+                                <Label x:Name="lblInfoReglasSeccion" Content="En este panel podras editar las reglas que luego serán usadas en la evaluacion de la capacidad de los trabajdores." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
+                                <Label x:Name="lbltablaReglas" Content="Reglas:" FontSize="16" HorizontalContentAlignment="Left" Width="93" Margin="20,0,0,0"/>
+                                <ComboBox x:Name="boxTipoReglas" Width="295" SelectedValuePath="Content" Height="28" Margin="0" SelectionChanged="SeleccionTipoReglas" SelectedIndex="0">
+                                    <ComboBoxItem Content="Habilidades blandas"/>
+                                    <ComboBoxItem Content="Habilidades duras"/>
+                                    <ComboBoxItem Content="Caracteristicas fisicas"/>
+                                </ComboBox>
+                                <DataGrid x:Name="tablaReglas" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="246" Width="745" Style="{StaticResource AzureDataGrid}" RowHeight="10" IsReadOnly="True" Margin="20,20,-2,0" BorderBrush="Gray" BorderThickness="1">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="id" Binding="{Binding ID}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Regla" Binding="{Binding Texto}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Button x:Name="btnAgregarRegla" Content="Agregar" Click="IrPanelRegla" VerticalAlignment="Top" Width="143" Margin="326,10,0,0" HorizontalAlignment="Right"/>
+                                <Button x:Name="btnModificarRegla" Content="Modificar" Click="IrPanelRegla" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                                <Button x:Name="btnEliminarRegla" Content="Eliminar" Click="EliminarRegla" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                            </WrapPanel>
+                        </ScrollViewer>
+                    </StackPanel>
+                    <StackPanel x:Name="panelRegla" Visibility="Hidden">
+                        <WrapPanel x:Name="wrapRegla" Height="515">
+                            <Label x:Name="lblReglaSeccion" Content="Edición Regla" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblInfoReglaSeccion" Content="En este panel podras editar la regla que luego será usada en la evaluacion de la capacidad de los trabajdores." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblRegla" Content="Regla" Margin="15,0,0,0" HorizontalAlignment="Right" Width="76"/>
+                            <TextBox x:Name="txtRegla" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right" IsReadOnly="True"/>
+                            <Label x:Name="lblConsecuente" Content="Antecedente" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <TextBox x:Name="txtConsecuente" Width="307" HorizontalAlignment="Right" IsReadOnly="True" Margin="15,0,0,20"/>
+                            <Label x:Name="lblValoresConsecuente" Content="Valor" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="boxValoresConsecuente" Width="281" Margin="15,0,0,20">
+                            </ComboBox>
+                            <Label x:Name="lblAntecedente" Content="Antecedente" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="boxAntecedente" Width="307" SelectedValuePath="Content" Margin="15,0,0,0" SelectionChanged="SeleccionAntecedente">
+                            </ComboBox>
+                            <Label x:Name="lblValoresAntecedente" Content="Valor" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="boxValoresAntecedente" Width="281" Margin="15,0,0,0">
+                            </ComboBox>
+                            <Button x:Name="btnCambiarValorAntecedente" Content="Cambiar valor" Click="CambiarValorAntecedente" VerticalAlignment="Top" Width="159" Margin="602,20,0,20" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblNoAntecedente" Content="Componentes" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="boxNoAntecedente" Width="307" Margin="15,0,0,0" SelectionChanged="SeleccionNoAntecedente">
+                            </ComboBox>
+                            <Label x:Name="lblValoresNoAntecedente" Content="Valor" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="boxValoresNoAntecedente" Width="270" Margin="15,0,0,0">
+                            </ComboBox>
+                            <Button x:Name="btnAgregarValorAntecedente" Content="Agregar componente" Click="AgregarComponenteAntecedente" VerticalAlignment="Top" Width="159" Margin="601,20,0,0" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblOperador" Content="Operador" Margin="398,20,0,0" HorizontalAlignment="Right" Width="77"/>
+                            <ComboBox x:Name="boxOperador" Width="270" Margin="15,20,0,0" SelectionChanged="SeleccionOperadorRegla" SelectedIndex="0">
+                                <ComboBoxItem Content="y"/>
+                                <ComboBoxItem Content="o"/>
+                            </ComboBox>
+                            <Button x:Name="btnVolverReglas" Content="Aceptar" Click="AceptarRegla" VerticalAlignment="Top" Width="159" Margin="422,50,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAceptarRegla" Content="Volver a las reglas" Click="VolverPanelReglas" VerticalAlignment="Top" Width="159" Margin="20,50,0,0" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                 </Grid>
@@ -205,13 +260,13 @@
                 <Grid Background="#FFFBFBFB">
                     <StackPanel x:Name="panelComponentes">
                         <WrapPanel x:Name="wrapComponentes">
-                            <Label x:Name="lbltablaComponentes" Content="Componentes:" FontSize="20" HorizontalContentAlignment="Left" Width="181" Margin="20,20,0,0"/>
+                            <Label x:Name="lbltablaComponentes" Content="Componentes:" FontSize="20" HorizontalContentAlignment="Left" Width="149" Margin="20,20,0,0"/>
                             <ComboBox x:Name="boxComponentes" Width="295" SelectedValuePath="Content" Height="28" Margin="0,20,0,0" SelectionChanged="SeleccionTipoComponentes">
                                 <ComboBoxItem Content="Habilidades blandas"/>
                                 <ComboBoxItem Content="Habilidades duras"/>
                                 <ComboBoxItem Content="Caracteristicas fisicas"/>
                             </ComboBox>
-                            <DataGrid x:Name="tablaComponentes" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="348" Width="758" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="20,20,-2,20">
+                            <DataGrid x:Name="tablaComponentes" AutoGenerateColumns="False" HorizontalAlignment="Left" VerticalAlignment="Top" Height="348" Width="758" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="20,20,-2,20" BorderBrush="Gray" BorderThickness="1">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="id" Binding="{Binding ID}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}"></DataGridTextColumn>

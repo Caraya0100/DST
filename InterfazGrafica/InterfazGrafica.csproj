@@ -92,7 +92,6 @@
     <Compile Include="Estructuras\Desempeno.cs" />
     <Compile Include="Metodos\GraficoRadar.cs" />
     <Compile Include="Metodos\Mensajes.cs" />
-    <Compile Include="Paneles\PanelDesempeno.cs" />
     <Compile Include="Paneles\PanelHabilidades.cs" />
     <Compile Include="Metodos\Rutificador.cs" />
     <Compile Include="Paneles\VisorSecciones.cs" />

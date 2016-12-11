@@ -62,6 +62,10 @@
       <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
       <Name>Perfil</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ReglasMatching\Matching.csproj">
+      <Project>{8ccfddd9-4371-4b8f-922b-476d609b782f}</Project>
+      <Name>Matching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Seccion\Seccion.csproj">
       <Project>{a2ff8f06-99d4-483c-b619-8e343947b23f}</Project>
       <Name>Seccion</Name>

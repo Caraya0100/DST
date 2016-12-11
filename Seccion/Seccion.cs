@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DST;
 
 namespace DST
 {
@@ -41,7 +40,7 @@ namespace DST
             ventasActuales = ObtenerVentasActuales();
             ventasAnioAnterior = ObtenerVentasAnioAnterior();
             ventasPlan = ObtenerVentasPlan();
-            Tuple<double, double> desempeno = EvaluacionDesempeno.Ejecutar(ventasActuales, VentasAnioAnterior, VentasPlan);
+            Tuple<double, double> desempeno = new Tuple<double, double>(52.0, 10.0);
             actualAnterior = desempeno.Item1;
             actualPlan = desempeno.Item2;
         }

@@ -16,13 +16,13 @@ using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.Behaviours;
 using System.ComponentModel;
 using System.Windows.Threading;
-using DST;
 using LogicaDifusa;
 using LiveCharts;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using LiveCharts.Wpf;
 using OxyPlot;
+using DST;
 
 namespace InterfazGrafica
 {
@@ -34,8 +34,7 @@ namespace InterfazGrafica
         private Mensajes cuadroMensajes;
         private DatosDePrueba datosPrueba;
         private AnimacionScroll animadorTrabajadores;
-        private List<Seccion> secciones;
-        private ObservableCollection<Seccion> seccionesTD;
+        private Dictionary<string, Seccion> secciones;
         private double valorGraficoDAnterior;
         private double valorGraficoDPlan;
         private Dictionary<string, Componente> hb;
@@ -59,10 +58,10 @@ namespace InterfazGrafica
             datosPrueba     = new DatosDePrueba();            
             animadorTrabajadores = new AnimacionScroll();
             GeneraListaTrabajadores();
-            Secciones();
+            ObtenerSecciones();
             IniciarTablaDesempeno();
             IniciarPanelComponentes();
-            GeneraListaSeccionesReglas();
+            IniciarPanelReglas();
 
 
         }
@@ -111,14 +110,14 @@ namespace InterfazGrafica
             {
 
             }
-            else if (itemComponentes.IsSelected)
+            /*else if (itemComponentes.IsSelected)
             {
 
             }
             else if (itemUsuarios.IsSelected)
             {
 
-            }
+            }*/
         }
         /// <summary>
         /// Metodo que genera los elementos que contiene el scrollTrabajador.
@@ -152,18 +151,16 @@ namespace InterfazGrafica
 
         }
 
-        public void Secciones()
+        public void ObtenerSecciones()
         {
-            seccionesTD = new ObservableCollection<Seccion>();
-            secciones = new List<Seccion>()
+            AdminSeccion adminSeccion = new AdminSeccion();
+            List<Seccion> s = adminSeccion.ObtenerSecciones();
+            secciones = new Dictionary<string, Seccion>();
+
+            foreach (Seccion seccion in s)
             {
-                new Seccion("Atencion al Cliente", 1, new Perfil(), new Dictionary<string, Trabajador>()),
-                new Seccion("Cajas", 2, new Perfil(), new Dictionary<string, Trabajador>()),
-                new Seccion("Carniceria", 3, new Perfil(), new Dictionary<string, Trabajador>()),
-                new Seccion("Electronica", 4, new Perfil(), new Dictionary<string, Trabajador>()),
-                new Seccion("Panaderia", 5, new Perfil(), new Dictionary<string, Trabajador>()),
-                new Seccion("Reponedores", 6, new Perfil(), new Dictionary<string, Trabajador>()),
-            };
+                secciones.Add(seccion.Nombre, seccion);
+            }
         }
 
         /* ----------------------------------------------------------------------
@@ -175,10 +172,9 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarTablaDesempeno()
         {
-            foreach (Seccion seccion in secciones)
+            foreach (KeyValuePair<string, Seccion> seccion in secciones)
             {
-                tablaDesempeno.Items.Add(seccion);
-                seccionesTD.Add(seccion);
+                tablaDesempeno.Items.Add(seccion.Value);
             }
         }
 
@@ -412,12 +408,23 @@ namespace InterfazGrafica
 
         }
 
+        private void IrPanelAlternativa(object sender, RoutedEventArgs e)
+        {
+            panelPregunta.Visibility = Visibility.Hidden;
+            panelAlternativa.Visibility = Visibility.Visible;
+        }
+
+        private void RemoverAlternativa(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         /// <summary>
         /// Muestra el panel para agregar una nueva alternativa.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AgregarAlternativa(object sender, RoutedEventArgs e)
+        private void AceptarAlternativa(object sender, RoutedEventArgs e)
         {
 
         }
@@ -427,7 +434,7 @@ namespace InterfazGrafica
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EditarAlternativa(object sender, RoutedEventArgs e)
+        private void EliminarAlternativa(object sender, RoutedEventArgs e)
         {
 
         }
@@ -437,9 +444,21 @@ namespace InterfazGrafica
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void VolverPanelPregunta(object sender, RoutedEventArgs e)
+        {
+            panelAlternativa.Visibility = Visibility.Hidden;
+            panelPregunta.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Vuelve al panel de preguntas.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolverPanelPreguntas(object sender, RoutedEventArgs e)
         {
-
+            panelPregunta.Visibility = Visibility.Hidden;
+            panelPreguntas.Visibility = Visibility.Visible;
         }
 
         /* ----------------------------------------------------------------------
@@ -917,8 +936,22 @@ namespace InterfazGrafica
          *                          PR. PANEL REGLAS
          * ----------------------------------------------------------------------*/
 
+        private Dictionary<string, Regla> reglasActuales;
+        private Seccion reglasSeccionActual;
+        private Regla reglaActual;
+
+        private void IniciarPanelReglas()
+        {
+            GeneraListaSeccionesReglas();
+            reglasSeccionActual = secciones["Cajas"];
+            ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
+            LlenarTablaReglas(reglasActuales);
+        }
+
         private void GeneraListaSeccionesReglas()
         {
+            reglasSeccionActual = secciones["Cajas"];
+
             this.panelReglasSecciones.Children.Clear();
             for (int i = 0; i < 10; i++)
             {
@@ -931,6 +964,30 @@ namespace InterfazGrafica
                 seccion.IdentificadorEliminar = "I" + i;
                 seccion.ControladorVer(VerSeccionReglas);
                 this.panelReglasSecciones.Children.Add(seccion.ConstructorInfo());
+            }
+        }
+
+        /// <summary>
+        /// Obtiene las reglas de la seccion.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="tipoComponente"></param>
+        private void ObtenerReglasSeccion(string idSeccion, string tipoComponente)
+        {
+            AdminReglas adminReglas = new AdminReglas();
+            reglasActuales = adminReglas.ObjetoReglasSeccion(Convert.ToInt32(idSeccion), tipoComponente);
+        }
+
+        /// <summary>
+        /// Llena la tabla de reglas de la seccion.
+        /// </summary>
+        /// <param name="reglas"></param>
+        private void LlenarTablaReglas(Dictionary<string, Regla> reglas)
+        {
+            tablaReglas.Items.Clear();
+            foreach (KeyValuePair<string, Regla> regla in reglas)
+            {
+                tablaReglas.Items.Add(regla.Value);
             }
         }
 
@@ -954,8 +1011,224 @@ namespace InterfazGrafica
 
         private void VerSeccionReglas(object sender, RoutedEventArgs e)
         {
-            scrollPanelReglas.Visibility = Visibility.Hidden;
+            reglasSeccionActual = secciones["Cajas"];
+        }
+
+        /// <summary>
+        /// Agrega una regla vacia a la tabla de reglas.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AgregarReglaVacia(object sender, RoutedEventArgs e)
+        {
+            AdminReglas adminReglas = new AdminReglas();
+            int id = adminReglas.ObtenerUltimoID() + 1;
+            tablaReglas.Items.Add(new Regla(id.ToString()));
+        }
+
+        private void EliminarRegla(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        /// <summary>
+        /// Llena la tabla de componentes segun el tipo de componente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SeleccionTipoReglas(object sender, SelectionChangedEventArgs e)
+        {
+
+            if ((string)boxTipoReglas.SelectedValue == "Habilidades blandas")
+            {
+                
+            }
+            else if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
+            {
+                
+            }
+            else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
+            {
+                
+            }
+        }
+
+        private void SeleccionRegla(object sender, RoutedEventArgs e)
+        {
+            reglaActual = (Regla)tablaReglas.SelectedItem;
+            Perfil perfil = reglasSeccionActual.Perfil;
+            Dictionary<string, Componente> componentes = perfil.Blandas;
+
+            boxAntecedente.Items.Clear();
+            foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
+            {
+                boxAntecedente.Items.Add(valor.Key);
+            }
+
+            if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
+                componentes = perfil.Duras;
+            else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
+                componentes = perfil.Fisicas;
+
+            boxNoAntecedente.Items.Clear();
+            foreach (KeyValuePair<string, Componente> componente in componentes)
+            {
+                boxNoAntecedente.Items.Add(componente.Value.ID);
+            }
+        }
+
+        /// <summary>
+        /// Muestra los valores correspondientes al componente seleccionado en el 
+        /// antecedente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SeleccionAntecedente(object sender, SelectionChangedEventArgs e)
+        {
+            AdminLD adminLD = new AdminLD();
+            string antecedente = (string)boxAntecedente.SelectedValue;
+            string valorActual = reglaActual.Antecedente[antecedente].Nombre;
+            VariableLinguistica variable = adminLD.ObtenerVariable(antecedente);
+
+            foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
+            {
+                boxValoresAntecedente.Items.Add(valor.Key);
+            }
+
+            boxValoresAntecedente.SelectedValue = valorActual;
+        }
+
+        /// <summary>
+        /// Muestra las opciones de un componente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SeleccionNoAntecedente(object sender, SelectionChangedEventArgs e)
+        {
+            AdminLD adminLD = new AdminLD();
+            Debug.WriteLine("Selected" + boxNoAntecedente.SelectedValue);
+            string componente = (string)boxNoAntecedente.SelectedValue;
+            VariableLinguistica variable = adminLD.ObtenerVariable(componente);
+
+            boxValoresNoAntecedente.Items.Clear();
+            foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
+            {
+                boxValoresNoAntecedente.Items.Add(valor.Key);
+            }
+
+            boxValoresNoAntecedente.SelectedIndex = 0;
+        }
+
+        private void SeleccionOperadorRegla(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void IrPanelRegla(object sender, RoutedEventArgs e)
+        {
+            if((string)((Button)sender).Content == "Agregar")
+            {
+                AdminReglas adminReglas = new AdminReglas();
+                int id = adminReglas.ObtenerUltimoID() + 1;
+                reglaActual = new Regla(id.ToString());
+                Perfil perfil = reglasSeccionActual.Perfil;
+                Dictionary<string, Componente> componentes = perfil.Blandas;
+                VariablesMatching vm = new VariablesMatching();
+                VariableLinguistica consecuente = vm.HBPerfil;
+                txtConsecuente.Text = consecuente.Nombre;
+
+                txtRegla.Text = "";
+                boxAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
+                {
+                    boxAntecedente.Items.Add(valor.Key);
+                }
+
+                if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
+                {
+                    componentes = perfil.Duras;
+                    consecuente = vm.HDPerfil;
+                }
+                else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
+                {
+                    componentes = perfil.Fisicas;
+                    consecuente = vm.CFPerfil;
+                }
+
+                boxValoresConsecuente.Items.Clear();
+                txtConsecuente.Text = consecuente.Nombre;
+                foreach (KeyValuePair<string, ValorLinguistico> valor in consecuente.Valores)
+                {
+                    boxValoresConsecuente.Items.Add(valor.Key);
+                }
+                boxValoresConsecuente.SelectedIndex = 2;
+
+                boxNoAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, Componente> componente in componentes)
+                {
+                    boxNoAntecedente.Items.Add(componente.Value.ID);
+                }
+
+                panelReglasSeccion.Visibility = Visibility.Hidden;
+                panelRegla.Visibility = Visibility.Visible;
+            } else if ((string)((Button)sender).Content == "Modificar")
+            {
+
+            }
+        }
+
+        private void AceptarRegla(object sender, RoutedEventArgs e)
+        {
+            AdminReglas ar = new AdminReglas();
+            int id = ar.ObtenerUltimoID() + 1;
+            string idSeccion = reglasSeccionActual.IdSeccion.ToString();
+            string tipo = txtConsecuente.Text.ToLower();
+
+            ar.InsertarRegla(id.ToString(), txtRegla.Text, idSeccion, tipo);
+            ObtenerReglasSeccion(idSeccion, tipo);
+            LlenarTablaReglas(reglasActuales);
+            VolverPanelReglas(null, null);
+        }
+
+        private void VolverPanelReglas(object sender, RoutedEventArgs e)
+        {
+            panelRegla.Visibility = Visibility.Hidden;
             panelReglasSeccion.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Cambia el valor de una variable del antecedente en la regla seleccionada.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CambiarValorAntecedente(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Muestra las opciones de un componente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AgregarComponenteAntecedente(object sender, RoutedEventArgs e)
+        {
+            AdminLD adminLD = new AdminLD();
+            AdminReglas adminReglas = new AdminReglas();
+            string nombreVariable = (string)boxNoAntecedente.SelectedValue;
+            string nombreValor = (string)boxValoresNoAntecedente.SelectedValue;
+            string variableConsecuente = txtConsecuente.Text;
+            string valorConsecuente = (string)boxValoresConsecuente.SelectedValue;
+            ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
+
+            if (reglaActual.Texto == "")
+            {
+                txtRegla.Text = "Si " + nombreVariable + " es " + nombreValor + " entonces " + variableConsecuente + " es " + valorConsecuente;
+            } else
+            {
+
+            }
+
         }
     }
 }

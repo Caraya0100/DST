@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LogicaDifusa;
 using SistemaInferencia;
 
-namespace Pruebas
+namespace DST
 {
     public class PruebaInferencia
     {

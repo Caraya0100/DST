@@ -64,5 +64,41 @@ namespace DST
         {
             get { return muyAltas; }
         }
+
+        public ValorLinguistico Inferiores
+        {
+            get { return inferiores; }
+        }
+
+        public ValorLinguistico Iguales
+        {
+            get { return iguales; }
+        }
+
+        public ValorLinguistico Superiores
+        {
+            get { return superiores; }
+        }
+
+        public ValorLinguistico NoCapacitado
+        {
+            get { return noCapacitado; }
+        }
+
+        public ValorLinguistico MedianamenteCapacitado
+        {
+            get { return medianamenteCapacitado; }
+        }
+
+        public ValorLinguistico Capacitado
+        {
+            get { return capacitado; }
+        }
+
+        public ValorLinguistico SobreCapacitado
+        {
+            get { return sobreCapacitado; }
+        }
+
     }
 }

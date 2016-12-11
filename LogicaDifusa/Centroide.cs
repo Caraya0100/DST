@@ -26,7 +26,7 @@ namespace LogicaDifusa
                que conforman el resultado de la agregación. */
             foreach (ValorLinguistico valor in agregacion)
             {
-                Console.WriteLine("Valor linguistico: " + valor.Nombre + " Valor corte: " + valor.Fp.ValorCorte);
+                //Console.WriteLine("Valor linguistico: " + valor.Nombre + " Valor corte: " + valor.Fp.ValorCorte);
                 double a = valor.Fp.LimiteInferior();
                 double b = valor.Fp.LimiteSuperior();
                 double epsilon = 1e-8; // tolerancia al error.
@@ -36,11 +36,11 @@ namespace LogicaDifusa
 
                 denominador += SimpsonIntegrator.Integrate(x => valor.Fp.GradoPertenencia(x), a,
                     b, epsilon);
-                Console.WriteLine("Numerador: " + numerador + " Denominador: " + denominador);
+                //Console.WriteLine("Numerador: " + numerador + " Denominador: " + denominador);
             }
             // Se divide el resultado de las integrales para obtener el centroide.
             resultado = numerador / denominador;
-            Console.WriteLine("Defuzzificacion: " + resultado);
+            //Console.WriteLine("Defuzzificacion: " + resultado);
             return resultado;
         }
     }
