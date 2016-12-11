@@ -177,6 +177,33 @@ namespace DST
         }
 
         /// <summary>
+        /// Obtiene el nombre de la seccion con el rut del trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public string ObtenerNombreSeccionTrabajador( string rutTrabajador)
+        {
+            string nombreSeccion = "";
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre FROM secciones WHERE id=(SELECT idSeccion FROM trabajadores WHERE rut='"
+                + rutTrabajador + "');";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nombreSeccion = consulta.GetString(0);
+            }
+
+            /*
+            Console.WriteLine("Nombre: {0}", nombreSeccion);
+            Console.ReadKey();*/
+
+            conn.Close();
+
+            return nombreSeccion;
+        }
+
+        /// <summary>
         /// Consulta para obtener el rut del jefe de seccion a partir del nombre de la seccion
         /// </summary>
         /// <param name="nombreSeccion"></param>
@@ -220,6 +247,9 @@ namespace DST
                 Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), 
                     consulta2.GetString(2),consulta2.GetDouble(3), consulta2.GetDouble(4));
                 perfilSeccion.AgregarComponente(nuevoComponente);
+                perfilSeccion.HB.Puntaje = ObtenerPuntajeHBSeccion(idSeccion);
+                perfilSeccion.HD.Puntaje = ObtenerPuntajeHBSeccion(idSeccion);
+                perfilSeccion.CF.Puntaje = ObtenerPuntajeHBSeccion(idSeccion);
             }
 
             conn2.Close();
@@ -280,6 +310,65 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+
+        public double ObtenerPuntajeHBSeccion(int idSeccion)
+        {
+            double puntajeHB = 0;
+
+            conn2.Open();
+            cmd2.CommandText = "SELECT hb FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";
+
+            consulta2 = cmd.ExecuteReader();
+            while (consulta2.Read())
+            {
+                puntajeHB = consulta2.GetDouble(0);
+            }
+
+            conn2.Close();
+
+            return puntajeHB;
+        }
+
+
+        public double ObtenerPuntajeHDSeccion(int idSeccion)
+        {
+            double puntajeHD = 0;
+
+            conn2.Open();
+            cmd2.CommandText = "SELECT hd FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";
+
+            consulta2 = cmd.ExecuteReader();
+            while (consulta2.Read())
+            {
+                puntajeHD = consulta2.GetDouble(0);
+            }
+
+            conn2.Close();
+
+            return puntajeHD;
+        }
+
+
+        public double ObtenerPuntajeCFSeccion(int idSeccion)
+        {
+            double puntajeCF = 0;
+
+            conn2.Open();
+            cmd2.CommandText = "SELECT cf FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";
+
+            consulta2 = cmd.ExecuteReader();
+            while (consulta2.Read())
+            {
+                puntajeCF = consulta2.GetDouble(0);
+            }
+
+            conn2.Close();
+
+            return puntajeCF;
         }
     }
 }
