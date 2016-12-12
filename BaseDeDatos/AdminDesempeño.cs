@@ -314,6 +314,42 @@ namespace DST
             return puntajeCF;
         }
         
-        
+        public List<string> ObtenerRankingTrabajadoresSeccion( int idSeccion )
+        {
+            List<string> ranking = new List<string>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT rutTrabajador FROM capacidadTrabajador WHERE idSeccionEvaluacion="
+                + idSeccion.ToString() + " ORDER BY capacidadTrabajador DESC;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                ranking.Add( consulta.GetString(0) );
+            }
+
+            conn.Close();
+
+            return ranking; 
+        }
+
+        public List<int> ObtenerRankingSeccionesTrabajador(string rutTrabajador)
+        {
+            List<int> ranking = new List<int>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT idSeccionEvaluacion FROM capacidadTrabajador WHERE rutTrabajador='"
+                + rutTrabajador + "' ORDER BY capacidadTrabajador DESC;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                ranking.Add(consulta.GetInt16(0));
+            }
+
+            conn.Close();
+
+            return ranking;
+        }
     }
 }
