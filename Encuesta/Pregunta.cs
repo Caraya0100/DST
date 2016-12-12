@@ -12,7 +12,8 @@ namespace DST
     public class Pregunta
     {
         private string descripcion;
-        private Dictionary<string, double> alternativas; // <id, valor>
+        //private Dictionary<string, double> alternativas; // <id, valor>
+        private List<Alternativa> alternativas;
         private Tuple<double, double, double> respuesta; // <grado, frecuencia, resultado>
         private List<string> componentes; // HB/HD/CF.
 
@@ -21,7 +22,8 @@ namespace DST
         /// </summary>
         public Pregunta()
         {
-            alternativas = new Dictionary<string, double>();
+            //alternativas = new Dictionary<string, double>();
+            alternativas = new List<Alternativa>();
             respuesta = new Tuple<double, double, double>(-1, -1, -1);
         }
 
@@ -50,7 +52,7 @@ namespace DST
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public KeyValuePair<string, double> Alternativa(string id)
+        /*public KeyValuePair<string, double> Alternativa(string id)
         {
             if (alternativas.ContainsKey(id))
             {
@@ -59,7 +61,7 @@ namespace DST
             {
                 return new KeyValuePair<string, double>();
             }
-        }
+        }*/
 
         /// <summary>
         /// Responde la pregunta, calculando el resultado final a partir 
@@ -84,7 +86,14 @@ namespace DST
             return resultado;
         }
 
+        /*
         public Dictionary<string, double> Alternativas
+        {
+            get { return alternativas; }
+            set { alternativas = value; }
+        }*/
+
+        public List<Alternativa> Alternativas
         {
             get { return alternativas; }
             set { alternativas = value; }

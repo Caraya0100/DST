@@ -121,14 +121,15 @@ namespace DST
         /// <param name="idSeccionActual"></param>
         /// <param name="idSeccionSolicitada"></param>
         public void InsertarSolicitudCambio(string fechaSolicitud, string estadoSolicitud, string rutSolicitud,
-            int idSeccionActual, int idSeccionSolicitada)
+            int idSeccionActual, int idSeccionSolicitada, double capacidadActual, double capacidadNueva)
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual"
-                + "idSeccionSolicitada) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "','"
+            cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual,"
+                + "idSeccionSolicitada,capacidadSeccionActual,capacidadNuevaSeccion) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "','"
                 + rutSolicitud + "'," + idSeccionActual.ToString() + "," + idSeccionSolicitada.ToString()
-                + ");";
+                + "," + capacidadActual.ToString() + "," + capacidadNueva.ToString() + ");";
+            //Console.WriteLine("CONSULTA" + cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
