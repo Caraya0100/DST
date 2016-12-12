@@ -252,8 +252,9 @@ namespace DST
             double puntajeHB = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)" 
-                + "FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador + "');" ;
+            cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador 
+                + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE" 
+                + " rutTrabajador='" + rutTrabajador + "');";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -276,8 +277,9 @@ namespace DST
             double puntajeHD = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT hd FROM evaluaciontrabajador WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
-                + "FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador + "');";
+            cmd.CommandText = "SELECT hd FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+                + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
+                + " rutTrabajador='" + rutTrabajador + "');";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -300,8 +302,9 @@ namespace DST
             double puntajeCF = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT cf FROM evaluaciontrabajador WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
-                + "FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador + "');";
+            cmd.CommandText = "SELECT cf FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+                + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
+                + " rutTrabajador='" + rutTrabajador + "');";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
