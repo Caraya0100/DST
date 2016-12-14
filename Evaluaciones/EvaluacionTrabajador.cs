@@ -12,6 +12,8 @@ namespace DST
     public class EvaluacionTrabajador
     {
         private Trabajador trabajador;
+        private Perfil perfilEvaluado;
+        private EvaluacionCapacidad ec;
 
         /// <summary>
         /// Constructor, recibe el trabajador al que se evaluara.
@@ -25,20 +27,21 @@ namespace DST
         /// <summary>
         /// Evalua la capacidad del trabajador respecto a una seccion.
         /// </summary>
-        /// <param name="seccion"></param>
-        public void Capacidad(Seccion seccion)
+        /// <param name="perfilSeccion"></param>
+        /// <param name="idSeccion"></param>
+        public EvaluacionCapacidad Capacidad(Perfil perfilSeccion, int idSeccion)
         {
-            EvaluacionCapacidad ec = new EvaluacionCapacidad();
+            ec = new EvaluacionCapacidad();
             AdminTrabajador at = new AdminTrabajador();
-            Perfil perfilSeccion = EvaluacionPerfil.Ejecutar(seccion.Perfil, seccion.IdSeccion);
+            perfilSeccion = EvaluacionPerfil.Ejecutar(perfilSeccion, idSeccion);
 
             perfilSeccion.HB.Nombre = "HBS";
             perfilSeccion.HD.Nombre = "HDS";
             perfilSeccion.CF.Nombre = "CFS";
 
             Perfil perfil = at.ObtenerPerfilTrabajador(trabajador.Rut);
-            Perfil perfilTrabajador = ObtenerPerfilTrabajadorSeccion(perfil, seccion.Perfil);
-            perfilTrabajador = EvaluacionPerfil.Ejecutar(perfilTrabajador, seccion.IdSeccion);
+            Perfil perfilTrabajador = ObtenerPerfilTrabajadorSeccion(perfil, perfilSeccion);
+            perfilTrabajador = EvaluacionPerfil.Ejecutar(perfilTrabajador, idSeccion);
 
             perfilTrabajador.HB.Nombre = "HBT";
             perfilTrabajador.HD.Nombre = "HDT";
@@ -54,6 +57,8 @@ namespace DST
                 perfilTrabajador.HD,
                 perfilTrabajador.CF
             );
+
+            return ec;
         }
 
         /// <summary>

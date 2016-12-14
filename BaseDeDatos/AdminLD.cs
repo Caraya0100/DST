@@ -294,5 +294,89 @@ namespace DST
 
             return variable;
         }
+
+        public void ActualizarVariableLinguistica(string nombreActual, string nombre, double minimo, double maximo)
+        {
+            AdminReglas ar = new AdminReglas();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE variablesLing SET nombre='" + nombre + "', minimo=" + minimo + ", maximo=" + maximo + " WHERE nombre='" + nombreActual + "';");
+
+            bd.Close();
+        }
+
+        /// <summary>
+        /// Actualiza el nombre de un valor linguistico, ademas actualiza 
+        /// el nombre de la funcion de pertenencia correspondiente, y las 
+        /// reglas correspondientes.
+        /// </summary>
+        /// <param name="nuevo"></param>
+        /// <param name="actual"></param>
+        /// <param name="nombreVariable"></param>
+        /// <param name="tipoFuncion"></param>
+        public void ActualizarNombreValor(string nuevo, string actual, string nombreVariable, string tipoFuncion)
+        {
+            AdminReglas ar = new AdminReglas();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE valoresLing SET nombre='" + nuevo + "' WHERE nombre='" + actual + "' AND nombreVariableLing='" + nombreVariable + "' AND tipoFuncion='" + tipoFuncion + "';");
+
+            if (tipoFuncion == "triangular")
+                ActualizarNombreTriangular(nuevo, actual, nombreVariable);
+            else if (tipoFuncion == "trapezoidal")
+                ActualizarNombreTrapezoidal(nuevo, actual, nombreVariable);
+
+            ar.ActualizarAntecedenteRegla(nombreVariable, actual, nombreVariable, nuevo);
+
+            bd.Close();
+        }
+
+        public void ActualizarNombreTriangular(string nuevo, string actual, string nombreVariable)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE funcionTriangular SET nombreValorLing='" + nuevo + "' WHERE nombreValorLing='" + actual + "' AND nombreVariableLing='" + nombreVariable + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarNombreTrapezoidal(string nuevo, string actual, string nombreVariable)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE funcionTrapezoide SET nombreValorLing='" + nuevo + "' WHERE nombreValorLing='" + actual + "' AND nombreVariableLing='" + nombreVariable + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarValoresTriangular(string nombreVariable, string nombreValor, double inferiorIzq, double superioIzq, double superiorDerch, double inferiorDerch)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE funcionTrapezoide SET valorInferiorIzquierdo=" + inferiorIzq.ToString() + ", valorSuperiorIzquierdo=" + superioIzq.ToString() + ", valorSuperiorDerecho=" + superiorDerch.ToString() + ", valorInferiorDerecho=" + inferiorDerch.ToString() + " WHERE nombreValor='" + nombreValor + "' AND nombreVariable='" + nombreVariable + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarValoresTriangular(string nombreVariable, string nombreValor, double izquierda, double centro, double derecha)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE funcionTriangular SET valorIzquierda=" + izquierda.ToString() + ", valorCentro=" + centro.ToString() + ", valorDerecha=" + derecha.ToString() + " WHERE nombreValor='" + nombreValor + "' AND nombreVariable='" + nombreVariable + "';");
+
+            bd.Close();
+        }
     }
 }

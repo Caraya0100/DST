@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Livecharts, Version=0.8.0.0, Culture=neutral, PublicKeyToken=c5935629d38af058, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.0.8.0\lib\net40\Livecharts.dll</HintPath>
       <Private>True</Private>
@@ -85,6 +89,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Estructuras\PreguntasYRespuestas.cs" />
+    <Compile Include="Estructuras\Trabajador.cs" />
+    <Compile Include="Estructuras\Usuario.cs" />
+    <Compile Include="InteraccionBD\InteraccionDesempeno.cs" />
+    <Compile Include="InteraccionBD\InteraccionEncuesta.cs" />
+    <Compile Include="InteraccionBD\InteraccionSecciones.cs" />
+    <Compile Include="InteraccionBD\InteraccionSolicitudes.cs" />
+    <Compile Include="InteraccionBD\InteraccionTrabajadores.cs" />
+    <Compile Include="InteraccionBD\InteraccionUsuarios.cs" />
     <Compile Include="Metodos\AnimacionScroll.cs" />
     <Compile Include="Convertidores\ConvertirValorTabla.cs" />
     <Compile Include="DatosDePrueba.cs" />
@@ -97,14 +110,21 @@
     <Compile Include="Paneles\VisorSecciones.cs" />
     <Compile Include="Paneles\VisorSolicitudes.cs" />
     <Compile Include="Paneles\VisorUsuarios.cs" />
+    <Compile Include="Reportes\Fuentes.cs" />
+    <Compile Include="Reportes\ReporteSolicitudes.cs" />
+    <Compile Include="Reportes\ReportesTrabajador.cs" />
+    <Compile Include="Reportes\Textos.cs" />
     <Compile Include="VentanaAdministrador.xaml.cs">
       <DependentUpon>VentanaAdministrador.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaAgregarSeccion.xaml.cs" />
     <Compile Include="VentanaAgregarTrabajador.xaml.cs" />
+    <Compile Include="VentanaAgregarUsuario.xaml.cs" />
     <Compile Include="VentanaAsignacionHabilidades.xaml.cs" />
     <Compile Include="VentanaDetalleHabilidades.xaml.cs">
       <DependentUpon>VentanaDetalleHabilidades.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaEleccionGradoImportancia.xaml.cs" />
     <Compile Include="VentanaEncuesta.xaml.cs" />
     <Compile Include="VentanaEvaluadores.xaml.cs" />
     <Compile Include="VentanaJefeSeccion.xaml.cs" />
@@ -129,7 +149,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="VentanaAgregarSeccion.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="VentanaAgregarTrabajador.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaAgregarUsuario.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -140,6 +168,10 @@
     <Page Include="VentanaDetalleHabilidades.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaEleccionGradoImportancia.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="VentanaEncuesta.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -215,10 +247,21 @@
       <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
       <Name>Trabajador</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Usuario\Usuario.csproj">
+      <Project>{0d750954-5cc0-4800-8270-f28c79a86d86}</Project>
+      <Name>Usuario</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
+    <Resource Include="Iconos\aceptar.png" />
+    <Resource Include="Iconos\agregar.png" />
     <Resource Include="Iconos\Business-Man.png" />
     <Resource Include="Iconos\configuracion.png" />
+    <Resource Include="Iconos\editar.png" />
+    <Resource Include="Iconos\eliminar.png" />
+    <Resource Include="Iconos\eliminarRojo.png" />
+    <Resource Include="Iconos\encuestaNoRealizada.png" />
     <Resource Include="Iconos\encuestaRealizada.png" />
     <Resource Include="Iconos\flechaAbajo.png" />
     <Resource Include="Iconos\flechaArriba.png" />
@@ -228,8 +271,10 @@
     <Resource Include="Iconos\guardar2.png" />
     <Resource Include="Iconos\herramientas.png" />
     <Resource Include="Iconos\logotipo.png" />
+    <Resource Include="Iconos\reporte.png" />
     <Resource Include="Iconos\User-Female.png" />
     <Resource Include="Iconos\usuarios.png" />
+    <Resource Include="Iconos\volver.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -19,6 +19,7 @@ namespace InterfazGrafica
         private TextBlock habilidad;
         private Slider gradoImportancia;
         private Label gradoImportanciaEtiqueta;
+        private Label puntaje;
         private Separator delimitador;
         private Canvas contenedorHabilidad;
         private Label key;
@@ -28,9 +29,11 @@ namespace InterfazGrafica
             this.habilidad = new TextBlock();
             this.gradoImportancia = new Slider();
             this.gradoImportanciaEtiqueta = new Label();
+            this.puntaje = new Label(); 
             this.delimitador = new Separator();
             this.contenedorHabilidad = new Canvas();
             this.key = new Label();
+            puntaje.Content = "0.0";
         }
 
         /// <summary>
@@ -57,12 +60,15 @@ namespace InterfazGrafica
             Brush colorDeLetrasNumero = (Brush)color.ConvertFrom("#CCA4C400");
             Brush colorDeFondo = (Brush)color.ConvertFrom("#FFFBFBFB");
             habilidad.Foreground = colorDeLetras;
-            habilidad.FontSize = 16;
+            habilidad.FontSize = 14;
             habilidad.TextWrapping = System.Windows.TextWrapping.Wrap;
             habilidad.Background = colorDeFondo;
             gradoImportanciaEtiqueta.Foreground = colorDeLetrasNumero;
             gradoImportanciaEtiqueta.FontSize = 36;
             gradoImportanciaEtiqueta.FontStyle = System.Windows.FontStyles.Italic;
+            puntaje.Foreground = colorDeLetrasNumero;
+            puntaje.FontSize = 36;
+            puntaje.FontStyle = System.Windows.FontStyles.Italic;
             habilidad.TextAlignment = System.Windows.TextAlignment.Center;
             habilidad.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             gradoImportanciaEtiqueta.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
@@ -75,9 +81,10 @@ namespace InterfazGrafica
         /// <param name="indice"></param>
         public void Ubicaciones(int indice)
         {
-            Canvas.SetTop(habilidad, 40); Canvas.SetLeft(habilidad, 10);
-            Canvas.SetTop(gradoImportancia, 40); Canvas.SetLeft(gradoImportancia, 365);
-            Canvas.SetTop(gradoImportanciaEtiqueta, 20); Canvas.SetLeft(gradoImportanciaEtiqueta, 580);
+            Canvas.SetTop(habilidad, 20); Canvas.SetLeft(habilidad, 0);
+            Canvas.SetTop(gradoImportancia, 40); Canvas.SetLeft(gradoImportancia, 450);
+            Canvas.SetTop(gradoImportanciaEtiqueta, 20); Canvas.SetLeft(gradoImportanciaEtiqueta, 570);
+            Canvas.SetTop(puntaje, 20); Canvas.SetLeft(puntaje,350);
             Canvas.SetTop(contenedorHabilidad, 100 * indice);
             Canvas.SetTop(delimitador, 102 * indice);
         }
@@ -87,11 +94,12 @@ namespace InterfazGrafica
         /// </summary>
         public void Dimensiones()
         {
-            contenedorHabilidad.Width = 650; contenedorHabilidad.Height = 70;
+            contenedorHabilidad.Width = 630; contenedorHabilidad.Height = 70;
             habilidad.Width = 330; habilidad.Height = 43;
             delimitador.Width = 679; delimitador.Height = 2;
-            gradoImportancia.Width = 174; gradoImportancia.Height = 22;
+            gradoImportancia.Width = 130; gradoImportancia.Height = 22;
             gradoImportanciaEtiqueta.Width = 110; gradoImportanciaEtiqueta.Height = 55;
+            puntaje.Width = 100; puntaje.Height = 55;
             key.Visibility = System.Windows.Visibility.Hidden;
         }
 
@@ -100,9 +108,10 @@ namespace InterfazGrafica
         /// </summary>
         public void AdicionChildren()
         {
-            contenedorHabilidad.Children.Add(this.habilidad);
-            contenedorHabilidad.Children.Add(this.gradoImportancia);
+            contenedorHabilidad.Children.Add(this.habilidad);            
             contenedorHabilidad.Children.Add(this.gradoImportanciaEtiqueta);
+            contenedorHabilidad.Children.Add(this.gradoImportancia);
+            contenedorHabilidad.Children.Add(this.puntaje);
             contenedorHabilidad.Children.Add(this.key);
         }
 
@@ -160,6 +169,12 @@ namespace InterfazGrafica
         {
             get { return delimitador; }
             set { }
-        }        
+        }
+
+        public string Puntaje
+        {
+            get { return puntaje.Content as string; }
+            set { puntaje.Content = value; }
+        }
     }
 }

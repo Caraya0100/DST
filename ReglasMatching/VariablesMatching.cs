@@ -20,6 +20,9 @@ namespace DST
         private VariableLinguistica cf;
         private VariableLinguistica trabajador;
 
+        /// <summary>
+        /// Constructor, inicializa las variables para el matching.
+        /// </summary>
         public VariablesMatching()
         {
             /*ValorLinguistico muy_bajas = new ValorLinguistico("muy_bajas", new FuncionTrapezoidal(0.0, 0.0, 0.1, 0.3));

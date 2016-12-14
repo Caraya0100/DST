@@ -16,6 +16,9 @@ namespace DST
         private MySqlDataReader consulta2;
         private MySqlCommand cmd;
         private MySqlCommand cmd2;
+        private MySqlConnection conn3;
+        private MySqlDataReader consulta3;
+        private MySqlCommand cmd3;
 
         //public AdminBD (string servidor, string usuario, string password, string nombreBD)
         public AdminSeccion()
@@ -26,7 +29,8 @@ namespace DST
             cmd = conn.CreateCommand();
             conn2 = bd.conectarBD();
             cmd2 = conn2.CreateCommand();
-
+            conn3 = bd.conectarBD();
+            cmd3 = conn3.CreateCommand();
         }
 
         /// <summary>
@@ -141,8 +145,8 @@ namespace DST
                 nombreSeccion = consulta.GetString(0);
             }
 
-            Console.WriteLine("Nombre: {0}", nombreSeccion);
-            Console.ReadKey();
+            /*Console.WriteLine("Nombre: {0}", nombreSeccion);
+            Console.ReadKey();*/
 
             conn.Close();
 
@@ -166,8 +170,8 @@ namespace DST
                 rutJefeSeccion = consulta.GetString(0);
             }
 
-            Console.WriteLine("RUT: {0}", rutJefeSeccion);
-            Console.ReadKey();
+            /*Console.WriteLine("RUT: {0}", rutJefeSeccion);
+            Console.ReadKey();*/
 
             conn.Close();
 
@@ -185,7 +189,7 @@ namespace DST
 
             conn2.Open();
             cmd2.CommandText = "SELECT c.id, c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia FROM componentesPerfil AS c,"
-                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.id=s.nombre;";
+                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.id=s.id;";
             consulta2 = cmd2.ExecuteReader();
             while (consulta2.Read())
             {
@@ -207,25 +211,333 @@ namespace DST
         public List<Seccion> ObtenerSecciones()
         {
             List<Seccion> secciones = new List<Seccion>();
-
+            AdminDesempeño ad = new AdminDesempeño();
             AdminTrabajador obtenerTrabajadores = new AdminTrabajador();
+            BaseDeDatos bd = new BaseDeDatos();
 
-            conn.Open();
-            cmd.CommandText = "SELECT * FROM secciones;";
-            consulta = cmd.ExecuteReader();
-            while (consulta.Read())
+            bd.Open();
+            bd.ConsultaMySql("SELECT * FROM secciones;");
+
+            while (bd.Consulta.Read())
             {
-                Seccion nuevaSeccion = new Seccion( consulta.GetString(1), consulta.GetInt16(0),
-                    ObtenerPerfilSeccion(consulta.GetInt16(0)), 
-                    obtenerTrabajadores.ObtenerTrabajadoresSeccion( consulta.GetInt16(0) ) );
+                int idSeccion = bd.Consulta.GetInt16(0);
+                string fecha = ad.ObtenerUltimaFecha();
+                Tuple<double, double, double> ventas = ad.ObtenerVentas(idSeccion, fecha);
+
+                if (ventas == null) ventas = new Tuple<double, double, double>(1,1,1);
+
+                Seccion nuevaSeccion = new Seccion(
+                    bd.Consulta.GetString(1),
+                    bd.Consulta.GetInt16(0),
+                    ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)), 
+                    obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0) ), 
+                    ventas.Item1, 
+                    ventas.Item2, 
+                    ventas.Item3
+                );
                 secciones.Add( nuevaSeccion );
             }
             
 
-            conn.Close();
+            bd.Close();
 
             return secciones;
         }
 
+        /// <summary>
+        /// Consulta para insertar una nueva seccion. Se reciben como parametros el nombre y el rut del jefe encargado
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="rutJefe"></param>
+        public void InsertarSeccion(string nombre, string rutJefe)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO secciones (nombre,rutJefe) VALUES('" + nombre + "','" + rutJefe + "');";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Obtiene el nombre de la seccion con el id de la seeccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
+        public string ObtenerNombreSeccion(int idSeccion)
+        {
+            string nombreSeccion = "";
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre FROM secciones WHERE id='" + idSeccion + "';";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nombreSeccion = consulta.GetString(0);
+            }
+
+            /*
+            Console.WriteLine("Nombre: {0}", nombreSeccion);
+            Console.ReadKey();*/
+
+            conn.Close();
+
+            return nombreSeccion;
+        }
+
+        /// <summary>
+        /// Obtiene el nombre de la seccion con el rut del trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public string ObtenerNombreSeccionTrabajador(string rutTrabajador)
+        {
+            string nombreSeccion = "";
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre FROM secciones WHERE id=(SELECT idSeccion FROM trabajadores WHERE rut='"
+                + rutTrabajador + "');";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nombreSeccion = consulta.GetString(0);
+            }
+
+            /*
+            Console.WriteLine("Nombre: {0}", nombreSeccion);
+            Console.ReadKey();*/
+
+            conn.Close();
+
+            return nombreSeccion;
+        }
+
+        /// <summary>
+        /// Modifica el nombre y el rut del jefe de seccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="nuevoNombre"></param>
+        /// <param name="nuevoRutJefe"></param>
+        public void ModificarDatosSeccion(int idSeccion, string nuevoNombre, string nuevoRutJefe)
+        {
+            conn.Open();
+
+            cmd.CommandText = "UPDATE secciones SET nombre='" + nuevoNombre + "', rutJefe='"
+                + nuevoRutJefe + " WHERE id=" + idSeccion.ToString() + ";";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Elimina una seccion y todo lo que este asociado a dicha seccion
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        public void EliminarSeccion(int idSeccion)
+        {
+            conn.Open();
+
+            cmd.CommandText = "DELETE FROM secciones WHERE id=" + idSeccion.ToString() + ";";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente de las hb
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeHBSeccion(int idSeccion)
+        {
+            double puntajeHB = 0;
+
+            conn3.Open();
+            /*cmd3.CommandText = "SELECT hb FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";*/
+            cmd3.CommandText = "SELECT hb FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                puntajeHB = consulta3.GetDouble(0);
+            }
+
+            conn3.Close();
+
+            return puntajeHB;
+        }
+
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente de las hd
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeHDSeccion(int idSeccion)
+        {
+            double puntajeHD = 0;
+
+            conn3.Open();
+            /*cmd3.CommandText = "SELECT hd FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";*/
+            cmd3.CommandText = "SELECT hd FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                puntajeHD = consulta3.GetDouble(0);
+            }
+
+            conn3.Close();
+
+            return puntajeHD;
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente de las cf
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeCFSeccion(int idSeccion)
+        {
+            double puntajeCF = 0;
+
+            conn3.Open();
+            /*cmd3.CommandText = "SELECT cf FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
+                + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";*/
+            cmd3.CommandText = "SELECT cf FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                puntajeCF = consulta3.GetDouble(0);
+            }
+
+            conn3.Close();
+
+            return puntajeCF;
+        }
+
+        /*************************************************************
+         *                  MIS CONSULTAS
+         * *******************************************************/
+        public List<string> ObtenerComponentesHD()
+        {
+            List<string> listaComponentes = new List<string>();
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT nombre FROM componentesPerfil WHERE tipo = 'hd';";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                listaComponentes.Add(consulta3.GetString(0));
+            }
+            conn3.Close();
+
+            return listaComponentes;
+        }
+
+        public List<string> ObtenerComponentesHB()
+        {
+            List<string> listaComponentes = new List<string>();
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT nombre FROM componentesPerfil WHERE tipo = 'hb';";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                listaComponentes.Add(consulta3.GetString(0));
+            }
+            conn3.Close();
+
+            return listaComponentes;
+        }
+
+        public List<string> ObtenerComponentesCF()
+        {
+            List<string> listaComponentes = new List<string>();
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT nombre FROM componentesPerfil WHERE tipo = 'cf'";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                listaComponentes.Add(consulta3.GetString(0));
+            }
+            conn3.Close();
+
+            return listaComponentes;
+        }
+
+        public void EliminarComponentePerfilSeccion(string nombre, int idSeccion)
+        {
+            try
+            {
+                conn.Open();
+                cmd.CommandText = "DELETE FROM componentesPerfilSecciones WHERE nombre='" + nombre + "' AND idSeccion=" + idSeccion + ";";
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR:" + e);
+            }
+        }
+
+        public List<string> ObtenerComponentesHDSeccion(int idSeccion)
+        {
+            List<string> listaComponentes = new List<string>();
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT DISTINCT t1.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
+                                + "ON t2.tipo = 'hd' AND t1.idSeccion= " + idSeccion + ";";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                listaComponentes.Add(consulta3.GetString(0));
+            }
+            conn3.Close();
+            return listaComponentes;
+        }
+
+
+        public List<string> ObtenerComponentesHBSeccion(int idSeccion)
+        {
+            List<string> listaComponentes = new List<string>();
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT DISTINCT t1.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
+                                + "ON t2.tipo = 'hb' AND t1.idSeccion= " + idSeccion + ";";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                listaComponentes.Add(consulta3.GetString(0));
+            }
+            conn3.Close();
+            return listaComponentes;
+        }
+
+        public List<string> ObtenerComponentesCFSeccion(int idSeccion)
+        {
+            List<string> listaComponentes = new List<string>();
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT DISTINCT t1.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
+                                + "ON t2.tipo = 'cf' AND t1.idSeccion= " + idSeccion + ";";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                listaComponentes.Add(consulta3.GetString(0));
+            }
+            conn3.Close();
+            return listaComponentes;
+        }
     }
 }

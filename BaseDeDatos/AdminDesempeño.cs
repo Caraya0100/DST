@@ -204,5 +204,346 @@ namespace DST
 
             return solicitudes;
         }
+
+        /// <summary>
+        /// Obtiene la fecha más actual.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="fecha"></param>
+        /// <returns></returns>
+        public string ObtenerUltimaFecha()
+        {
+            string fecha = "";
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+            bd.ConsultaMySql("SELECT max(fecha) FROM desempeño;");
+
+            while (bd.Consulta.Read())
+            {
+                fecha = bd.Consulta.GetDateTime(0).ToString();
+            }
+
+            bd.Close();
+
+            return fecha;
+        }
+
+        /// <summary>
+        /// Obtiene las ventas de un mes de una seccion.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="fecha"></param>
+        /// <returns></returns>
+        public Tuple<double, double, double> ObtenerVentas(int idSeccion, string fecha)
+        {
+            // año actual, año anterior, ventas plan.
+            Tuple<double, double, double> ventas = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+            bd.ConsultaMySql("SELECT ventasAñoActual, ventasAñoAnterior, ventasPlan FROM desempeño WHERE idSeccion=" + idSeccion + ";");
+
+            if (bd.Consulta.Read())
+            {
+                ventas = new Tuple<double, double, double>(
+                    bd.Consulta.GetDouble(0),
+                    bd.Consulta.GetDouble(1),
+                    bd.Consulta.GetDouble(2)
+                );
+            }
+
+            bd.Close();
+
+            return ventas;
+        }
+
+        /// <summary>
+        /// Funcion con la consulta para insertar las ventas asociadas al año anterior
+        /// Estas deben ingresarse solo una vez, ya que al ingresar las ventas del año actual, automaticamente
+        /// se ingresaran tambien como ventas del año anterior.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="mes"></param>
+        /// <param name="año"></param>
+        /// <param name="ventasAñoAnterior"></param>
+        public void InsertarVentasAñoAnterior(int idSeccion, string mes, string año, double ventasAñoAnterior)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO ventasAñoAnterior(idSeccion,mes,año,ventasAñoAnterior) VALUES("
+                + idSeccion.ToString() + ",'" + mes + "','" + año + "'," + ventasAñoAnterior.ToString() + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Funcion con la consulta para insertar las ventas del plan de la empresa
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="mes"></param>
+        /// <param name="año"></param>
+        /// <param name="ventasPlan"></param>
+        public void InsertarVentasPlan(int idSeccion, string mes, string año, double ventasPlan)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO ventasPlan(idSeccion,mes,año,ventasAñoAnterior) VALUES("
+                + idSeccion.ToString() + ",'" + mes + "','" + año + "'," + ventasPlan.ToString() + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+
+
+        /// <summary>
+        /// Funcion con la consulta para insertar en la tabla una solicitud de cambio de seccion
+        /// </summary>
+        /// <param name="fechaSolicitud"></param>
+        /// <param name="estadoSolicitud"></param>
+        /// <param name="rutSolicitud"></param>
+        /// <param name="idSeccionActual"></param>
+        /// <param name="idSeccionSolicitada"></param>
+        public void InsertarSolicitudCambio(string fechaSolicitud, string estadoSolicitud, string rutSolicitud,
+          int idSeccionActual, int idSeccionSolicitada, double capacidadActual, double capacidadNueva)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual,"
+                + "idSeccionSolicitada,capacidadSeccionActual,capacidadNuevaSeccion) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "'"
+                + rutSolicitud + "," + idSeccionActual.ToString() + "," + idSeccionSolicitada.ToString()
+                + "," + capacidadActual + "," + capacidadNueva + ");";
+            Console.WriteLine("CONSULTA" + cmd.CommandText.ToString());
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Guarda los resultados de la evaluacion de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <param name="idSeccionEvaluacion"></param>
+        /// <param name="capacidadTrabajador"></param>
+        /// <param name="gradoIgualdadHB"></param>
+        /// <param name="gradoIgualdadHD"></param>
+        /// <param name="gradoIgualdadCF"></param>
+        public void InsertarEvaluacion(string rutTrabajador, int idSeccionEvaluacion, double capacidadTrabajador,
+            double gradoIgualdadHB, double gradoIgualdadHD, double gradoIgualdadCF)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO capacidadTrabajador(rutTrabajador,idSeccionEvaluacion,capacidadTrabajador,"
+                + "gradoIgualdadHB,gradoIgualdadHD,gradoIgualdadCF) VALUES ('" + rutTrabajador + "',"
+                + idSeccionEvaluacion.ToString() + "," + gradoIgualdadHB.ToString() + "," + gradoIgualdadHD.ToString()
+                + "," + gradoIgualdadCF.ToString() + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void InsertarEvaluacionTrabajador(string fechaEvaluacion, string rutTrabajador, double hb, double hd,
+            double cf)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO evaluacionTrabajador(fechaEvaluacion,rutTrabajador,hb,hd,cf) VALUES ('"
+                + fechaEvaluacion + "','" + rutTrabajador + "'," + hb.ToString() + "," + hd.ToString()
+                + "," + cf.ToString() + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente para las habilidades blandas de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeHB(string rutTrabajador)
+        {
+            double puntajeHB = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+                + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
+                + " rutTrabajador='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeHB = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeHB;
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente para las habilidades duras de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeHD(string rutTrabajador)
+        {
+            double puntajeHD = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT hd FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+                + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
+                + " rutTrabajador='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeHD = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeHD;
+        }
+
+        /// <summary>
+        /// Obtiene el puntaje de la evaluacion mas reciente para las caracteristicas fisicas de un trabajador
+        /// </summary>
+        /// <param name="rutTrabajador"></param>
+        /// <returns></returns>
+        public double ObtenerPuntajeCF(string rutTrabajador)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT cf FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+                + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
+                + " rutTrabajador='" + rutTrabajador + "');";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
+
+        public List<string> ObtenerRankingTrabajadoresSeccion(int idSeccion)
+        {
+            List<string> ranking = new List<string>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT rutTrabajador FROM capacidadTrabajador WHERE idSeccionEvaluacion="
+                + idSeccion.ToString() + " ORDER BY capacidadTrabajador DESC;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                ranking.Add(consulta.GetString(0));
+            }
+
+            conn.Close();
+
+            return ranking;
+        }
+
+        public List<int> ObtenerRankingSeccionesTrabajador(string rutTrabajador)
+        {
+            List<int> ranking = new List<int>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT idSeccionEvaluacion FROM capacidadTrabajador WHERE rutTrabajador='"
+                + rutTrabajador + "' ORDER BY capacidadTrabajador DESC;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                ranking.Add(consulta.GetInt16(0));
+            }
+
+            conn.Close();
+
+            return ranking;
+        }
+
+        /**************************************************************************
+         *                              MIS CONSULTAS
+         * *************************************************************************/
+
+        public double ObtenerCapacidadGeneralRanking(string rutTrabajador)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
+
+        public double ObtenerCapacidadHBRanking(string rutTrabajador)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT gradoIgualdadHB FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
+
+        public double ObtenerCapacidadHDRanking(string rutTrabajador)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT gradoIgualdadHD FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
+
+        public double ObtenerCapacidadCFRanking(string rutTrabajador)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT gradoIgualdadCF FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
     }
 }

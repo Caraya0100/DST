@@ -52,7 +52,7 @@ namespace DST
         }
 
         /// <summary>
-        /// Devuelve los datos a partir
+        /// Devuelve los datos (puntajes) a partir de los componentes.
         /// </summary>
         /// <param name="componentes"></param>
         /// <returns></returns>

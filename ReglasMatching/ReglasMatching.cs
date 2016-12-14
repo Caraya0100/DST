@@ -25,7 +25,7 @@ namespace DST
         }
 
         /// <summary>
-        /// Define las reglas para inferir la compatibilidad de las HB.
+        /// Define las reglas para inferir el grado de igualdad de las HB.
         /// </summary>
         /// <returns></returns>
         private Dictionary<string, string> ReglasHB()
@@ -62,7 +62,7 @@ namespace DST
         }
 
         /// <summary>
-        /// Define las reglas para inferir la compatibilidad de las HD.
+        /// Define las reglas para inferir el grado de igualdad de las HD.
         /// </summary>
         /// <returns></returns>
         private Dictionary<string, string> ReglasHD()
@@ -99,7 +99,7 @@ namespace DST
         }
 
         /// <summary>
-        /// Define las reglas para inferir la compatibilidad de las CF.
+        /// Define las reglas para inferir el grado de igualdad de las CF.
         /// </summary>
         /// <returns></returns>
         private Dictionary<string, string> ReglasCF()

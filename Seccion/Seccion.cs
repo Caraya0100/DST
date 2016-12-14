@@ -31,6 +31,24 @@ namespace DST
         /// <param name="idSeccion"></param>
         /// <param name="perfil"></param>
         /// <param name="trabajadores"></param>
+        public Seccion(string nombre, int idSeccion, Perfil perfil, Dictionary<string, Trabajador> trabajadores, double ventasActuales, double ventasAnioAnterior, double ventasPlan)
+        {
+            this.nombre = nombre;
+            this.idSeccion = idSeccion;
+            this.perfil = perfil;
+            this.trabajadores = trabajadores;
+            this.ventasActuales = ventasActuales;
+            this.ventasAnioAnterior = ventasAnioAnterior;
+            this.ventasPlan = ventasPlan;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="idSeccion"></param>
+        /// <param name="perfil"></param>
+        /// <param name="trabajadores"></param>
         public Seccion( string nombre, int idSeccion, Perfil perfil, Dictionary<string, Trabajador> trabajadores)
         {
             this.nombre = nombre;
@@ -114,11 +132,13 @@ namespace DST
         public double ActualAnterior
         {
             get { return actualAnterior; }
+            set { actualAnterior = value; }
         }
 
         public double ActualPlan
         {
             get { return actualPlan; }
+            set { actualPlan = value; }
         }
     }
 }

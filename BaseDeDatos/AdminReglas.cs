@@ -288,5 +288,253 @@ namespace DST
 
             return id;
         }
+
+        public List<string> ObtenerIdReglaPorVariable(string nombreVariable)
+        {
+            List<string> ids = new List<string>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT DISTINCT idRegla FROM regla WHERE nombreVariable='" + nombreVariable + "';");
+
+            while (bd.Consulta.Read())
+            {
+                ids.Add(bd.Consulta.GetInt32("idRegla").ToString());
+            }
+
+            bd.Close();
+
+            return ids;
+        }
+
+        /// <summary>
+        /// Obtiene una variable y su valor, del antecedente de una regla.
+        /// </summary>
+        /// <param name="idRegla"></param>
+        /// <param name="nombreVariable"></param>
+        /// <param name="nombreValor"></param>
+        /// <returns></returns>
+        public Tuple<string, ValorLinguistico> ObtenerVariableAntecedente(int idRegla, string nombreVariable)
+        {
+            Tuple<string, ValorLinguistico> variable;
+            AdminLD ald = new AdminLD();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT idRegla, nombreVariable, nombreValor FROM regla WHERE idRegla =" + idRegla + " AND nombreVariable='" + nombreVariable + "' AND tipoVariable='antecedente';");
+
+            if (bd.Consulta.Read())
+            {
+                variable = new Tuple<string, ValorLinguistico>(
+                    bd.Consulta.GetString("nombreVariable"),
+                    ald.ObtenerValor(
+                        bd.Consulta.GetString("nombreValor"),
+                        bd.Consulta.GetString("nombreVariable")
+                    )
+                );
+            } else
+            {
+                variable = null;
+            }
+
+            bd.Close();
+
+            return variable;
+        }
+
+        /// <summary>
+        /// Obtiene una variable y su valor, del antecedente de una regla.
+        /// </summary>
+        /// <param name="idRegla"></param>
+        /// <param name="nombreVariable"></param>
+        /// <param name="nombreValor"></param>
+        /// <returns></returns>
+        public Tuple<string, ValorLinguistico> ObtenerVariableConsecuente(int idRegla, string nombreVariable)
+        {
+            Tuple<string, ValorLinguistico> variable;
+            AdminLD ald = new AdminLD();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT idRegla, nombreVariable, nombreValor FROM regla WHERE idRegla =" + idRegla + " AND nombreVariable='" + nombreVariable + "' AND tipoVariable='consecuente';");
+
+            if (bd.Consulta.Read())
+            {
+                VariablesMatching vm = new VariablesMatching();
+                string nombre = bd.Consulta.GetString("nombreVariable");
+                VariableLinguistica consecuente = vm.HBPerfil;
+
+                if (nombre == "HD")
+                    consecuente = vm.HDPerfil;
+                else if (nombre == "CF")
+                    consecuente = vm.CFPerfil;
+
+                variable = new Tuple<string, ValorLinguistico>(
+                    nombre,
+                    consecuente.Valores[bd.Consulta.GetString("nombreValor")]
+                );
+            }
+            else
+            {
+                variable = null;
+            }
+
+            bd.Close();
+
+            return variable;
+        }
+
+        public void ActualizarVariable(int idRegla, string variableActual, string nuevaVariable, string nuevoValor, string nuevoOperador)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE regla SET nombreVariable='" + nuevaVariable + "', nombreValor='" + nuevoValor + "', operador='" + nuevoOperador + "' WHERE idRegla=" + idRegla + " AND nombreVariable='" + variableActual + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarAntecedenteRegla(string variableActual, string valorActual, string nuevaVariable, string nuevoValor)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE regla SET nombreVariable='" + nuevaVariable + "', nombreValor='" + nuevoValor + "' WHERE nombreValor='" + valorActual + "' AND nombreVariable='" + variableActual + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarNombreVariable(string actual, string nuevo)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE regla SET nombreVariable='" + nuevo + "' WHERE nombreVariable='" + actual + "';");
+
+            bd.Close();
+        }
+
+        /// <summary>
+        /// Actualiza una regla de una seccion.
+        /// </summary>
+        /// <param name="regla"></param>
+        /// <param name="idSeccion"></param>
+        public void ActualizarRegla(Regla regla, int idSeccion)
+        {
+            string tipoComponente = regla.Consecuente.Item1.ToLower();
+
+            foreach (KeyValuePair<string, ValorLinguistico> variable in regla.Antecedente)
+            {
+                Tuple<string, ValorLinguistico> va = ObtenerVariableAntecedente(Convert.ToInt32(regla.ID), variable.Key);
+
+                if (va != null && va.Item2.Nombre != variable.Value.Nombre)
+                {
+                    ActualizarVariable(
+                        Convert.ToInt32(regla.ID), 
+                        variable.Key,
+                        variable.Key,
+                        variable.Value.Nombre, 
+                        regla.Operador
+                    );
+                } else if (va == null)
+                {
+                    GuardarRegla(
+                        Convert.ToInt32(regla.ID), 
+                        regla.Operador,
+                        variable.Key,
+                        variable.Value.Nombre, 
+                        "antecedente", 
+                        idSeccion, 
+                        tipoComponente
+                    );
+                }
+            }
+
+            Tuple<string, ValorLinguistico> consecuente = ObtenerVariableConsecuente(Convert.ToInt32(regla.ID), regla.Consecuente.Item1);
+
+            if (consecuente.Item2.Nombre != regla.Consecuente.Item2.Nombre)
+            {
+                ActualizarVariable(
+                    Convert.ToInt32(regla.ID),
+                    regla.Consecuente.Item1,
+                    regla.Consecuente.Item1,
+                    regla.Consecuente.Item2.Nombre,
+                    regla.Operador
+                );
+            }
+        }
+
+        /// <summary>
+        /// Elimina las reglas que tengan el nombre de la variable
+        /// </summary>
+        /// <param name="nombre"></param>
+        public void EliminarReglasNombreVariable(string nombreVariable)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+            bd.Open();
+
+            List<string> ids = ObtenerIdReglaPorVariable(nombreVariable);
+
+            foreach (string id in ids)
+            {
+                bd.Insertar("DELETE FROM regla WHERE idRegla=" + id.ToString() + ";");
+            }
+
+            bd.Close();
+        }
+
+        /// <summary>
+        /// Cambia el valor de una variable linguistica de una regla.
+        /// </summary>
+        /// <param name="idRegla"></param>
+        /// <param name="nombreVariable"></param>
+        public void CambiarValor(string nuevo, string actual, string nombreVariable, int idRegla)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE regla SET nombreValor='" + nuevo + "' WHERE idRegla=" + idRegla.ToString() + " AND nombreVariable='" + nombreVariable + "' AND nombreValor='" + actual + "';");
+
+            bd.Close();
+        }
+
+        /// <summary>
+        /// Elimina una variable linguistica de una regla.
+        /// </summary>
+        /// <param name="idRegla"></param>
+        /// <param name="nombreVariable"></param>
+        public void EliminarVariable(int idRegla, string nombreVariable)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM regla WHERE idRegla=" + idRegla.ToString() + " AND nombreVariable='" + nombreVariable + "';");
+
+            bd.Close();
+        }
+
+        /// <summary>
+        /// Elimina una regla.
+        /// </summary>
+        /// <param name="idRegla"></param>
+        /// <param name="nombreVariable"></param>
+        public void EliminarRegla(int idRegla)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM regla WHERE idRegla=" + idRegla.ToString() + ";");
+
+            bd.Close();
+        }
     }
 }

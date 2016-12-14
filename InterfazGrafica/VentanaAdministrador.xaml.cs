@@ -32,8 +32,21 @@ namespace InterfazGrafica
     public partial class VentanaAdministrador : MetroWindow
     {
         private Mensajes cuadroMensajes;
-        private DatosDePrueba datosPrueba;
+        private DatosDePrueba datosPrueba;//datos de prueba
         private AnimacionScroll animadorTrabajadores;
+        private Reportes.ReporteSolicitudes reporteSolicitud;
+        /*INTERACCION CON BD*/
+        private InteraccionBD.InteraccionUsuarios datosUsuario;
+        private InteraccionBD.InteraccionSecciones datosSeccion;
+        private InteraccionBD.InteraccionTrabajadores datosTrabajador;
+        private InteraccionBD.InteraccionSolicitudes datosSolicitudes;
+        private string idTrabajador;
+        /*Estructuras de datos*/
+        List<Seccion> listaDeSecciones;
+        List<Trabajador> listaDeTrabajadores;
+        List<Solicitud> listaDeSolicitudes;
+        int trabajadorSeleccionado;
+
         private Dictionary<string, Seccion> secciones;
         private double valorGraficoDAnterior;
         private double valorGraficoDPlan;
@@ -54,10 +67,20 @@ namespace InterfazGrafica
         }
         private void IniciarComponentes()
         {
-            cuadroMensajes  = new Mensajes(this);
-            datosPrueba     = new DatosDePrueba();            
+            trabajadorSeleccionado = 0;
+            cuadroMensajes = new Mensajes(this);
+            datosPrueba = new DatosDePrueba();
             animadorTrabajadores = new AnimacionScroll();
+            idTrabajador = string.Empty;
+            datosUsuario = new InteraccionBD.InteraccionUsuarios();
+            datosSeccion = new InteraccionBD.InteraccionSecciones();
+            datosTrabajador = new InteraccionBD.InteraccionTrabajadores();
+            datosSolicitudes = new InteraccionBD.InteraccionSolicitudes();
+            listaDeSecciones = datosSeccion.TodasLasSecciones();
+            listaDeTrabajadores = datosTrabajador.TrabajadoresEmpresa();
+            listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
             GeneraListaTrabajadores();
+
             ObtenerSecciones();
             IniciarTablaDesempeno();
             IniciarPanelComponentes();
@@ -87,38 +110,43 @@ namespace InterfazGrafica
         {
             if (itemDesempenio.IsSelected)
             {
-
+                animadorTrabajadores.detenerAnimacionHorizontal();
             }
-            else if (itemTrabajadores.IsSelected)
+            else if (itemTrabajadores != null && itemTrabajadores.IsSelected)
             {
-                //animadorTrabajadores.detenerAnimacionHorizontal();
-                animadorTrabajadores.comenzarAnimacionHorizontal();                
+                animadorTrabajadores.comenzarAnimacionHorizontal();
             }
-            else if (itemSecciones.IsSelected)
+            else if (itemSecciones != null && itemSecciones.IsSelected)
             {
-
+                animadorTrabajadores.detenerAnimacionHorizontal();
+                GeneraListaSecciones();
             }
-            else if (itemEvaluacion.IsSelected)
+            else if (itemEvaluacion != null && itemEvaluacion.IsSelected)
             {
-
+                animadorTrabajadores.detenerAnimacionHorizontal();
             }
-            else if (itemSolicitudes.IsSelected)
+            else if (itemSolicitudes != null && itemSolicitudes.IsSelected)
             {
-
+                animadorTrabajadores.detenerAnimacionHorizontal();
+                GeneraListaSolicitudes();
             }
-            else if(itemReglas.IsSelected)
+            else if (itemReglas != null && itemReglas.IsSelected)
             {
-
+                animadorTrabajadores.detenerAnimacionHorizontal();
             }
-            /*else if (itemComponentes.IsSelected)
+            else if (itemComponentes != null && itemComponentes.IsSelected)
             {
-
+                animadorTrabajadores.detenerAnimacionHorizontal();
             }
-            else if (itemUsuarios.IsSelected)
+            else if (itemUsuarios != null && itemUsuarios.IsSelected)
             {
-
-            }*/
+                animadorTrabajadores.detenerAnimacionHorizontal();
+                GeneraListaUsuarios();
+            }
         }
+        /**********************************************************************************
+                                        ITEM TRABAJADORES
+        *********************************************************************************/
         /// <summary>
         /// Metodo que genera los elementos que contiene el scrollTrabajador.
         /// </summary>
@@ -126,13 +154,14 @@ namespace InterfazGrafica
         {
             this.panelTrabajadores.Children.Clear();
             int indice = 0;
-            foreach (Trabajador datos in datosPrueba.Trabajadores)
+            foreach (Trabajador trabajador in listaDeTrabajadores)
             {
                 VisorTrabajador infoTrabajador = new VisorTrabajador(seleccionPanelTrabajador);
-                infoTrabajador.Nombre = datos.Nombre;
-                infoTrabajador.Apellido = datos.ApellidoPaterno;                
+                infoTrabajador.Nombre = trabajador.Nombre;
+                infoTrabajador.Apellido = trabajador.ApellidoPaterno;
+                Console.WriteLine("SEXO: " + trabajador.Sexo);
                 /*comprobar el sexo*/
-                if (datos.Sexo.Equals("M"))
+                if (trabajador.Sexo.Equals("Masculino"))
                     infoTrabajador.DireccionImagen = @"..\..\Iconos\Business-Man.png";
                 else
                     infoTrabajador.DireccionImagen = @"..\..\Iconos\User-Female.png";
@@ -148,8 +177,428 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void seleccionPanelTrabajador(object sender, MouseButtonEventArgs e)
         {
+            eliminarTrabajador.IsEnabled = true;
+            editarInformacion.IsEnabled = true;
+            int indice = IdentificadorCanvas(sender);
+            trabajadorSeleccionado = indice;
+            /*asignacion de datos del trabajador*/
+            this.nombreTrabajador.Content = listaDeTrabajadores[indice].Nombre + " " + listaDeTrabajadores[indice].ApellidoPaterno;
+            this.edadTrabajador.Content = CalcularEdad(listaDeTrabajadores[indice].FechaNacimiento);
+            this.sexoTrabajador.Content = listaDeTrabajadores[indice].Sexo;
+            if (listaDeTrabajadores[indice].Sexo.Equals("Masculino"))
+                this.imagenTrabajador.Fill = new ImageBrush(new BitmapImage(new Uri(@"..\..\Iconos\Business-Man.png", UriKind.Relative)));
+            else
+                this.imagenTrabajador.Fill = new ImageBrush(new BitmapImage(new Uri(@"..\..\Iconos\User-Female.png", UriKind.Relative)));
+            datosSeccion.IdTrabajador = listaDeTrabajadores[indice].Rut;
+            this.seccionTrabajador.Content = datosSeccion.NombreSeccionPorRutTrabajador();
+        }
+
+        async private void EliminarTrabajador(object sender, RoutedEventArgs e)
+        {
+            if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConsultaEliminarTrabajadorAdmin()))
+            {
+                cuadroMensajes.TrabajadorEliminadoAdmin();
+                nombreTrabajador.Content = "";
+                edadTrabajador.Content = "";
+                sexoTrabajador.Content = "";
+                eliminarTrabajador.IsEnabled = false;
+                editarInformacion.IsEnabled = false;
+                /**eliminar datos de BD*/
+
+            }
+        }
+
+        private void AgregarTrabajador(object sender, RoutedEventArgs e)
+        {
+            VentanaAgregarTrabajador nuevoTrabajador = new VentanaAgregarTrabajador();
+            nuevoTrabajador.ShowDialog();
+        }
+
+        private void EditarTrabajador(object sender, RoutedEventArgs e)
+        {
+            VentanaAgregarTrabajador nuevoTrabajador = new VentanaAgregarTrabajador();
+            nuevoTrabajador.IdTrabajador = idTrabajador;//id del trabajador seleccionado
+            nuevoTrabajador.NombreTrabajador = listaDeTrabajadores[trabajadorSeleccionado].Nombre;
+            nuevoTrabajador.ApellidoPaterno = listaDeTrabajadores[trabajadorSeleccionado].ApellidoPaterno;
+            nuevoTrabajador.ApellidoMaterno = listaDeTrabajadores[trabajadorSeleccionado].ApellidoMaterno;
+            nuevoTrabajador.ApellidoPaterno = listaDeTrabajadores[trabajadorSeleccionado].ApellidoPaterno;
+            nuevoTrabajador.FechaNacimiento = FechaNacimientoFormato(listaDeTrabajadores[trabajadorSeleccionado].FechaNacimiento);
+            nuevoTrabajador.Rut = RutNumero(listaDeTrabajadores[trabajadorSeleccionado].Rut);
+            nuevoTrabajador.DigitoVerificador = DigitoVerificador(listaDeTrabajadores[trabajadorSeleccionado].Rut);
+            nuevoTrabajador.Sexo = TipoSexo(listaDeTrabajadores[trabajadorSeleccionado].Sexo);
+            nuevoTrabajador.Edicion = true;
+            nuevoTrabajador.RutNoModificado = listaDeTrabajadores[trabajadorSeleccionado].Rut;
+            nuevoTrabajador.ShowDialog();
+        }
+
+        private void DetenerMovientoScroll(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            animadorTrabajadores.detenerAnimacionHorizontal();
+        }
+        private void ComenzarMovimientoScroll(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            animadorTrabajadores.comenzarAnimacionHorizontal();
+        }
+
+        private void eventoMovimientoDerecha(object sender, EventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollTrabajadores.HorizontalOffset);
+            double aumentaEspacio = (double)estadoAvance + 40.0;
+            animadorTrabajadores.detenerAnimacionHorizontal();
+            animadorTrabajadores.Contador = (int)aumentaEspacio;
+            scrollTrabajadores.ScrollToHorizontalOffset(aumentaEspacio);
+        }
+
+        private void eventoMovimientoIzquierda(object sender, EventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollTrabajadores.HorizontalOffset);
+            double aumentaEspacio = (double)estadoAvance - 40.0;
+            animadorTrabajadores.detenerAnimacionHorizontal();
+            animadorTrabajadores.Contador = (int)aumentaEspacio;
+            scrollTrabajadores.ScrollToHorizontalOffset(aumentaEspacio);
+        }
+        /********************************************************************************
+         *                                  ITEM SECCIONES
+        *********************************************************************************/
+
+        private void GeneraListaSecciones()
+        {
+            this.panelSecciones.Children.Clear();
+            int identificador = 0;
+            foreach (Seccion unaSeccion in listaDeSecciones)
+            {
+                datosSeccion.NombreSeccion = unaSeccion.Nombre;  //especifica la seccion actual
+                VisorSecciones seccion = new VisorSecciones();
+                seccion.NombreSeccion = unaSeccion.Nombre;
+                seccion.JefeSeccion = datosSeccion.NombreJefeSeccion();
+                seccion.CantidadTrabajadores = "" + unaSeccion.Trabajadores.Count;
+                seccion.IdentificadorEditar = "I" + identificador;
+                seccion.IdentificadorEliminar = "I" + identificador;
+                seccion.IdenficadorVer = "I" + identificador;
+                seccion.ControladorVer(VerSeccion);
+                seccion.ControladorEliminar(EliminarSeccion);
+                seccion.ControladorEditar(EditarSeccion);
+                this.panelSecciones.Children.Add(seccion.ConstructorInfo());
+                identificador++;
+            }
+        }
+
+        private void VerSeccion(object sender, RoutedEventArgs e)
+        {
+            int indice = IdentificadorBoton(sender);
+            VentanaJefeSeccion seccion = new VentanaJefeSeccion();
+            datosSeccion.NombreSeccion = listaDeSecciones[indice].Nombre;//identifica la seccion seleccionada
+            seccion.NombreSeccion = listaDeSecciones[indice].Nombre;
+            //seccion.NombreJefeSeccion = datosSeccion.NombreJefeSeccion();
+            seccion.NombreJefeSeccion = "Administrador";
+            seccion.ListaTrabajadores = listaDeSecciones[indice].Trabajadores;
+            seccion.IdSeccion = listaDeSecciones[indice].IdSeccion;
+            this.Hide();
+            seccion.Show();
+        }
+
+        private void EditarSeccion(object sender, RoutedEventArgs e)
+        {
+            int indice = IdentificadorBoton(sender);
+            datosSeccion.NombreSeccion = listaDeSecciones[indice].Nombre; //indica seccion actual
+            VentanaAgregarSeccion seccionNueva = new VentanaAgregarSeccion();
+            seccionNueva.Seccion = listaDeSecciones[indice].Nombre;
+            int item = 0;
+            foreach (string nombre in seccionNueva.NombreJefeSeccion)
+            {
+                if (nombre.Equals(datosSeccion.NombreJefeSeccion()))
+                {
+                    seccionNueva.JefeSeccion = item;
+                }
+                item++;
+            }
+            seccionNueva.ShowDialog();
+        }
+
+        private void AgregarSeccion(object sender, RoutedEventArgs e)
+        {
+            VentanaAgregarSeccion seccionNueva = new VentanaAgregarSeccion();
+            seccionNueva.ShowDialog();
+            listaDeSecciones = datosSeccion.TodasLasSecciones();
+            GeneraListaSecciones();
 
         }
+
+        async private void EliminarSeccion(object sender, RoutedEventArgs e)
+        {
+            int indice = IdentificadorBoton(sender);
+            if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConsultaEliminarSeccion()))
+            {
+                datosSeccion.IdSeccion = listaDeSecciones[indice].IdSeccion;
+                datosSeccion.EliminarSeccion();
+                listaDeSecciones = datosSeccion.TodasLasSecciones();
+                GeneraListaSecciones();
+                cuadroMensajes.SeccionEliminada();
+                listaDeTrabajadores = datosTrabajador.TrabajadoresEmpresa();
+                GeneraListaTrabajadores();
+            }
+        }
+
+        private void MovimientoArriba(object sender, RoutedEventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollSecciones.VerticalOffset);
+            double aumentaEspacio = (double)estadoAvance - 100.0;
+            scrollSecciones.ScrollToVerticalOffset(aumentaEspacio);
+        }
+
+        private void MovimientoAbajo(object sender, RoutedEventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollSecciones.VerticalOffset);
+            double aumentaEspacio = (double)estadoAvance + 100.0;
+            scrollSecciones.ScrollToVerticalOffset(aumentaEspacio);
+        }
+
+        /*********************************************************************************
+        *                               ITEM USUARIOS
+        *********************************************************************************/
+
+        private void GeneraListaUsuarios()
+        {
+            panelUsuarios.Children.Clear();
+
+            int identificador = 0;
+            foreach (Estructuras.Usuario usuario in datosUsuario.UsuariosExistentes())
+            {
+
+                VisorUsuarios usuarios = new VisorUsuarios();
+                usuarios.Nombre = usuario.Nombre;
+                string nombreSeccion = datosUsuario.SeccionAsociada(usuario.Rut);
+
+                if (!nombreSeccion.Equals(""))
+                    usuarios.Seccion = nombreSeccion;
+                else usuarios.Seccion = "Sección no asignada";
+                usuarios.IdenficadorEditar = "I" + identificador;
+                usuarios.IdenficadorEliminar = "I" + identificador;
+                usuarios.ControladorEditar(EditarUsuario);
+                usuarios.ControladorEliminar(EliminarUsuario);
+                panelUsuarios.Children.Add(usuarios.ConstructorInfo());
+                identificador++;
+            }
+        }
+
+        private void EditarUsuario(object sender, RoutedEventArgs e)
+        {
+            int id = IdentificadorBoton(sender);//verificar
+            int identificador = 0;
+            foreach (Estructuras.Usuario infoUsuario in datosUsuario.UsuariosExistentes())
+            {
+                if (id == identificador)
+                {
+                    VentanaAgregarUsuario usuario = new VentanaAgregarUsuario();
+                    usuario.Edicion = true;
+                    usuario.NombreUsuario = infoUsuario.Nombre;
+                    string[] rut = SeparadorRut(infoUsuario.Rut);
+                    usuario.Rut = rut[0];
+                    usuario.DigitoVerificador = rut[1];
+                    if (infoUsuario.TipoUsuario.Equals("JEFE_SECCION"))
+                        usuario.TipoUsuario = 0;
+                    else usuario.TipoUsuario = 1;
+                    usuario.Password = infoUsuario.Clave;
+                    usuario.ShowDialog();
+                }
+                identificador++;
+            }
+
+        }
+
+        async private void EliminarUsuario(object sender, RoutedEventArgs e)
+        {
+            int id = IdentificadorBoton(sender);
+            if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.EliminarUsuario()))
+            {
+                int identificador = 0;
+                foreach (Estructuras.Usuario infoUsuario in datosUsuario.UsuariosExistentes())
+                {
+                    if (id == identificador)
+                    {
+                        datosUsuario.IdUsuario = infoUsuario.Rut;
+                        datosUsuario.EliminarUsuario();
+                    }
+                    identificador++;
+                }
+                cuadroMensajes.UsuarioEliminado();
+                panelUsuarios.Children.Clear();
+                GeneraListaUsuarios();
+            }
+        }
+
+        private void AgregarUsuario(object sender, RoutedEventArgs e)
+        {
+            VentanaAgregarUsuario usuario = new VentanaAgregarUsuario();
+            usuario.ShowDialog();
+            panelUsuarios.Children.Clear();
+            GeneraListaUsuarios();
+        }
+
+        private void MovimientoArribaUsuarios(object sender, RoutedEventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollUsuarios.VerticalOffset);
+            double aumentaEspacio = (double)estadoAvance - 100.0;
+            scrollUsuarios.ScrollToVerticalOffset(aumentaEspacio);
+        }
+
+        private void MovimientoAbajoUsuarios(object sender, RoutedEventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollUsuarios.VerticalOffset);
+            double aumentaEspacio = (double)estadoAvance + 100.0;
+            scrollUsuarios.ScrollToVerticalOffset(aumentaEspacio);
+        }
+
+
+        /*********************************************************************************
+         *                                  ITEM SOLICITUDES
+        /*********************************************************************************/
+        private void GeneraListaSolicitudes()
+        {
+            panelSolicitudes.Children.Clear();
+            int identificador = 0;
+            foreach (Solicitud datosSolicitud in listaDeSolicitudes)
+            {
+                VisorSolicitudes solicitud = new VisorSolicitudes();
+                solicitud.SeccionActual = datosSeccion.NombreSeccionPorId(datosSolicitud.IdSeccionActual);
+                solicitud.SeccionNueva = datosSeccion.NombreSeccionPorId(datosSolicitud.IdSeccionSolicitada);
+                solicitud.Trabajador = "un trabajador";//datos de prueba
+                solicitud.CapacidadActualSeccion = "90.0%";//datos de prueba
+                solicitud.CapacidadNuevaSeccion = "92.0%";//datos de prueba
+                solicitud.IdentificadorAceptar = "I" + identificador;
+                solicitud.IdentificadorRechazar = "I" + identificador;
+                solicitud.ControladorRechazar(RechazarSolicitud);
+                solicitud.ControladorAceptar(AceptarSolicitud);
+                panelSolicitudes.Children.Add(solicitud.ConstructorInfo());
+                identificador++;
+            }
+        }
+
+        async private void AceptarSolicitud(object sender, RoutedEventArgs e)
+        {
+            /*actualiza datos en el panel y BD*/
+            if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConfirmarSolicitud()))
+            {
+                cuadroMensajes.SolicitudConfirmada();
+                panelSolicitudes.Children.Clear();
+                GeneraListaSolicitudes();
+            }
+
+        }
+
+        async private void RechazarSolicitud(object sender, RoutedEventArgs e)
+        {
+            /*actualiza datos en el panel y BD*/
+            if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.RechazarSolicitud()))
+            {
+                cuadroMensajes.SolicitudRechazada();
+                panelSolicitudes.Children.Clear();
+                GeneraListaSolicitudes();
+            }
+        }
+
+        private void GenerarReportesSolicitudes(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog explorador = new System.Windows.Forms.SaveFileDialog();
+            explorador.Filter = "Pdf Files|*.pdf";
+            explorador.ShowDialog();
+            if (explorador.FileName != "")
+            {
+                reporteSolicitud = new Reportes.ReporteSolicitudes();
+                reporteSolicitud.RutaFichero = explorador.FileName;
+                reporteSolicitud.GenerarReporte();
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = explorador.FileName;
+                proc.Start();
+                proc.Close();
+            }
+
+
+        }
+
+        private void MovimientoArribaSolicitudes(object sender, RoutedEventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollSolicitudes.VerticalOffset);
+            double aumentaEspacio = (double)estadoAvance - 100.0;
+            scrollSolicitudes.ScrollToVerticalOffset(aumentaEspacio);
+        }
+
+        private void MovimientoAbajoSolicitudes(object sender, RoutedEventArgs e)
+        {
+            int estadoAvance = Convert.ToInt32(scrollSolicitudes.VerticalOffset);
+            double aumentaEspacio = (double)estadoAvance + 100.0;
+            scrollSolicitudes.ScrollToVerticalOffset(aumentaEspacio);
+        }
+
+        /***********************************************************/
+        private int IdentificadorBoton(Object sender)
+        {
+            var ver = sender as System.Windows.Controls.Button;
+            string id = ver.Name as string;
+
+            string[] indiceEtiqueta = id.Split('I');
+            int indice = Convert.ToInt32(indiceEtiqueta[1]);
+            return indice;
+        }
+
+        private string[] SeparadorRut(string rut)
+        {
+            string[] rutSeparado = rut.Split('-');
+            return rutSeparado;
+        }
+        /**********************************************************************************
+        *                                  METODOS DE PARSEO
+        * *******************************************************************************/
+
+        private string CalcularEdad(string fechaNacimiento)
+        {
+            string[] soloFecha = fechaNacimiento.Split(' ');
+            string[] fecha = soloFecha[0].Split('/');
+            Console.WriteLine(fecha[0] + "-" + fecha[1] + "-" + fecha[2]);
+            int mm, yy, dd; Int32.TryParse(fecha[0], out dd); Int32.TryParse(fecha[1], out mm); Int32.TryParse(fecha[2], out yy);
+            DateTime nacimiento = new DateTime(yy, mm, dd);
+            int edad = DateTime.Today.AddTicks(-nacimiento.Ticks).Year - 1;
+            return "" + edad;
+        }
+
+        private int IdentificadorCanvas(Object sender)
+        {
+            var ver = sender as System.Windows.Controls.Canvas;
+            string id = ver.Name as string;
+
+            string[] indiceEtiqueta = id.Split('I');
+            int indice = Convert.ToInt32(indiceEtiqueta[1]);
+            return indice;
+        }
+
+        private string FechaNacimientoFormato(string fecha)
+        {
+            string[] fechaNacimiento = fecha.Split(' ');
+            return fechaNacimiento[0];
+        }
+
+        private string RutNumero(string rut)
+        {
+            string[] soloRut = rut.Split('-');
+            return soloRut[0];
+        }
+
+        private string DigitoVerificador(string rut)
+        {
+            string[] soloRut = rut.Split('-');
+            return soloRut[1];
+        }
+
+        private int TipoSexo(string sexo)
+        {
+            if (sexo.Equals("Masculino"))
+                return 0;
+            else return 1;
+        }
+
+        /* ----------------------------------------------------------------------
+         *                          PD. PANEL DESEMPEÑO
+         * ----------------------------------------------------------------------*/
 
         public void ObtenerSecciones()
         {
@@ -159,13 +608,13 @@ namespace InterfazGrafica
 
             foreach (Seccion seccion in s)
             {
+                Tuple<double, double> desempeno = EvaluacionDesempeno.Ejecutar(seccion.VentasActuales, seccion.VentasAnioAnterior, seccion.VentasPlan);
+
+                seccion.ActualAnterior = desempeno.Item1;
+                seccion.ActualPlan = desempeno.Item2;
                 secciones.Add(seccion.Nombre, seccion);
             }
         }
-
-        /* ----------------------------------------------------------------------
-         *                          PD. PANEL DESEMPEÑO
-         * ----------------------------------------------------------------------*/
 
         /// <summary>
         /// Inicializa la tabla resumen con el desempeño de todas las secciones.
@@ -462,11 +911,12 @@ namespace InterfazGrafica
         }
 
         /* ----------------------------------------------------------------------
-         *                          PD. PANEL COMPONENTES
+         *                          PC. PANEL COMPONENTES
          * ----------------------------------------------------------------------*/
 
         private Componente componenteActual;
         private VariableLinguistica variableActual;
+        private ValorLinguistico valorActual;
 
         /// <summary>
         /// Inicializa los valores linguisticos por defecto de un componente.
@@ -636,6 +1086,13 @@ namespace InterfazGrafica
             txtLimiteInferior.Text = "" + variableActual.Min;
             txtLimiteSuperior.Text = "" + variableActual.Max;
 
+            if (componenteActual.Tipo == PerfilConstantes.HB)
+                boxTipoComponente.SelectedValue = "Habilidad blanda";
+            else if (componenteActual.Tipo == PerfilConstantes.HD)
+                boxTipoComponente.SelectedValue = "Habilidad dura";
+            else if (componenteActual.Tipo == PerfilConstantes.CF)
+                boxTipoComponente.SelectedValue = "Caracteristica fisica";
+
             foreach (KeyValuePair<string, ValorLinguistico> valor in variableActual.Valores)
             {
                 boxFP.Items.Add(valor.Key);
@@ -685,6 +1142,7 @@ namespace InterfazGrafica
         {
             AdminLD adminLD = new AdminLD();
             AdminPerfil adminPerfil = new AdminPerfil();
+            string idViejo = componenteActual.ID;
             bool insertar = false;
             if (componenteActual.ID == "")
             {
@@ -725,14 +1183,48 @@ namespace InterfazGrafica
                         VolverPanelComponentes(null, null);
                     }
                 }
-                else if (!insertar && adminLD.ObtenerVariable(componenteActual.ID) != null)
+                else if (!insertar)
                 {
-                    
+                    if (idViejo != componenteActual.ID && adminLD.ObtenerVariable(componenteActual.ID) == null)
+                    {
+                        adminPerfil.ActualizarComponente(idViejo, componenteActual.ID, componenteActual.Nombre, componenteActual.Descripcion, componenteActual.Tipo);
+                        ObtenerComponentes();
+                        LlenarTablaComponentes(hb);
+                        lblErrorComponente.Visibility = Visibility.Collapsed;
+                        VolverPanelComponentes(null, null);
+                    }
+                    else
+                        MostrarError(lblErrorComponente, " El Id del componente ya existe.");
                 }
             } else
             {
                 MostrarError(lblErrorComponente, " El Id y el Nombre del componente no pueden ser vacios.");
             }
+        }
+
+        /// <summary>
+        /// Realiza los cambios en las opciones avanzadas de la variable linguistica.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AceptarOpcionesAvanzadas(object sender, RoutedEventArgs e)
+        {
+            AdminLD adminLD = new AdminLD();
+
+            if (variableActual.Min.ToString() != txtLimiteInferior.Text || variableActual.Max.ToString() != txtLimiteSuperior.Text)
+            {
+                variableActual.Min = Convert.ToDouble(txtLimiteInferior.Text);
+                variableActual.Max = Convert.ToDouble(txtLimiteSuperior.Text);
+                adminLD.ActualizarVariableLinguistica(
+                    variableActual.Nombre,
+                    variableActual.Nombre,
+                    variableActual.Min,
+                    variableActual.Max
+                );
+            }
+
+            panelOpcionesAvanzadas.Visibility = Visibility.Hidden;
+            panelComponente.Visibility = Visibility.Visible;
         }
 
         private void MostrarError(Label label, string mensaje)
@@ -761,7 +1253,59 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void AceptarFP(object sender, RoutedEventArgs e)
         {
-            boxFP.SelectedValue = "Muy_baja";
+            AdminLD ald = new AdminLD();
+            string tipoFuncion = "triangular";
+            //boxFP.SelectedValue = "Muy_baja";
+
+            if ((string)boxTipoFP.SelectedValue == "triangular")
+            {
+                FuncionTriangular fp = (FuncionTriangular)valorActual.Fp;
+                string izq = txtValorIzquierda.Text;
+                string centro = txtValorCentro.Text;
+                string derch = txtValorDerecha.Text;
+
+                if (izq != fp.ValorIzq.ToString() || centro != fp.ValorCentro.ToString() || derch != fp.ValorDerch.ToString())
+                {
+                    fp.ValorIzq = Convert.ToDouble(izq);
+                    fp.ValorCentro = Convert.ToDouble(centro);
+                    fp.ValorDerch = Convert.ToDouble(derch);
+                    ald.ActualizarValoresTriangular(
+                        variableActual.Nombre, 
+                        valorActual.Nombre,
+                        fp.ValorIzq, fp.ValorCentro, fp.ValorDerch
+                    );
+                }
+            }
+            else if ((string)boxTipoFP.SelectedValue == "trapezoidal")
+            {
+                tipoFuncion = "trapezoidal";
+                FuncionTrapezoidal fp = (FuncionTrapezoidal)valorActual.Fp;
+                string izqAbajo = txtValorIzquierdaAbajo.Text;
+                string izqArriba = txtValorIzquierdaArriba.Text;
+                string derchArriba = txtValorDerechaArriba.Text;
+                string derchAbajo = txtValorDerechaAbajo.Text;
+
+                if (izqAbajo != fp.ValorIzqAbajo.ToString() || izqArriba != fp.ValorIzqAbajo.ToString() || derchArriba != fp.ValorDerchArriba.ToString() || derchAbajo != fp.ValorDerchAbajo.ToString())
+                {
+                    fp.ValorIzqAbajo = Convert.ToDouble(izqAbajo);
+                    fp.ValorIzqArriba = Convert.ToDouble(izqArriba);
+                    fp.ValorDerchArriba = Convert.ToDouble(derchArriba);
+                    fp.ValorDerchAbajo = Convert.ToDouble(derchAbajo);
+                    ald.ActualizarValoresTriangular(
+                        variableActual.Nombre,
+                        valorActual.Nombre,
+                        fp.ValorIzqAbajo, fp.ValorIzqArriba, 
+                        fp.ValorDerchArriba, fp.ValorDerchAbajo
+                    );
+                }
+            }
+
+            if (valorActual.Nombre != txtNombreFP.Text)
+            {
+                ald.ActualizarNombreValor(txtNombreFP.Text, valorActual.Nombre, variableActual.Nombre, tipoFuncion);
+                valorActual.Nombre = txtNombreFP.Text;
+            }
+
             panelFP.Visibility = Visibility.Hidden;
             panelOpcionesAvanzadas.Visibility = Visibility.Visible;
         }
@@ -773,6 +1317,32 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void IrPanelFP(object sender, RoutedEventArgs e)
         {
+            string valor = (string)boxFP.SelectedValue;
+            valorActual = variableActual.Valores[valor];
+            txtNombreFP.Text = valor;
+
+            Type tipoFuncion = valorActual.Fp.GetType();
+            if (tipoFuncion.Equals(typeof(FuncionTriangular)))
+            {
+                FuncionTriangular fp = (FuncionTriangular)valorActual.Fp;
+                boxTipoFP.SelectedValue = "Triangular";
+                txtValorIzquierda.Text = "" + fp.ValorIzq;
+                txtValorCentro.Text = "" + fp.ValorCentro;
+                txtValorDerecha.Text = "" + fp.ValorDerch;
+                wrapValoresTrapezoidal.Visibility = Visibility.Hidden;
+                wrapValoresTriangular.Visibility = Visibility.Visible;
+            } else if (tipoFuncion.Equals(typeof(FuncionTrapezoidal))) {
+                FuncionTrapezoidal fp = (FuncionTrapezoidal)valorActual.Fp;
+                boxTipoFP.SelectedValue = "Trapezoidal";
+                txtValorIzquierdaAbajo.Text = "" + fp.ValorIzqAbajo;
+                txtValorIzquierdaArriba.Text = "" + fp.ValorIzqArriba;
+                txtValorDerechaArriba.Text = "" + fp.ValorDerchAbajo;
+                txtValorDerechaAbajo.Text = "" + fp.ValorDerchArriba;
+                wrapValoresTriangular.Visibility = Visibility.Hidden;
+                wrapValoresTrapezoidal.Visibility = Visibility.Visible;
+            }
+
+
             panelOpcionesAvanzadas.Visibility = Visibility.Hidden;
             panelFP.Visibility = Visibility.Visible;
         }
@@ -995,20 +1565,6 @@ namespace InterfazGrafica
          *                          PR.1 EVENTOS
          * ----------------------------------------------------------------------*/
 
-        private void MovimientoArriba(object sender, RoutedEventArgs e)
-        {
-            int estadoAvance = Convert.ToInt32(scrollPanelReglas.VerticalOffset);
-            double aumentaEspacio = (double)estadoAvance - 100.0;
-            scrollPanelReglas.ScrollToVerticalOffset(aumentaEspacio);
-        }
-
-        private void MovimientoAbajo(object sender, RoutedEventArgs e)
-        {
-            int estadoAvance = Convert.ToInt32(scrollPanelReglas.VerticalOffset);
-            double aumentaEspacio = (double)estadoAvance + 100.0;
-            scrollPanelReglas.ScrollToVerticalOffset(aumentaEspacio);
-        }
-
         private void VerSeccionReglas(object sender, RoutedEventArgs e)
         {
             reglasSeccionActual = secciones["Cajas"];
@@ -1028,7 +1584,9 @@ namespace InterfazGrafica
 
         private void EliminarRegla(object sender, RoutedEventArgs e)
         {
-            
+            AdminReglas ar = new AdminReglas();
+            Regla regla = (Regla)tablaReglas.SelectedItem;
+            ar.EliminarRegla(Convert.ToInt32(regla.ID));
         }
 
         /// <summary>
@@ -1087,15 +1645,20 @@ namespace InterfazGrafica
         {
             AdminLD adminLD = new AdminLD();
             string antecedente = (string)boxAntecedente.SelectedValue;
-            string valorActual = reglaActual.Antecedente[antecedente].Nombre;
-            VariableLinguistica variable = adminLD.ObtenerVariable(antecedente);
-
-            foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
+            
+            if (antecedente != null)
             {
-                boxValoresAntecedente.Items.Add(valor.Key);
-            }
+                string valorActual = reglaActual.Antecedente[antecedente].Nombre;
+                VariableLinguistica variable = adminLD.ObtenerVariable(antecedente);
 
-            boxValoresAntecedente.SelectedValue = valorActual;
+                boxValoresAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
+                {
+                    boxValoresAntecedente.Items.Add(valor.Key);
+                }
+
+                boxValoresAntecedente.SelectedValue = valorActual;
+            }
         }
 
         /// <summary>
@@ -1121,70 +1684,95 @@ namespace InterfazGrafica
 
         private void SeleccionOperadorRegla(object sender, SelectionChangedEventArgs e)
         {
+            string operador = (string)boxOperador.SelectedValue;
 
+            if (reglaActual != null && reglaActual.Operador != operador)
+            {
+                reglaActual.Operador = operador;
+                ActualizarTxtRegla(reglaActual);
+            }
         }
 
         private void IrPanelRegla(object sender, RoutedEventArgs e)
         {
-            if((string)((Button)sender).Content == "Agregar")
+            AdminReglas adminReglas = new AdminReglas();
+            Perfil perfil = reglasSeccionActual.Perfil;
+            Dictionary<string, Componente> componentes;
+            VariablesMatching vm = new VariablesMatching();
+            VariableLinguistica consecuente;
+            componentes = perfil.Blandas;
+            consecuente = vm.HBPerfil;
+
+            if ((string)((Button)sender).Content == "Agregar")
             {
-                AdminReglas adminReglas = new AdminReglas();
                 int id = adminReglas.ObtenerUltimoID() + 1;
-                reglaActual = new Regla(id.ToString());
-                Perfil perfil = reglasSeccionActual.Perfil;
-                Dictionary<string, Componente> componentes = perfil.Blandas;
-                VariablesMatching vm = new VariablesMatching();
-                VariableLinguistica consecuente = vm.HBPerfil;
+                reglaActual = new Regla(
+                    id.ToString(),
+                    new Dictionary<string, ValorLinguistico>(),
+                    new Tuple<string, ValorLinguistico>(
+                        consecuente.Nombre, 
+                        consecuente.Valores["promedio"]
+                    ),
+                    "y"
+                );
+                vm = new VariablesMatching();
                 txtConsecuente.Text = consecuente.Nombre;
-
                 txtRegla.Text = "";
-                boxAntecedente.Items.Clear();
-                foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
-                {
-                    boxAntecedente.Items.Add(valor.Key);
-                }
-
-                if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
-                {
-                    componentes = perfil.Duras;
-                    consecuente = vm.HDPerfil;
-                }
-                else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
-                {
-                    componentes = perfil.Fisicas;
-                    consecuente = vm.CFPerfil;
-                }
-
-                boxValoresConsecuente.Items.Clear();
-                txtConsecuente.Text = consecuente.Nombre;
-                foreach (KeyValuePair<string, ValorLinguistico> valor in consecuente.Valores)
-                {
-                    boxValoresConsecuente.Items.Add(valor.Key);
-                }
-                boxValoresConsecuente.SelectedIndex = 2;
-
-                boxNoAntecedente.Items.Clear();
-                foreach (KeyValuePair<string, Componente> componente in componentes)
-                {
-                    boxNoAntecedente.Items.Add(componente.Value.ID);
-                }
-
-                panelReglasSeccion.Visibility = Visibility.Hidden;
-                panelRegla.Visibility = Visibility.Visible;
             } else if ((string)((Button)sender).Content == "Modificar")
             {
-
+                reglaActual = (Regla)tablaReglas.SelectedItem;
+                txtRegla.Text = reglaActual.Texto;
             }
+
+            boxAntecedente.Items.Clear();
+            foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
+            {
+                boxAntecedente.Items.Add(valor.Key);
+            }
+
+            if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
+            {
+                componentes = perfil.Duras;
+                consecuente = vm.HDPerfil;
+            }
+            else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
+            {
+                componentes = perfil.Fisicas;
+                consecuente = vm.CFPerfil;
+            }
+            // Llenamos el comboBox del consecuente.
+            boxValoresConsecuente.Items.Clear();
+            txtConsecuente.Text = consecuente.Nombre;
+            foreach (KeyValuePair<string, ValorLinguistico> valor in consecuente.Valores)
+            {
+                boxValoresConsecuente.Items.Add(valor.Key);
+            }
+            // Seleccionamos el valor del consecuente.
+            string[] r = reglaActual.Texto.Split(' ');
+            boxValoresConsecuente.SelectedValue = r[r.Length - 1];
+            // Llenamos el comboBox con los componentes de la seccion.
+            boxNoAntecedente.Items.Clear();
+            foreach (KeyValuePair<string, Componente> componente in componentes)
+            {
+                boxNoAntecedente.Items.Add(componente.Value.ID);
+            }
+            // Hacemos visible el panel de la regla.
+            panelReglasSeccion.Visibility = Visibility.Hidden;
+            panelRegla.Visibility = Visibility.Visible;
         }
 
         private void AceptarRegla(object sender, RoutedEventArgs e)
         {
             AdminReglas ar = new AdminReglas();
-            int id = ar.ObtenerUltimoID() + 1;
             string idSeccion = reglasSeccionActual.IdSeccion.ToString();
             string tipo = txtConsecuente.Text.ToLower();
+            string regla = ar.ObtenerRegla(Convert.ToInt32(reglaActual.ID));
 
-            ar.InsertarRegla(id.ToString(), txtRegla.Text, idSeccion, tipo);
+            if (regla != "")
+                ar.ActualizarRegla(reglaActual, reglasSeccionActual.IdSeccion);
+            else
+                ar.InsertarRegla(reglaActual.ID, reglaActual.Texto, idSeccion, tipo);
+
             ObtenerReglasSeccion(idSeccion, tipo);
             LlenarTablaReglas(reglasActuales);
             VolverPanelReglas(null, null);
@@ -1201,9 +1789,56 @@ namespace InterfazGrafica
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CambiarValorAntecedente(object sender, RoutedEventArgs e)
+        public void CambiarValorAntecedente(object sender, RoutedEventArgs e)
         {
+            AdminLD adminLD = new AdminLD();
+            string nombreVariable = (string)boxAntecedente.SelectedValue;
+            string nombreValor = (string)boxValoresAntecedente.SelectedValue;
+            ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
+            reglaActual.Antecedente[nombreVariable] = valor;
+            ActualizarTxtRegla(reglaActual);
+        }
 
+        private void EliminarValorAntecedente(object sender, RoutedEventArgs e)
+        {
+            AdminReglas ar = new AdminReglas();
+            string nombreVariable = (string)boxAntecedente.SelectedValue;
+            // Eliminamos la variable de la base de datos.
+            ar.EliminarVariable(Convert.ToInt32(reglaActual.ID), nombreVariable);
+            // Removemos la variable del antecedente de la regla.
+            reglaActual.Antecedente.Remove(nombreVariable);
+            // Actualizamos el textBox de la regla.
+            ActualizarTxtRegla(reglaActual);
+            // Eliminamos la variable del comboBox del antecedente.
+            boxAntecedente.Items.Remove(boxAntecedente.SelectedValue);
+            boxValoresAntecedente.Items.Clear();
+        }
+
+        /// <summary>
+        /// Cambia el valor de la variable del consecuente en la regla seleccionada.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CambiarValorConsecuente(object sender, RoutedEventArgs e)
+        {
+            AdminLD adminLD = new AdminLD();
+            VariablesMatching vm = new VariablesMatching();
+            string nombreVariable = txtConsecuente.Text;
+            string nombreValor = (string)boxValoresConsecuente.SelectedValue;
+            VariableLinguistica consecuente = vm.HBPerfil;
+
+            if (nombreVariable == PerfilConstantes.HD)
+                consecuente = vm.HDPerfil;
+            else if (nombreVariable == PerfilConstantes.CF)
+                consecuente = vm.CFPerfil;
+
+            Tuple<string, ValorLinguistico> nuevoConsecuente = new Tuple<string, ValorLinguistico>(
+                consecuente.Nombre,
+                consecuente.Valores[nombreValor]
+              );
+
+            reglaActual.Consecuente = nuevoConsecuente;
+            ActualizarTxtRegla(reglaActual);
         }
 
         /// <summary>
@@ -1217,18 +1852,32 @@ namespace InterfazGrafica
             AdminReglas adminReglas = new AdminReglas();
             string nombreVariable = (string)boxNoAntecedente.SelectedValue;
             string nombreValor = (string)boxValoresNoAntecedente.SelectedValue;
-            string variableConsecuente = txtConsecuente.Text;
-            string valorConsecuente = (string)boxValoresConsecuente.SelectedValue;
             ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
-
-            if (reglaActual.Texto == "")
+            // Agregamos la variable al antecedente.
+            reglaActual.AgregarAntecendente(nombreVariable, valor);
+            // Actualizamos el textBox de la regla.
+            ActualizarTxtRegla(reglaActual);
+            //Actualizamos las variables del antecedente de la regla.
+            boxAntecedente.Items.Clear();
+            foreach (KeyValuePair<string, ValorLinguistico> variable in reglaActual.Antecedente)
             {
-                txtRegla.Text = "Si " + nombreVariable + " es " + nombreValor + " entonces " + variableConsecuente + " es " + valorConsecuente;
-            } else
-            {
-
+                boxAntecedente.Items.Add(variable.Key);
             }
+        }
 
+        /// <summary>
+        /// Actualiza el textBox de la regla.
+        /// </summary>
+        /// <param name="regla"></param>
+        private void ActualizarTxtRegla(Regla regla)
+        {
+            reglaActual = new Regla(
+                    reglaActual.ID,
+                    reglaActual.Antecedente,
+                    reglaActual.Consecuente,
+                    reglaActual.Operador
+                );
+            txtRegla.Text = reglaActual.Texto;
         }
     }
 }

@@ -12,17 +12,17 @@
             <ColumnDefinition Width="94*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75*"/>
-            <RowDefinition Height="57*"/>
-            <RowDefinition Height="57*"/>
-            <RowDefinition Height="60*"/>
-            <RowDefinition Height="59*"/>
+            <RowDefinition Height="76*"/>
+            <RowDefinition Height="58*"/>
+            <RowDefinition Height="58*"/>
+            <RowDefinition Height="53*"/>
+            <RowDefinition Height="68*"/>
             <RowDefinition Height="48*"/>
             <RowDefinition Height="46*"/>
+            <RowDefinition Height="47*"/>
             <RowDefinition Height="46*"/>
-            <RowDefinition Height="46*"/>
-            <RowDefinition Height="46*"/>
-            <RowDefinition Height="60*"/>
+            <RowDefinition Height="47*"/>
+            <RowDefinition Height="61*"/>
         </Grid.RowDefinitions>
         <Label Content="Nombre De Evaluado" HorizontalAlignment="Left" Margin="151,27,0,0" VerticalAlignment="Top" Width="207" Height="46" Grid.Column="1" FontSize="20" VerticalContentAlignment="Center"/>
         <Label Content="Tipo De Habilidad" Grid.Column="1" HorizontalAlignment="Left" Margin="151,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="207" Height="46" FontSize="20" VerticalContentAlignment="Center"/>
@@ -34,23 +34,29 @@
         <Label Content="Habilidad Blanda" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="46" Width="433" VerticalContentAlignment="Center" FontSize="20" Grid.Row="1"/>
         <Label Content="Proactividad" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="46" Width="526" VerticalContentAlignment="Center" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2"/>
         <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="855" Grid.ColumnSpan="2"/>
-        <TextBlock Name="textoPregunta" Grid.Column="1" HorizontalAlignment="Left" Margin="10,8,0,0" Grid.Row="4" TextWrapping="Wrap" Text="¿Alguna Pregunta relacionada con alguna habilidad?" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="857" Height="43" FontSize="20" TextAlignment="Center"/>
-        <Button Name="botonDerecho"  HorizontalAlignment="Left" Margin="202,0,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="7" Grid.Column="2" Click="MovimientoDerecha" Grid.RowSpan="2">
+        <TextBlock Name="textoPregunta" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="4" TextWrapping="Wrap" Text="¿Alguna Pregunta relacionada con alguna habilidad?" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="857" Height="58" FontSize="20" TextAlignment="Center"/>
+        <Button Name="botonDerecho"  HorizontalAlignment="Left" Margin="391,0,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="7" Grid.Column="2" Click="MovimientoDerecha" Grid.RowSpan="2">
             <DockPanel>
                 <Image Source="Iconos/flecha_derecha.png" Height="24" Width="34"/>
             </DockPanel>
         </Button>
-        <Button Name="botonIzquierdo"  HorizontalAlignment="Left" Margin="101,0,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="7"  Click="MovimientoIzquierda" Grid.Column="1" Grid.RowSpan="2">
+        <Button Name="botonIzquierdo"  HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="6"  Click="MovimientoIzquierda" Grid.Column="1" Grid.RowSpan="2">
             <DockPanel>
                 <Image Source="Iconos/flecha_izquierda.png" Height="24" Width="34"/>
             </DockPanel>
         </Button>
-        <RadioButton Name="alternativaTDA" Content="Totalmente De acuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="5" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
-        <RadioButton Name="alternativaDA" Content="De Acuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="6" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
-        <RadioButton Name="alternativaNDND" Content="Ni De acuerdo, Ni en Desacuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,9,351,0" Grid.Row="7" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
-        <RadioButton Name="alternativaEDS" Content="En Desacuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="8" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
-        <RadioButton Name="alternativaTDS" Content="Totalmente en Desacuerdo" Grid.Column="1" HorizontalAlignment="Center" Margin="258,10,351,0" Grid.Row="9" VerticalAlignment="Top" Height="18" Width="268" Grid.ColumnSpan="2" FontSize="16" Checked="SeleccionRespuesta"/>
-
+        <RadioButton Name="alternativaMR" Content="Modelo de rol" Grid.Column="1" HorizontalAlignment="Center" Margin="156,10,0,0" Grid.Row="5" VerticalAlignment="Top" Height="18" Width="268" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaAC" Content="Altamente competente" Grid.Column="1" HorizontalAlignment="Center" Margin="156,10,0,0" Grid.Row="6" VerticalAlignment="Top" Height="26" Width="268" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaC" Content="Competente" Grid.Column="1" HorizontalAlignment="Center" Margin="156,10,0,0" Grid.Row="7" VerticalAlignment="Top" Height="27" Width="268" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaND" Content="Necesita desarrollarse" Grid.Column="1" HorizontalAlignment="Center" Margin="156,10,0,0" Grid.Row="8" VerticalAlignment="Top" Height="26" Width="268" FontSize="16" Checked="SeleccionRespuesta"/>
+        <RadioButton Name="alternativaNDS" Content="Necesita desarrollarse significativamente" Grid.Column="1" HorizontalAlignment="Center" Margin="156,10,398,0" Grid.Row="9" VerticalAlignment="Top" Height="27" Width="323" FontSize="16" Checked="SeleccionRespuesta" Grid.ColumnSpan="2"/>
+        <RadioButton x:Name="alternativaNO" Content="No puede ser evaluada" Grid.Column="1" HorizontalAlignment="Center" Margin="156,10,398,0" Grid.Row="10" VerticalAlignment="Top" Height="27" Width="323" FontSize="16" Checked="SeleccionRespuesta" Grid.ColumnSpan="2"/>
+        <StackPanel Grid.Column="2" HorizontalAlignment="Left" Height="177" Margin="89,0,0,60" Grid.Row="6" Grid.RowSpan="5" VerticalAlignment="Bottom" Width="266">
+            <RadioButton Name="alternativaSiempre" Checked="SeleccionFrecuencia" Content="Siempre" FontSize="16" Height="40"/>
+            <RadioButton Name="alternativaFrecuente" Checked="SeleccionFrecuencia" Content="Frecuente" FontSize="16" Height="40"/>
+            <RadioButton Name="alternativaMitadTiempo" Checked="SeleccionFrecuencia" Content="Mitad del Tiempo" FontSize="16" Height="40"/>
+            <RadioButton Name="alternativaOcasional" Checked="SeleccionFrecuencia" Content="Ocasional" FontSize="16" Height="40"/>
+        </StackPanel>
     </Grid>
 </Controls:MetroWindow>
 

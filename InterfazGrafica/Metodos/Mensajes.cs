@@ -28,11 +28,30 @@ namespace InterfazGrafica
         private string guardarCambiosPerfilAlSalir;
         private string guardarCambiosPerfil;
         private string verificacionUsuarioIncorrecta;
+        private string consultaEliminarSeccion;
+        private string seccionEliminada;
+        private string rechazarSolicitud;
+        private string solicitudRechazada;
+        private string confirmarSolicitud;
+        private string solicitudAprobada;
+        private string agregarNuevaSeccion;
+        private string nuevaSeccionAgregada;
+        private string camposIncompletosSeccion;
+        private string agregarNuevoUsuario;
+        private string nuevoUsuarioAgregado;
+        private string rutInvalido;
+        private string passwordInvalida;
+        private string eliminarUsuario;
+        private string usuarioEliminado;
         private VentanaJefeSeccion ventanaPrincipal;
         private VentanaAgregarTrabajador ventanaTrabajador;
         private VentanaEncuesta ventanaEncuesta;
         private VentanaLogin ventanaLogin;
         private VentanaAdministrador ventanaAdministrador;
+        private VentanaAgregarSeccion ventanaAgregarSeccion;
+        private VentanaAgregarUsuario ventanaAgregarUsuario;
+        private VentanaAsignacionHabilidades ventanaAsignacionHabilidades;
+
 
         public Mensajes(VentanaJefeSeccion ventana)
         {
@@ -67,6 +86,28 @@ namespace InterfazGrafica
             this.ventanaAdministrador = ventana;
             MensajesPorDefecto();
         }
+
+        public Mensajes(VentanaAgregarSeccion ventana)
+        {
+            inicializacionVariables();
+            this.ventanaAgregarSeccion = ventana;
+            MensajesPorDefecto();
+        }
+
+        public Mensajes(VentanaAgregarUsuario ventana)
+        {
+            inicializacionVariables();
+            this.ventanaAgregarUsuario = ventana;
+            MensajesPorDefecto();
+        }
+
+        public Mensajes(VentanaAsignacionHabilidades ventana)
+        {
+            inicializacionVariables();
+            this.ventanaAsignacionHabilidades = ventana;
+            MensajesPorDefecto();
+        }
+
         private void inicializacionVariables()
         {
             this.nombreSoftware = string.Empty;
@@ -85,6 +126,21 @@ namespace InterfazGrafica
             this.guardarCambiosPerfilAlSalir = string.Empty;
             this.guardarCambiosPerfil = string.Empty;
             this.verificacionUsuarioIncorrecta = string.Empty;
+            this.consultaEliminarSeccion = string.Empty;
+            this.seccionEliminada = string.Empty;
+            this.rechazarSolicitud = string.Empty;
+            this.solicitudRechazada = string.Empty;
+            this.confirmarSolicitud = string.Empty;
+            this.solicitudAprobada = string.Empty;
+            this.agregarNuevaSeccion = string.Empty;
+            this.nuevaSeccionAgregada = string.Empty;
+            this.camposIncompletos = string.Empty;
+            this.agregarNuevoUsuario = string.Empty;
+            this.nuevoUsuarioAgregado = string.Empty;
+            this.rutInvalido = string.Empty;
+            this.passwordInvalida = string.Empty;
+            this.eliminarUsuario = string.Empty;
+            this.usuarioEliminado = string.Empty;
         }
 
 
@@ -96,7 +152,7 @@ namespace InterfazGrafica
             this.consultaSolicitudTrabajador = "¿Está seguro que desea solicitar la reubicación del trabajador?";
             this.trabajadorSolicitado = "La solicitud se ha realizado Exitosamente.";
             this.camposIncompletos = "Debe completar todos los Campos correctamente para ingresar al Trabajador.";
-            this.trabajadorAgregado = "Los datos del nuevo Trabajador han sido Agregados Correctamente.";
+            this.trabajadorAgregado = "Los datos del Trabajador han sido Agregados Correctamente.";
             this.claveIncorrecta = "Contraseña incorrecta, Vuelva a intentarlo";
             this.trabajadorNoSeleccionado = "Debe seleccionar algun Trabajador para iniciar la evaluación.";
             this.encuestaFinalizadaGuardarYSalir = "Ha respondido toda la evaluación, ¿Desea Guardar y salir?.";
@@ -106,6 +162,21 @@ namespace InterfazGrafica
             this.guardarCambiosPerfilAlSalir = "¿Desea Guardar los cambios realizados en el Perfil antes de salir?.";
             this.guardarCambiosPerfil = "¿Desea Guardar los cambios realizados?.";
             this.verificacionUsuarioIncorrecta = "Usuario o Contraseña incorrectos, Vuelva a intentarlo.";
+            this.consultaEliminarSeccion = "¿Está seguro que desea eliminar la sección?.";
+            this.seccionEliminada = "La sección ha sido Eliminada Exitosamente.";
+            this.rechazarSolicitud = "¿Está seguro que desea rechazar la solicitud?.";
+            this.solicitudRechazada = "La solicitud ha sido Descartada.";
+            this.confirmarSolicitud = "¿Desea confirmar la solicitud?.";
+            this.solicitudAprobada = "El trabajador ha sido reubicado exitosamente.";
+            this.agregarNuevaSeccion = "¿Está seguro que desea guardar los datos de la nueva sección?.";
+            this.nuevaSeccionAgregada = "Los datos de la sección han sido agregados correctamente.";
+            this.camposIncompletosSeccion = "Debe completar todos los campos para guardar.";
+            this.agregarNuevoUsuario = "¿Está seguro que desea guardar los datos del nuevo usuario?";
+            this.nuevoUsuarioAgregado = "El nuevo usuario ha sido agregado exitosamente.";
+            this.rutInvalido = "Debe ingresar un rut valido.";
+            this.passwordInvalida = "Ingrese contraseña correctamente.";
+            this.eliminarUsuario = "¿Está seguro que desea eliminar la cuenta de usuario?.";
+            this.usuarioEliminado = "La cuenta del usuario ha sido eliminada exitosamente.";
         }
 
         async public Task<MessageDialogResult> ConsultaEliminarTrabajador()
@@ -192,6 +263,108 @@ namespace InterfazGrafica
         async public Task<MessageDialogResult> CerrarSesionAdministrador()
         {
             MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, cerrarSesion, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public Task<MessageDialogResult> ConsultaEliminarTrabajadorAdmin()
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, consultaEliminarTrabajador, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+        async public void TrabajadorEliminadoAdmin()
+        {
+            await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, trabajadorEliminado);
+        }
+
+        async public Task<MessageDialogResult> ConsultaEliminarSeccion()
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, consultaEliminarSeccion, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public void SeccionEliminada()
+        {
+            await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, seccionEliminada);
+        }
+
+        async public Task<MessageDialogResult> RechazarSolicitud()
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, rechazarSolicitud, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public void SolicitudRechazada()
+        {
+            await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, solicitudRechazada);
+        }
+
+        async public Task<MessageDialogResult> ConfirmarSolicitud()
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, confirmarSolicitud, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public void SolicitudConfirmada()
+        {
+            await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, solicitudAprobada);
+        }
+
+        async public Task<MessageDialogResult> AgregarNuevaSeccion()
+        {
+            MessageDialogResult resultado = await this.ventanaAgregarSeccion.ShowMessageAsync(nombreSoftware, agregarNuevaSeccion, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public void NuevaSeccionAgregada()
+        {
+            await this.ventanaAgregarSeccion.ShowMessageAsync(nombreSoftware, nuevaSeccionAgregada);
+        }
+
+        async public void CamposIncompletosSeccion()
+        {
+            await this.ventanaAgregarSeccion.ShowMessageAsync(nombreSoftware, camposIncompletosSeccion);
+        }
+
+        async public Task<MessageDialogResult> AgregarNuevoUsuario()
+        {
+            MessageDialogResult resultado = await this.ventanaAgregarUsuario.ShowMessageAsync(nombreSoftware, agregarNuevoUsuario, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public void NuevoUsuarioAgregado()
+        {
+            await this.ventanaAgregarUsuario.ShowMessageAsync(nombreSoftware, nuevoUsuarioAgregado);
+        }
+
+        async public void CamposIncompletosUsuario()
+        {
+            await this.ventanaAgregarUsuario.ShowMessageAsync(nombreSoftware, camposIncompletosSeccion);
+        }
+
+        async public void RutInvalido()
+        {
+            await this.ventanaAgregarUsuario.ShowMessageAsync(nombreSoftware, rutInvalido);
+        }
+
+        async public void PasswordInvalida()
+        {
+            await this.ventanaAgregarUsuario.ShowMessageAsync(nombreSoftware, passwordInvalida);
+        }
+
+        async public Task<MessageDialogResult> EliminarUsuario()
+        {
+            MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, eliminarUsuario, MessageDialogStyle.AffirmativeAndNegative);
+            return resultado;
+        }
+
+        async public void UsuarioEliminado()
+        {
+            await this.ventanaAdministrador.ShowMessageAsync(nombreSoftware, usuarioEliminado);
+        }
+
+        async public Task<MessageDialogResult> GuardarCambiosAsignacionHabilidades()
+        {
+            MessageDialogResult resultado = await this.ventanaAsignacionHabilidades.ShowMessageAsync(nombreSoftware, guardarCambiosPerfil, MessageDialogStyle.AffirmativeAndNegative);
             return resultado;
         }
 

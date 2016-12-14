@@ -111,5 +111,47 @@ namespace DST
 
             return componentes;
         }
+
+        public void ActualizarComponente(string idActual, string id, string nombre, string descripcion, string tipo)
+        {
+            AdminReglas ar = new AdminReglas();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE componentesPerfil SET id='" + id + "', nombre='" + nombre + "', descripcion='" + descripcion + "', tipo='" + tipo + "' WHERE id='" + idActual + "';");
+
+            ar.ActualizarNombreVariable(idActual, id);
+
+            bd.Close();
+        }
+
+        public void ActualizarIdComponente(string actual, string nuevo)
+        {
+            AdminReglas ar = new AdminReglas();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE componentesPerfil SET id='" + nuevo + "' WHERE id='" + actual + "';");
+
+            ar.ActualizarNombreVariable(actual, nuevo);
+
+            bd.Close();
+        }
+
+        public void EliminarComponente(string id)
+        {
+            AdminReglas ar = new AdminReglas();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM componentesPerfil WHERE id='" + id + "';");
+
+            ar.EliminarReglasNombreVariable(id);
+
+            bd.Close();
+        }
     }
 }
