@@ -55,6 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Encuesta\Encuesta.csproj">
+      <Project>{5893d1de-c96f-44a4-8fa4-53870d8048d7}</Project>
+      <Name>Encuesta</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
       <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
       <Name>LogicaDifusa</Name>
