@@ -135,7 +135,7 @@ namespace DST
         {
             conn.Open();
 
-            cmd.CommandText = "UPDATE usuarios SET nombre='" + nuevoNombre + "',rut='" + nuevoRut + "',tipoUsuario='" 
+            cmd.CommandText = "UPDATE usuarios SET nombre='" + nuevoNombre + "',rut='" + nuevoRut + "',tipoUsuario='"
                 + nuevoTipoUsuario + "',clave='" + nuevaClave + "' WHERE rut='" + rutActual + "';";
             cmd.ExecuteNonQuery();
 
@@ -154,7 +154,7 @@ namespace DST
             {
                 Usuario nuevoUsuario = new Usuario(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
                     consulta.GetString(3));
-                usuarios.Add( nuevoUsuario );
+                usuarios.Add(nuevoUsuario);
             }
 
             conn.Close();
@@ -166,7 +166,7 @@ namespace DST
         /// Consulta para borrar a un usuario permanentemente
         /// </summary>
         /// <param name="rutUsuario"></param>
-        public void BorrarUsuario( string rutUsuario )
+        public void BorrarUsuario(string rutUsuario)
         {
             conn.Open();
 
@@ -182,7 +182,7 @@ namespace DST
         /// false para cuando esta inactivo
         /// </summary>
         /// <param name="nuevoEstado"></param>
-        public void CambiarEstadoUsuario( string rutUsuario, bool nuevoEstado )
+        public void CambiarEstadoUsuario(string rutUsuario, bool nuevoEstado)
         {
             conn.Open();
 
@@ -190,6 +190,67 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+
+        /************************************************************
+         *          MIS CONSULTAS 
+         * *************************************************************/
+        public string ObtenerNombreUsuario(string rut)
+        {
+            string nombre = string.Empty;
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre FROM usuarios WHERE rut ='" + rut + "' AND estado=1;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nombre = consulta.GetString(0);
+            }
+
+            conn.Close();
+
+            return nombre;
+        }
+
+
+        public string ObtenerTipoUsuario(string rut)
+        {
+            string tipo = string.Empty;
+
+            conn.Open();
+            cmd.CommandText = "SELECT tipoUsuario FROM usuarios WHERE rut ='" + rut + "' AND estado=1;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                tipo = consulta.GetString(0);
+            }
+
+            conn.Close();
+
+            return tipo;
+        }
+
+        public string ObtenerNombreSeccionPorUsuario(string rutTrabajador)
+        {
+            string nombreSeccion = "";
+
+            conn.Open();
+            cmd.CommandText = "SELECT nombre FROM secciones WHERE rutJefe = '" + rutTrabajador + "';";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nombreSeccion = consulta.GetString(0);
+            }
+
+            /*
+            Console.WriteLine("Nombre: {0}", nombreSeccion);
+            Console.ReadKey();*/
+
+            conn.Close();
+
+            return nombreSeccion;
         }
     }
 }

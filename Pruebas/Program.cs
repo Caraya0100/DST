@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DST;
 
-namespace Pruebas
+namespace DST
 {
     class Program
     {
         static void Main(string[] args)
         {
             //new CreacionBD();
+
+            //new PruebaInsercionReglas();
+
+            new PruebaEvaluacionTrabajadores();
 
             //new PruebaInferencia().PruebaPropina(3.0, 8.0, 1.0);
 
@@ -152,7 +155,11 @@ namespace Pruebas
 
             /*
             AdminTrabajador consultasTrabajador = new AdminTrabajador();*/
+<<<<<<< HEAD
+            /*AdminTrabajador consultasTrabajador = new AdminTrabajador();
+=======
             //AdminTrabajador consultasTrabajador = new AdminTrabajador();
+>>>>>>> master
 
             List<Trabajador> trabajadores = consultasTrabajador.ObtenerTrabajadoresEmpresa();
 
@@ -170,7 +177,7 @@ namespace Pruebas
             {
                 Console.WriteLine("{0} {1}", seccion.IdSeccion, seccion.Nombre );
                 Console.ReadKey();
-            }
+            }*/
         }
     }
 }

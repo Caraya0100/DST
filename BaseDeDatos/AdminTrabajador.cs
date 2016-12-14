@@ -82,7 +82,7 @@ namespace DST
             conn.Open();
 
             cmd.CommandText = "UPDATE componentesPerfilTrabajadores SET puntaje =" + nuevoPuntaje.ToString() + "WHERE "
-                + "nombre='" + nombreComponente + "AND rut='"+ rutTrabajador + "';";
+                + "nombre='" + nombreComponente + "AND rut='" + rutTrabajador + "';";
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -100,13 +100,19 @@ namespace DST
             //conn.Close();
 
             conn2.Open();
-            cmd2.CommandText = "SELECT c.nombre,c.descripcion,c.tipo,t.puntaje FROM componentesPerfil AS c,"
-                + "componentesPerfilTrabajadores AS t WHERE t.rut='" + rutTrabajador + "' AND c.nombre=t.nombre;";
+            cmd2.CommandText = "SELECT c.id, c.nombre,c.descripcion,c.tipo,t.puntaje FROM componentesPerfil AS c,"
+                + "componentesPerfilTrabajadores AS t WHERE t.rut='" + rutTrabajador + "' AND c.id=t.id;";
             consulta2 = cmd2.ExecuteReader();
             while (consulta2.Read())
             {
-                Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2),
-                    consulta2.GetDouble(3), -1);
+                Componente nuevoComponente = new Componente(
+                    consulta2.GetString(0), 
+                    consulta2.GetString(1), 
+                    consulta2.GetString(2), 
+                    consulta2.GetString(3),
+                    consulta2.GetDouble(4), 
+                    -1
+                );
                 perfilTrabajador.AgregarComponente(nuevoComponente);
             }
 
@@ -114,7 +120,7 @@ namespace DST
 
             return perfilTrabajador;
         }
-        
+
         /// <summary>
         /// Consulta para obtener los trabajadores de una seccion. Es necesario el id de la seccion
         /// </summary>
@@ -176,14 +182,15 @@ namespace DST
         /// <param name="nuevaFechaNacimiento"></param>
         /// <param name="nuevaIdSeccion"></param>
         /// <param name="rutActual"></param>
-        public void ModificarDatosTrabajador(string nuevoRut, string nuevoNombre, string nuevoAP, string nuevoAM, 
-            string nuevaFechaNacimiento, int nuevaIdSeccion, string rutActual )
+        public void ModificarDatosTrabajador(string nuevoRut, string nuevoNombre, string nuevoAP, string nuevoAM,
+            string nuevaFechaNacimiento, int nuevaIdSeccion, string rutActual)
         {
             conn.Open();
 
-            cmd.CommandText = "UPDATE trabajadores SET rut=" + nuevoRut + ",nombre='" + nuevoNombre + "',apellidoPaterno='" 
-                + nuevoAP + ",apellidoMaterno='" + nuevoAM + ",fechaNacimiento='" + nuevaFechaNacimiento 
-                + ",idSeccion=" + nuevaIdSeccion + " WHERE rut='" + rutActual + "';";
+            cmd.CommandText = "UPDATE trabajadores SET rut='" + nuevoRut + "',nombre='" + nuevoNombre + "',apellidoPaterno='"
+                + nuevoAP + "',apellidoMaterno='" + nuevoAM + "',fechaNacimiento='" + nuevaFechaNacimiento
+                + "',idSeccion=" + nuevaIdSeccion + " WHERE rut='" + rutActual + "';";
+            Console.WriteLine("LACONSULTA: " + cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -195,11 +202,11 @@ namespace DST
         /// </summary>
         /// <param name="idSeccion"></param>
         /// <param name="rutTrabajador"></param>
-        public void ModificarSeccionTrabajador( int idSeccion, string rutTrabajador )
+        public void ModificarSeccionTrabajador(int idSeccion, string rutTrabajador)
         {
             conn.Open();
 
-            cmd.CommandText = "UPDATE trabajadores SET idSeccion=" + idSeccion.ToString() + " WHERE rut='" + rutTrabajador 
+            cmd.CommandText = "UPDATE trabajadores SET idSeccion=" + idSeccion.ToString() + " WHERE rut='" + rutTrabajador
                 + "';";
             cmd.ExecuteNonQuery();
 
@@ -210,7 +217,7 @@ namespace DST
         /// Elimina el trabajador con el rut que se pasa como parametro
         /// </summary>
         /// <param name="rutTrabajador"></param>
-        public void BorrarTrabajador( string rutTrabajador )
+        public void BorrarTrabajador(string rutTrabajador)
         {
             conn.Open();
 
@@ -218,6 +225,26 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+        /************************************************************
+         *                      CONSULTAS MIAS
+         * **************************************************************/
+        public Trabajador ObtenerInfoTrabajador(string rut)
+        {
+            Trabajador nuevoTrabajador = null;
+            conn.Open();
+            cmd.CommandText = "SELECT * FROM trabajadores WHERE rut = '" + rut + "';";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                nuevoTrabajador = new Trabajador(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
+                consulta.GetString(3), consulta.GetString(4), consulta.GetString(6),
+                ObtenerPerfilTrabajador(consulta.GetString(0)));
+            }
+
+            conn.Close();
+
+            return nuevoTrabajador;
         }
     }
 }

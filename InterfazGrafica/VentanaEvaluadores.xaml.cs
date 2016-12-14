@@ -24,6 +24,7 @@ namespace InterfazGrafica
     public partial class VentanaEvaluadores : MetroWindow
     {
         private DatosDePrueba datosRandom;
+        private int idSeccion;
         public VentanaEvaluadores()
         {
             InitializeComponent();
@@ -52,7 +53,7 @@ namespace InterfazGrafica
             /*habilita encuesta*/
             int indice = IdentificaTrabajador(sender);/*identificar con el id desde mainwindow*/
             this.Close();
-            VentanaEncuesta encuesta = new VentanaEncuesta();
+            VentanaEncuesta encuesta = new VentanaEncuesta(idSeccion);
             encuesta.Preguntas = datosRandom.Preguntas;
             encuesta.NombreTrabajador = datosRandom.Nombres[indice] + " " + datosRandom.Apellido[indice];
             encuesta.InicioEncuesta();
@@ -71,6 +72,12 @@ namespace InterfazGrafica
             string[] indiceEtiqueta = id.Split('I');
             int indice = Convert.ToInt32(indiceEtiqueta[1]);
             return indice;
+        }
+
+        public int IdSeccion
+        {
+            get { return idSeccion; }
+            set { idSeccion = value; }
         }
     }
 }

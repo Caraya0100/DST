@@ -24,13 +24,13 @@ namespace LogicaDifusa
             {
                 List<double> gradosPertenencias = new List<double>();
                 ValorLinguistico valorLinguistico = null;
-                Console.WriteLine("Consecuente : " + consecuente.Key);
+                //Console.WriteLine("Consecuente : " + consecuente.Key);
                 foreach (ValorLinguistico valor in consecuente.Value)
                 {
                     // Obtenemos el valor linguistico en la primera iteracion.
                     if ( valorLinguistico == null )
                         valorLinguistico = new ValorLinguistico(valor.Nombre, valor.Fp);
-                    Console.WriteLine("Grado pertenencia : " + valor.GradoPertenencia);
+                    //Console.WriteLine("Grado pertenencia : " + valor.GradoPertenencia);
                     gradosPertenencias.Add(valor.GradoPertenencia);
                 }
                 // Obtenemos el maximo y agregamos el valor linguistico al conjunto difuso resultante.
@@ -38,7 +38,7 @@ namespace LogicaDifusa
                 {
                     valorLinguistico.GradoPertenencia = gradosPertenencias.Max();
                     valorLinguistico.Fp.ValorCorte = valorLinguistico.GradoPertenencia;
-                    Console.WriteLine("Max : " + valorLinguistico.GradoPertenencia);
+                    //Console.WriteLine("Max : " + valorLinguistico.GradoPertenencia);
                     resultado.Add(valorLinguistico);
                 }
             }

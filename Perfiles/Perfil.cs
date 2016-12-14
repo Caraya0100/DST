@@ -29,9 +29,9 @@ namespace DST
             blandas = new Dictionary<string, Componente>();
             duras = new Dictionary<string, Componente>();
             fisicas = new Dictionary<string, Componente>();
-            hb = new Componente("habilidades_blandas", "Habilidades blandas del perfil", "general");
-            hd = new Componente("habilidades_duras", "Habilidades duras del perfil", "general");
-            cf = new Componente("caracteristicas_fisicas", "Caracteristicas fisicas del perfil", "general");
+            hb = new Componente("HB", "Habilidades blandas del perfil", "general");
+            hd = new Componente("HD", "Habilidades duras del perfil", "general");
+            cf = new Componente("CF", "Caracteristicas fisicas del perfil", "general");
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace DST
             IniciarComponentes(this.duras, duras);
             IniciarComponentes(this.fisicas, fisicas);
 
-            hb = new Componente("habilidades_blandas", "Habilidades blandas del perfil", "general");
-            hd = new Componente("habilidades_duras", "Habilidades duras del perfil", "general");
-            cf = new Componente("caracteristicas_fisicas", "Caracteristicas fisicas del perfil", "general");
+            hb = new Componente("HB", "Habilidades blandas del perfil", "general");
+            hd = new Componente("HD", "Habilidades duras del perfil", "general");
+            cf = new Componente("CF", "Caracteristicas fisicas del perfil", "general");
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace DST
             IniciarComponentes(this.duras, perfil.Duras);
             IniciarComponentes(this.fisicas, perfil.Fisicas);
 
-            hb = new Componente("habilidades_blandas", "Habilidades blandas del perfil", "general");
-            hd = new Componente("habilidades_duras", "Habilidades duras del perfil", "general");
-            cf = new Componente("caracteristicas_fisicas", "Caracteristicas fisicas del perfil", "general");
+            hb = new Componente("HB", "Habilidades blandas del perfil", "general");
+            hd = new Componente("HD", "Habilidades duras del perfil", "general");
+            cf = new Componente("CF", "Caracteristicas fisicas del perfil", "general");
         }
 
         /// <summary>
@@ -105,7 +105,8 @@ namespace DST
         {
             if (componente.Tipo == "hb")
             {
-                Blandas.Add(componente.Nombre, new Componente(
+                Blandas.Add(componente.ID, new Componente(
+                    componente.ID,
                     componente.Nombre,
                     componente.Descripcion,
                     componente.Tipo,
@@ -114,16 +115,18 @@ namespace DST
                 ));
             } else if (componente.Tipo == "hd")
             {
-                Duras.Add(componente.Nombre, new Componente(
-                    componente.Nombre, 
-                    componente.Descripcion, 
-                    componente.Tipo, 
-                    componente.Puntaje, 
+                Duras.Add(componente.ID, new Componente(
+                    componente.ID,
+                    componente.Nombre,
+                    componente.Descripcion,
+                    componente.Tipo,
+                    componente.Puntaje,
                     componente.Importancia
                 ));
             } else if (componente.Tipo == "cf")
             {
-                Fisicas.Add(componente.Nombre, new Componente(
+                Fisicas.Add(componente.ID, new Componente(
+                    componente.ID,
                     componente.Nombre,
                     componente.Descripcion,
                     componente.Tipo,

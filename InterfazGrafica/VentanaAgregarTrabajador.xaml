@@ -41,7 +41,7 @@
         <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="4" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
         <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="0,54,0,0" Grid.Row="5" VerticalAlignment="Top" Width="654" Grid.ColumnSpan="2"/>
         <Label Content="Ej. 11.111.111 - 1" Grid.Column="2" HorizontalAlignment="Left" Margin="268,11,0,0" Grid.Row="4" VerticalAlignment="Top" Width="124"/>
-        <Button Name="agregarTrabajador" Content="Agregar" Grid.Column="2" HorizontalAlignment="Left" Margin="12,34,0,0" Grid.Row="6" VerticalAlignment="Top" Width="189" Click="agregarNuevoTrabajador"/>
+        <Button Name="agregarTrabajador" Content="Guardar" Grid.Column="2" HorizontalAlignment="Left" Margin="12,34,0,0" Grid.Row="6" VerticalAlignment="Top" Width="189" Click="agregarNuevoTrabajador"/>
         <Label Content="Apellido Paterno" Grid.Column="2" HorizontalAlignment="Left" Margin="60,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="110"/>
         <Label Content="Apellido Materno" Grid.Column="2" HorizontalAlignment="Left" Margin="247,36,0,0" Grid.Row="2" VerticalAlignment="Top" Width="113"/>
         <Button x:Name="seleccionFechaNacimiento" Content="Seleccionar" Grid.Column="2" HorizontalAlignment="Left" Margin="247,20,0,0" Grid.Row="3" VerticalAlignment="Top" Width="107" Click="despliegueFechaNacimiento"/>

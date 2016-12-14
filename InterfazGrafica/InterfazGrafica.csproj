@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Livecharts, Version=0.8.0.0, Culture=neutral, PublicKeyToken=c5935629d38af058, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.0.8.0\lib\net40\Livecharts.dll</HintPath>
       <Private>True</Private>
@@ -46,6 +50,14 @@
     </Reference>
     <Reference Include="MahApps.Metro, Version=1.3.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.3.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.1.0.0\lib\net45\OxyPlot.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -77,29 +89,51 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnimacionScroll.cs" />
+    <Compile Include="Estructuras\PreguntasYRespuestas.cs" />
+    <Compile Include="Estructuras\Trabajador.cs" />
+    <Compile Include="Estructuras\Usuario.cs" />
+    <Compile Include="InteraccionBD\InteraccionDesempeno.cs" />
+    <Compile Include="InteraccionBD\InteraccionEncuesta.cs" />
+    <Compile Include="InteraccionBD\InteraccionSecciones.cs" />
+    <Compile Include="InteraccionBD\InteraccionSolicitudes.cs" />
+    <Compile Include="InteraccionBD\InteraccionTrabajadores.cs" />
+    <Compile Include="InteraccionBD\InteraccionUsuarios.cs" />
+    <Compile Include="Metodos\AnimacionScroll.cs" />
+    <Compile Include="Convertidores\ConvertirValorTabla.cs" />
     <Compile Include="DatosDePrueba.cs" />
-    <Compile Include="GraficoRadar.cs" />
-    <Compile Include="Mensajes.cs" />
-    <Compile Include="PanelHabilidades.cs" />
-    <Compile Include="Rutificador.cs" />
+    <Compile Include="Desempeno\TablaDesempeno.cs" />
+    <Compile Include="Estructuras\Desempeno.cs" />
+    <Compile Include="Metodos\GraficoRadar.cs" />
+    <Compile Include="Metodos\Mensajes.cs" />
+    <Compile Include="Paneles\PanelHabilidades.cs" />
+    <Compile Include="Metodos\Rutificador.cs" />
+    <Compile Include="Paneles\VisorSecciones.cs" />
+    <Compile Include="Paneles\VisorSolicitudes.cs" />
+    <Compile Include="Paneles\VisorUsuarios.cs" />
+    <Compile Include="Reportes\Fuentes.cs" />
+    <Compile Include="Reportes\ReporteSolicitudes.cs" />
+    <Compile Include="Reportes\ReportesTrabajador.cs" />
+    <Compile Include="Reportes\Textos.cs" />
     <Compile Include="VentanaAdministrador.xaml.cs">
       <DependentUpon>VentanaAdministrador.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaAgregarSeccion.xaml.cs" />
     <Compile Include="VentanaAgregarTrabajador.xaml.cs" />
+    <Compile Include="VentanaAgregarUsuario.xaml.cs" />
     <Compile Include="VentanaAsignacionHabilidades.xaml.cs" />
     <Compile Include="VentanaDetalleHabilidades.xaml.cs">
       <DependentUpon>VentanaDetalleHabilidades.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VentanaEleccionGradoImportancia.xaml.cs" />
     <Compile Include="VentanaEncuesta.xaml.cs" />
     <Compile Include="VentanaEvaluadores.xaml.cs" />
     <Compile Include="VentanaJefeSeccion.xaml.cs" />
     <Compile Include="VentanaLogin.xaml.cs" />
-    <Compile Include="VisorEncuestados.cs" />
-    <Compile Include="VisorEvaluacion.cs" />
-    <Compile Include="VisorHabilidades.cs" />
-    <Compile Include="VisorRanking.cs" />
-    <Compile Include="VisorTrabajador.cs" />
+    <Compile Include="Paneles\VisorEncuestados.cs" />
+    <Compile Include="Paneles\VisorEvaluacion.cs" />
+    <Compile Include="Paneles\VisorHabilidades.cs" />
+    <Compile Include="Paneles\VisorRanking.cs" />
+    <Compile Include="Paneles\VisorTrabajador.cs" />
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,7 +149,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="VentanaAgregarSeccion.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="VentanaAgregarTrabajador.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaAgregarUsuario.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -126,6 +168,10 @@
     <Page Include="VentanaDetalleHabilidades.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VentanaEleccionGradoImportancia.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="VentanaEncuesta.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -173,18 +219,49 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BaseDeDatos\BaseDeDatos.csproj">
+      <Project>{5b24a143-1bd9-4e73-a31f-dd6577a6886e}</Project>
+      <Name>BaseDeDatos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Evaluaciones\Evaluaciones.csproj">
+      <Project>{505bbfb4-82ad-4446-b55a-57cb479668e9}</Project>
+      <Name>Evaluaciones</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
+      <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
+      <Name>LogicaDifusa</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Perfiles\Perfil.csproj">
       <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
       <Name>Perfil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReglasMatching\Matching.csproj">
+      <Project>{8ccfddd9-4371-4b8f-922b-476d609b782f}</Project>
+      <Name>Matching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Seccion\Seccion.csproj">
+      <Project>{a2ff8f06-99d4-483c-b619-8e343947b23f}</Project>
+      <Name>Seccion</Name>
     </ProjectReference>
     <ProjectReference Include="..\Trabajador\Trabajador.csproj">
       <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>
       <Name>Trabajador</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Usuario\Usuario.csproj">
+      <Project>{0d750954-5cc0-4800-8270-f28c79a86d86}</Project>
+      <Name>Usuario</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
+    <Resource Include="Iconos\aceptar.png" />
+    <Resource Include="Iconos\agregar.png" />
     <Resource Include="Iconos\Business-Man.png" />
     <Resource Include="Iconos\configuracion.png" />
+    <Resource Include="Iconos\editar.png" />
+    <Resource Include="Iconos\eliminar.png" />
+    <Resource Include="Iconos\eliminarRojo.png" />
+    <Resource Include="Iconos\encuestaNoRealizada.png" />
     <Resource Include="Iconos\encuestaRealizada.png" />
     <Resource Include="Iconos\flechaAbajo.png" />
     <Resource Include="Iconos\flechaArriba.png" />
@@ -194,8 +271,10 @@
     <Resource Include="Iconos\guardar2.png" />
     <Resource Include="Iconos\herramientas.png" />
     <Resource Include="Iconos\logotipo.png" />
+    <Resource Include="Iconos\reporte.png" />
     <Resource Include="Iconos\User-Female.png" />
     <Resource Include="Iconos\usuarios.png" />
+    <Resource Include="Iconos\volver.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

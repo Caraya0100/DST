@@ -24,9 +24,11 @@ namespace InterfazGrafica
     /// </summary>
     public partial class VentanaLogin : MetroWindow
     {
-        Mensajes cuadroMensajes;
-        Rutificador rutificador;
+        private Mensajes cuadroMensajes;
+        private Rutificador rutificador;
+        private InteraccionBD.InteraccionUsuarios usuarios;
         private string tipoUsuario;
+        string rutFormateado;
         public VentanaLogin()
         {
             InitializeComponent();
@@ -45,6 +47,7 @@ namespace InterfazGrafica
             rutificador = new Rutificador();
             tipoUsuario = string.Empty;
             cuadroMensajes = new Mensajes(this);
+            usuarios = new InteraccionBD.InteraccionUsuarios();
         }
 
         private void VerificacionUsuario(object sender, RoutedEventArgs e)
@@ -65,24 +68,33 @@ namespace InterfazGrafica
         {
             bool rutVerificado = false;
             bool passVerificada = false;
-            string rutFormateado = string.Empty;
+            rutFormateado = string.Empty;
 
             if (rutificador.ValidaRut(rut.Text, digitoVerificador.Text))
             {
                 rutFormateado = rutificador.formatoRut(this.rut.Text) + "-" + this.digitoVerificador.Text;
                 this.rut.Text = rutificador.formatoRut(this.rut.Text);
             }
-            Console.WriteLine(rutFormateado);
-            if (password.Password.Equals("admin"))
+            
+            /*asignacion de los datos a comprobar*/
+            usuarios.IdUsuario = rutFormateado;
+            usuarios.Clave = password.Password;
+
+           /* if (password.Password.Equals("admin"))
             {
                 passVerificada = true;
             }
             if (rutFormateado.Equals("17.626.128-5"))
             {
                 rutVerificado = true;
+            }*/
+            if (usuarios.VerificacionUsuario())
+            {
+                usuarios.IdUsuario = rutFormateado;
+                DeterminacionUsuario(usuarios.TipoUsuario());
             }
-            if (rutVerificado && passVerificada)
-                DeterminacionUsuario("Administrador");
+            /*if (rutVerificado && passVerificada)
+                DeterminacionUsuario("Jefe de seccion");*///falta dertimanar usuario
             else
             {
                 await cuadroMensajes.VerificacionUsuarioIncorrecta();
@@ -94,20 +106,24 @@ namespace InterfazGrafica
 
         private void DeterminacionUsuario(string tipoUsuario)
         {
-            if (tipoUsuario.Equals("Administrador"))
+            if (tipoUsuario.Equals("ADMINISTRADOR"))
             {
                 /*abre ventana admin*/
                 VentanaAdministrador administrador = new VentanaAdministrador();
-                administrador.ShowDialog();
-                this.Close();
+                administrador.Show();
+                this.Hide();
             }
-            else if (tipoUsuario.Equals("JefeSeccion"))
+            else if (tipoUsuario.Equals("JEFE_SECCION"))
             {                
                 VentanaJefeSeccion jefeSeccion = new VentanaJefeSeccion();
-                jefeSeccion.ShowDialog();
-                this.Close();
+                usuarios.IdUsuario = rutFormateado;
+                jefeSeccion.RetornarAdministrador = Visibility.Hidden;
+                jefeSeccion.NombreJefeSeccion = usuarios.NombreJefeSeccion();
+                jefeSeccion.IdJefeSeccion = rutFormateado;
+                jefeSeccion.Show();
+                this.Hide();
             }
-            else if (tipoUsuario.Equals("Psicologo"))
+            else if (tipoUsuario.Equals("PSICOLOGO"))
             {
 
             }

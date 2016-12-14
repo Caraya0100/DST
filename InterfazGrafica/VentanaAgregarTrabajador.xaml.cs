@@ -25,12 +25,30 @@ namespace InterfazGrafica
     {
         private Rutificador rutificador;
         private Mensajes cuadroMensajes;
+        private string idTrabajador;
+        private int idSeccion;
+        private DatosDePrueba datosPrueba;//datos de prueba
+        private bool edicion;
+        private string rutNoModificado;
+        
+        /****************************/
+        private InteraccionBD.InteraccionTrabajadores datosTrabajadores;
         public VentanaAgregarTrabajador()
         {
             InitializeComponent();
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            IniciarComponentes();
+        }
+
+
+        private void IniciarComponentes()
+        {
+            idTrabajador = string.Empty;
             rutificador = new Rutificador();
             cuadroMensajes = new Mensajes(this);
+            datosTrabajadores = new InteraccionBD.InteraccionTrabajadores();
+            datosPrueba = new DatosDePrueba();
+            edicion = false;
         }
 
         /// <summary>
@@ -71,8 +89,25 @@ namespace InterfazGrafica
             if (camposCompletos != 5)
                 cuadroMensajes.CamposIncompletos();
             else
-            {
+            {                
                 /*capturar datos y almacenar en BD*/
+                Estructuras.Trabajador nuevoTrabajador = new Estructuras.Trabajador();
+                nuevoTrabajador.Nombre = nombre.Text;
+                nuevoTrabajador.ApellidoPaterno = apellidoPaterno.Text;
+                nuevoTrabajador.ApellidoMaterno = apellidoMaterno.Text;
+                nuevoTrabajador.Rut = rut;
+                if(sexo.SelectedIndex == 0)
+                    nuevoTrabajador.Sexo = "Masculino";
+                else nuevoTrabajador.Sexo = "Femenino";
+                nuevoTrabajador.FechaNacimiento = etiquetaFechaNacimiento.Content as string;
+                nuevoTrabajador.IdSeccion = idSeccion;//CAMBIAR por idseccion
+                nuevoTrabajador.Estado = true;
+                if (!edicion)
+                {
+                    nuevoTrabajador.IdSeccion = idSeccion; System.Windows.MessageBox.Show("id"+idSeccion);
+                    datosTrabajadores.NuevoTrabajador(nuevoTrabajador);//agrega el trabajador
+                }                    
+                else datosTrabajadores.ModificaTrabajador(nuevoTrabajador, rutNoModificado);//guarda los datos editados
                 cuadroMensajes.NuevoTrabajadorAgregado();
                 EstableceCamposVacios();
             }
@@ -86,7 +121,9 @@ namespace InterfazGrafica
         private void SeleccionFechaNacimiento(object sender, MouseButtonEventArgs e)
         {
             despliegueCalendario.IsOpen = false;
-            this.etiquetaFechaNacimiento.Content = "" + this.calendario.SelectedDate.Value.ToString("dd/MM/yyyy"); ;
+            if (this.calendario.SelectedDate.HasValue)
+                this.etiquetaFechaNacimiento.Content = "" + this.calendario.SelectedDate.Value.ToString("yyyy-MM-dd"); //dd/MM/yyyy
+            else this.etiquetaFechaNacimiento.Content = string.Empty;
         }
 
         /// <summary>
@@ -98,7 +135,89 @@ namespace InterfazGrafica
             apellidoPaterno.Text = "";
             apellidoMaterno.Text = "";
             rut.Text = "";
+            digitoVerificador.Text = "";
             etiquetaFechaNacimiento.Content = "";
+        }
+
+        public string IdTrabajador
+        {
+            get { return idTrabajador; }
+            set { idTrabajador = value; }
+        }
+
+        public void RecuperarDatos()
+        {
+            int indice = Convert.ToInt32(idTrabajador);
+            nombre.Text = datosPrueba.Trabajadores[indice].Nombre;//datos de prueba
+            apellidoPaterno.Text = datosPrueba.Trabajadores[indice].ApellidoPaterno;//datos de prueba
+            apellidoMaterno.Text = datosPrueba.Trabajadores[indice].ApellidoMaterno;//datos de prueba
+            string[] rutSeparado = datosPrueba.Trabajadores[indice].Rut.Split('-');
+            rut.Text = rutSeparado[0];//datos de prueba
+            digitoVerificador.Text = rutSeparado[1];//datos de prueba
+            etiquetaFechaNacimiento.Content = datosPrueba.Trabajadores[indice].FechaNacimiento;//datos de prueba
+            if (datosPrueba.Trabajadores[indice].Sexo.Equals("Masculino"))//datos de prueba
+                sexo.SelectedIndex = 0;
+            else
+                sexo.SelectedIndex = 1;
+        }
+
+        public string NombreTrabajador
+        {
+            get { return nombre.Text; }
+            set { nombre.Text = value; }
+        }
+
+        public string ApellidoPaterno
+        {
+            get { return apellidoPaterno.Text; }
+            set { apellidoPaterno.Text = value; }
+        }
+
+        public string ApellidoMaterno
+        {
+            get { return apellidoMaterno.Text; }
+            set { apellidoMaterno.Text = value; }
+        }
+        public string FechaNacimiento
+        {
+            get { return etiquetaFechaNacimiento.Content as string; }
+            set { etiquetaFechaNacimiento.Content = value; }
+        }
+
+        public int Sexo
+        {
+            get { return sexo.SelectedIndex; }
+            set { sexo.SelectedIndex = value; }
+        }
+
+        public string Rut
+        {
+            get { return rut.Text; }
+            set { rut.Text = value; }
+        }
+
+        public string DigitoVerificador
+        {
+            get { return digitoVerificador.Text; }
+            set { digitoVerificador.Text = value; }
+        }
+
+        public bool Edicion
+        {
+            get { return edicion; }
+            set { edicion = value; }
+        }
+
+        public string RutNoModificado
+        {
+            get { return rutNoModificado; }
+            set { rutNoModificado = value; }
+        }
+
+        public int IdSeccion
+        {
+            get { return idSeccion; }
+            set { idSeccion = value; }
         }
     }
 }
