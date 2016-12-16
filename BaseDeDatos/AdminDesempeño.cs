@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 
 namespace DST
 {
@@ -132,6 +133,320 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+
+        /// <summary>
+        /// Obtiene una lista con los años del desempeño de una sección.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <returns></returns>
+        public List<int> ObtenerAnios(int idSeccion)
+        {
+            List<int> anios = new List<int>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT DISTINCT YEAR(fecha) AS anio FROM desempeño WHERE idSeccion=" + idSeccion + " ORDER BY anio ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                anios.Add(Convert.ToInt32(bd.Consulta.GetString("anio")));
+            }
+
+            bd.Close();
+
+            return anios;
+        }
+
+        /// <summary>
+        /// Obtiene una lista con los meses de un año del desempeño de una sección.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="anio"></param>
+        /// <returns></returns>
+        public List<int> ObtenerMesesAnio(int idSeccion, int anio)
+        {
+            List<int> meses = new List<int>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT DISTINCT MONTH(fecha) AS mes FROM desempeño WHERE idSeccion=" + idSeccion + " AND YEAR(fecha)='" + anio + "' ORDER BY mes ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                meses.Add(Convert.ToInt32(bd.Consulta.GetString(0)));
+            }
+
+            bd.Close();
+
+            return meses;
+        }
+
+        /// <summary>
+        /// Obtiene las ventas (actuales, anteriores, plan) de una sección.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="inicioAnioFiscal"></param>
+        /// <param name="anio"></param>
+        /// <returns></returns>
+        public Dictionary<string, Tuple<double, double, double>> ObtenerVentasAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        {
+            // fecha, añoActual, añoAnaterior, ventasPlan
+            Dictionary<string, Tuple<double, double, double>> ventas = new Dictionary<string, Tuple<double, double, double>>();
+            Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
+            int finalAnioFiscal = fechaFinal.Item1;
+            int anioFinal = fechaFinal.Item2;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT fecha, ventasAñoActual, ventasAñoAnterior, ventasPlan FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                ventas.Add(
+                    bd.Consulta.GetString("fecha"),
+                    new Tuple<double, double, double>(
+                        bd.Consulta.GetDouble(1),
+                        bd.Consulta.GetDouble(2),
+                        bd.Consulta.GetDouble(3)
+                    )
+                );
+            }
+
+            bd.Close();
+
+            return ventas;
+        }
+
+        public Dictionary<string, int> ObtenerReubicacionesAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        {
+            Dictionary<string, int> reubicaciones = new Dictionary<string, int>();
+            Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
+            int finalAnioFiscal = fechaFinal.Item1;
+            int anioFinal = fechaFinal.Item2;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT fecha, reubicaciones FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;;");
+
+            while (bd.Consulta.Read())
+            {
+                reubicaciones.Add(
+                    bd.Consulta.GetString("fecha"),
+                    bd.Consulta.GetInt32("reubicaciones")
+                );
+            }
+
+            bd.Close();
+
+            return reubicaciones;
+        }
+
+        /// <summary>
+        /// Obtiene el total de empleados de una seccion en cada mes de un año fiscal.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="inicioAnioFiscal"></param>
+        /// <param name="anio"></param>
+        /// <returns></returns>
+        public Dictionary<string, int> ObtenerTotalEmpleadosAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        {
+            Dictionary<string, int> empleados = new Dictionary<string, int>();
+            Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
+            int finalAnioFiscal = fechaFinal.Item1;
+            int anioFinal = fechaFinal.Item2;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT fecha, totalEmpleados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                empleados.Add(
+                    bd.Consulta.GetString("fecha"),
+                    bd.Consulta.GetInt32("totalEmpleados")
+                );
+            }
+
+            bd.Close();
+
+            return empleados;
+        }
+
+        /// <summary>
+        /// Obtiene los empleados capacitados de una seccion en cada mes de un año fiscal.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="inicioAnioFiscal"></param>
+        /// <param name="anio"></param>
+        /// <returns></returns>
+        public Dictionary<string, int> ObtenerEmpleadosCapacitadosAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        {
+            Dictionary<string, int> empleados = new Dictionary<string, int>();
+            Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
+            int finalAnioFiscal = fechaFinal.Item1;
+            int anioFinal = fechaFinal.Item2;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT fecha, empleadosCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                empleados.Add(
+                    bd.Consulta.GetString("fecha"),
+                    bd.Consulta.GetInt32("empleadosCapacitados")
+                );
+            }
+
+            bd.Close();
+
+            return empleados;
+        }
+
+        /// <summary>
+        /// Obtiene los empleados capacitados de una seccion en cada mes de un año fiscal.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="inicioAnioFiscal"></param>
+        /// <param name="anio"></param>
+        /// <returns></returns>
+        public Dictionary<string, int> ObtenerEmpleadosNoCapacitadosAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        {
+            Dictionary<string, int> empleados = new Dictionary<string, int>();
+            Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
+            int finalAnioFiscal = fechaFinal.Item1;
+            int anioFinal = fechaFinal.Item2;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT fecha, empleadosNoCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                empleados.Add(
+                    bd.Consulta.GetString("fecha"),
+                    bd.Consulta.GetInt32("empleadosNoCapacitados")
+                );
+            }
+
+            bd.Close();
+
+            return empleados;
+        }
+
+        /// <summary>
+        /// Obtiene las ventas del mes del año de una seccion.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="mes"></param>
+        /// <param name="anio"></param>
+        /// <returns></returns>
+        public Tuple<double, double, double> ObtenerVentasMes(int idSeccion, int mes, int anio)
+        {
+            // añoActual, añoAnaterior, ventasPlan
+            Tuple<double, double, double> ventas = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT ventasAñoActual, ventasAñoAnterior, ventasPlan FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                ventas = new Tuple<double, double, double>(
+                    bd.Consulta.GetDouble(0),
+                    bd.Consulta.GetDouble(1),
+                    bd.Consulta.GetDouble(2)
+                );
+            }
+
+            bd.Close();
+
+            return ventas;
+        }
+
+        public int ObtenerReubicacionesMes(int idSeccion, int mes, int anio)
+        {
+            int reubicaciones = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT reubicaciones FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                reubicaciones = bd.Consulta.GetInt32("reubicaciones");
+            }
+
+            bd.Close();
+
+            return reubicaciones;
+        }
+
+        public int ObtenerTotalEmpleadosMes(int idSeccion, int mes, int anio)
+        {
+            int empleados = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT totalEmpleados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                empleados = bd.Consulta.GetInt32("totalEmpleados");
+            }
+
+            bd.Close();
+
+            return empleados;
+        }
+
+        public int ObtenerEmpleadosCapacitadosMes(int idSeccion, int mes, int anio)
+        {
+            int empleados = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT empleadosCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                empleados = bd.Consulta.GetInt32("empleadosCapacitados");
+            }
+
+            bd.Close();
+
+            return empleados;
+        }
+
+        public int ObtenerEmpleadosNoCapacitadosMes(int idSeccion, int mes, int anio)
+        {
+            int empleados = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT empleadosNoCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                empleados = bd.Consulta.GetInt32("empleadosNoCapacitados");
+            }
+
+            bd.Close();
+
+            return empleados;
         }
 
         /// <summary>
@@ -544,6 +859,34 @@ namespace DST
             conn.Close();
 
             return puntajeCF;
+        }
+
+        /// <summary>
+        /// Obtiene el mes y el año final a partir de la fecha de inicio 
+        /// para el periodo anual.
+        /// </summary>
+        /// <param name="inicioAnioFiscal"></param>
+        /// <param name="anio"></param>
+        /// <returns>Retorna mes y año finales</returns>
+        private Tuple<int, int> ObtenerFechaFinal(int inicioAnioFiscal, int anio)
+        {
+            int anioFinal = anio;
+            int finalAnioFiscal = inicioAnioFiscal;
+
+            for (int i = 1; i < 11; i++)
+            {
+                if (finalAnioFiscal == 12)
+                {
+                    finalAnioFiscal = 1;
+                    anioFinal += 1;
+                }
+                else
+                {
+                    finalAnioFiscal += 1;
+                }
+            }
+
+            return new Tuple<int, int>(finalAnioFiscal, anioFinal);
         }
     }
 }

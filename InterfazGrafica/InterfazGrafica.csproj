@@ -223,6 +223,10 @@
       <Project>{5b24a143-1bd9-4e73-a31f-dd6577a6886e}</Project>
       <Name>BaseDeDatos</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Encuesta\Encuesta.csproj">
+      <Project>{5893d1de-c96f-44a4-8fa4-53870d8048d7}</Project>
+      <Name>Encuesta</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Evaluaciones\Evaluaciones.csproj">
       <Project>{505bbfb4-82ad-4446-b55a-57cb479668e9}</Project>
       <Name>Evaluaciones</Name>

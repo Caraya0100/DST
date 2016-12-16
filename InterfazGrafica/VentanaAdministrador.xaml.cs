@@ -48,8 +48,6 @@ namespace InterfazGrafica
         int trabajadorSeleccionado;
 
         private Dictionary<string, Seccion> secciones;
-        private double valorGraficoDAnterior;
-        private double valorGraficoDPlan;
         private Dictionary<string, Componente> hb;
         private Dictionary<string, Componente> hd;
         private Dictionary<string, Componente> cf;
@@ -85,7 +83,7 @@ namespace InterfazGrafica
             IniciarTablaDesempeno();
             IniciarPanelComponentes();
             IniciarPanelReglas();
-
+            IniciarPanelPreguntas();
 
         }
         /// <summary>
@@ -600,6 +598,14 @@ namespace InterfazGrafica
          *                          PD. PANEL DESEMPEÑO
          * ----------------------------------------------------------------------*/
 
+        // Mes inicial del año fiscal de la empresa.
+        int inicioAnioFiscal = 1;
+        Seccion desempenoSeccionActual;
+        private double valorGraficoDAnterior;
+        private double valorGraficoDPlan;
+        private double valorGraficoObjetivoMes;
+        private double valorGraficoCapacitados;
+
         public void ObtenerSecciones()
         {
             AdminSeccion adminSeccion = new AdminSeccion();
@@ -639,102 +645,218 @@ namespace InterfazGrafica
             ValorGraficoDAnterior = actualAnterior;
             ValorGraficoDPlan = actualPlan;
             FormatoPorcentaje = x => x.ToString("P");
-            
+        }
+
+        public void IniciarPanelVentasMes(int idSeccion, string tipoSeccion, int mes, int año)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            int reubicaciones = ad.ObtenerReubicacionesMes(idSeccion, mes, año);
+            int capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, año);
+            int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(idSeccion, mes, año);
+
+            IniciarGraficoVentasMes(idSeccion, mes, año);
+            //IniciarGraficoMensualObjetivo(idSeccion, mes, año);
+            txtNumeroReubicaciones.Text = reubicaciones.ToString();
+            txtNumeroCapacitados.Text = capacitados.ToString();
+            txtNumeroNoCapacitados.Text = noCapacitados.ToString();
+            IniciarGraficoDCapacitados(idSeccion, mes, año);
+            panelDatosAnuales.Visibility = Visibility.Collapsed;
+            panelDatosMensuales.Visibility = Visibility.Visible;
         }
 
         /// <summary>
         /// Inicia el grafico de las ventas anuales de una seccion.
-        /// <param name="seccion">Nombre de la seccion</param>
+        /// <param name="seccion">Id de la seccion</param>
+        /// <param name="anio">Anio de las ventas</param>
         /// </summary>
-        private void IniciarGraficoVentasAnuales(string seccion)
+        private void IniciarGraficoVentasAnuales(int idSeccion, int anio)
         {
+            AdminDesempeño ad = new AdminDesempeño();
+            ChartValues<double> anioActual = new ChartValues<double>();
+            ChartValues<double> anioAnterior = new ChartValues<double>();
+            ChartValues<double> ventasPlan = new ChartValues<double>();
+            Dictionary<string, Tuple<double, double, double>> ventas = ad.ObtenerVentasAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
+            string[] meses = new string[ventas.Count];
+
+            int mes = 0;
+            foreach (KeyValuePair<string, Tuple<double, double, double>> venta in ventas)
+            {
+                string[] m = venta.Key.Split('/');
+                meses[mes] = m[1];
+                mes += 1;
+                anioActual.Add(venta.Value.Item1);
+                anioAnterior.Add(venta.Value.Item2);
+                ventasPlan.Add(venta.Value.Item3);
+            }
+
             SeriesVentasAnuales = new SeriesCollection
             {
                 new LineSeries
                 {
                     Title = "Ventas Año Actual",
-                    Values = new ChartValues<double> {
-                        1150000, 1820000, 1052000, 1292000,
-                        1352000, 1152000, 1252000, 1102000,
-                        2012000, 2462000, 1252000, 1109000,
-                    },
+                    Values = anioActual,
                     Fill = Brushes.Transparent
                 },
                 new LineSeries
                 {
                     Title = "Ventas Año Anterior",
-                    Values = new ChartValues<double> {
-                        1050000, 1220000, 1050000, 1092000,
-                        1152000, 1052000, 1200100, 1302000,
-                        2612000, 2062000, 1152000, 1009000,
-                    },
+                    Values = anioAnterior,
                     Fill = Brushes.Transparent
-                    //PointGeometry = null
                 },
                 new LineSeries
                 {
                     Title = "Ventas Plan",
-                    Values = new ChartValues<double> {
-                        2150000, 2820000, 1052000, 3292000,
-                        2352000, 2152000, 2252000, 2102000,
-                        2012000, 2462000, 2252000, 3109000,
-                    },
+                    Values = ventasPlan,
                     Fill = Brushes.Transparent
-                    //PointGeometry = DefaultGeometries.Square,
-                    //PointGeometrySize = 15
                 }
             };
 
-            LabelsAnioFiscal = new[] { "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Oct", "Nov", "Dic" };
+            LabelsAnioFiscal = meses;
             YFormatoVentasAnuales = value => value + "$";
+
+            // Actualizamos el grafico (reinicio animaciones y actualización de datos).
+            graficoDesempenoAnuales.Update(true);
+
         }
 
-        private void IniciarGraficoReubicacionesAnuales(string seccion)
+        private void IniciarGraficoReubicacionesAnuales(int idSeccion, int anio)
         {
+            AdminDesempeño ad = new AdminDesempeño();
+            ChartValues<double> reubicaciones = new ChartValues<double>();
+            Dictionary<string, int> r = ad.ObtenerReubicacionesAnuales(idSeccion, inicioAnioFiscal, anio);
+            string[] meses = new string[r.Count];
+            int mes = 0;
+
+            foreach (KeyValuePair<string, int> reubicacion in r)
+            {
+                string[] m = reubicacion.Key.Split('/');
+                meses[mes] = m[1];
+                mes += 1;
+                reubicaciones.Add(Convert.ToDouble(reubicacion.Value));
+            }
+
             SeriesReubicacionesAnuales = new SeriesCollection
             {
                 new ColumnSeries
                 {
                     Title = "Reubicaciones",
-                    Values = new ChartValues<double> {
-                        1, 5, 3, 2, 
-                        1, 1, 3, 4, 
-                        1, 2, 3, 3
-                    },
+                    Values = reubicaciones,
                     MaxColumnWidth = 10
                 }
             };
 
+            LabelsAnioFiscal = meses;
             FormatoReubicaciones = value => value.ToString("N");
+            // Actualizamos el grafico (reinicio animaciones y actualización de datos).
+            graficoDReubicaciones.Update(true);
         }
 
-        private void IniciarGraficoComparacionRAnuales(string seccion)
+        private void IniciarGraficoComparacionRAnuales(int idSeccion, int anio)
         {
+            AdminDesempeño ad = new AdminDesempeño();
+            ChartValues<double> totalEmpleados = new ChartValues<double>();
+            ChartValues<double> empleadosCapacitados = new ChartValues<double>();
+            Dictionary<string, int> te = ad.ObtenerTotalEmpleadosAnuales(idSeccion, inicioAnioFiscal, anio);
+            Dictionary<string, int> ec = ad.ObtenerEmpleadosCapacitadosAnuales(idSeccion, inicioAnioFiscal, anio);
+            string[] meses = new string[te.Count];
+            int mes = 0;
+
+            foreach (KeyValuePair<string, int> total in te)
+            {
+                string[] m = total.Key.Split('/');
+                meses[mes] = m[1];
+                mes += 1;
+                totalEmpleados.Add(Convert.ToDouble(total.Value));
+            }
+
+            foreach (KeyValuePair<string, int> empleados in ec)
+            {
+                empleadosCapacitados.Add(Convert.ToDouble(empleados.Value));
+            }
+
             SeriesComparacionRAnuales = new SeriesCollection
             {
                 new ColumnSeries
                 {
                     Title = "Trabajadores",
-                    Values = new ChartValues<double> {
-                        6, 5, 5, 5,
-                        6, 5, 5, 5,
-                        6, 5, 6, 6,
-                    }, 
+                    Values = totalEmpleados, 
                     MaxColumnWidth = 10
                 },
                 new ColumnSeries
                 {
                     Title = "Capacitados",
-                    Values = new ChartValues<double> {
-                        1, 2, 3, 4,
-                        4, 4, 4, 4,
-                        4, 4, 3, 3
-                    },
+                    Values = empleadosCapacitados,
                     MaxColumnWidth = 10
                 }
             };
 
+            LabelsAnioFiscal = meses;
             FormatoReubicaciones = value => value.ToString("N");
+
+            // Actualizamos el grafico (reinicio animaciones y actualización de datos).
+            graficoDComparacionR.Update(true);
+        }
+
+        public void IniciarPanelDatosAnuales(int idSeccion, int anio)
+        {
+            IniciarGraficoVentasAnuales(desempenoSeccionActual.IdSeccion, anio);
+            IniciarGraficoReubicacionesAnuales(desempenoSeccionActual.IdSeccion, anio);
+            IniciarGraficoComparacionRAnuales(desempenoSeccionActual.IdSeccion, anio);
+            panelDatosMensuales.Visibility = Visibility.Collapsed;
+            panelDatosAnuales.Visibility = Visibility.Visible;
+        }
+
+        public void IniciarGraficoVentasMes(int idSeccion, int mes, int anio)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            ChartValues<double> anioActual = new ChartValues<double>();
+            ChartValues<double> anioAnterior = new ChartValues<double>();
+            ChartValues<double> ventasPlan = new ChartValues<double>();
+            Tuple<double, double, double> ventas = ad.ObtenerVentasMes(desempenoSeccionActual.IdSeccion, mes, anio);
+
+            anioActual.Add(ventas.Item1);
+            anioAnterior.Add(ventas.Item2);
+            ventasPlan.Add(ventas.Item3);
+
+            SeriesVentasMes = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Ventas Actuales",
+                    Values = anioActual,
+                    MaxColumnWidth = 10
+                },
+                new ColumnSeries
+                {
+                    Title = "Ventas Año Anterior",
+                    Values = anioAnterior,
+                    MaxColumnWidth = 10
+                },
+                new ColumnSeries
+                {
+                    Title = "Ventas Plan",
+                    Values = ventasPlan,
+                    MaxColumnWidth = 10
+                }
+            };
+
+            LabelsVentasMes = new string[] { mes.ToString() };
+            YFormatoVentasAnuales = value => value + "$";
+        }
+
+        public void IniciarGraficoMensualObjetivo(int idSeccion, int mes, int anio)
+        {
+            
+        }
+
+        public void IniciarGraficoDCapacitados (int idSeccion, int mes, int anio)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            double total = ad.ObtenerTotalEmpleadosMes(idSeccion, mes, anio);
+            double capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, anio);
+
+            ValorGraficoCapacitados = capacitados / total;
+            FormatoPorcentaje = x => x.ToString("P");
         }
 
         /* ----------------------------------------------------------------------
@@ -748,21 +870,61 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void DetallesDesempenoSeccion(object sender, RoutedEventArgs e)
         {
-            Seccion seccion = (Seccion)tablaDesempeno.SelectedItem;
-            // iniciamos los graficos.
-            boxWrapDDetalles.SelectedIndex = 0;
-            boxWrapDDetalles.SelectedValue = "VentasAnuales";
-            IniciarGraficosDesempeno((seccion.ActualAnterior/100), (seccion.ActualPlan/100));
-            IniciarGraficoVentasAnuales(seccion.Nombre);
-            IniciarGraficoReubicacionesAnuales(seccion.Nombre);
-            IniciarGraficoComparacionRAnuales(seccion.Nombre);
+            desempenoSeccionActual = (Seccion)tablaDesempeno.SelectedItem;
+            DateTime fechaActual = DateTime.Now;
+            AdminDesempeño ad = new AdminDesempeño();
+            List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion);
+
+            // Iniciamos los comboBox con los años y los meses.
+            boxWrapDDetalles.Items.Clear();
+            foreach (int anio in anios)
+            {
+                boxWrapDDetalles.Items.Add(anio.ToString());
+            }
+            //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
+
+            // Iniciamos los graficos.
+            IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
+            IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
             DataContext = this;
-            // hacemos visible el panel del desempeño de la seccion.
+
+            // Hacemos visible el panel del desempeño de la seccion.
             panelDResumen.Visibility = Visibility.Hidden;
-            lblNombreSeccion.Content = seccion.Nombre;
-            ValorGraficoDAnterior = seccion.ActualAnterior;
-            ValorGraficoDPlan = seccion.ActualPlan;
+            lblNombreSeccion.Content = desempenoSeccionActual.Nombre;
+            //ValorGraficoDAnterior = desempenoSeccionActual.ActualAnterior;
+            //ValorGraficoDPlan = desempenoSeccionActual.ActualPlan;
             panelDDetalles.Visibility = Visibility.Visible;
+        }
+
+        public void SeleccionAnioDDetalles(object sender, RoutedEventArgs e)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            List<int> meses = ad.ObtenerMesesAnio(desempenoSeccionActual.IdSeccion, DateTime.Now.Year);
+
+            boxWrapMes.Items.Clear();
+            boxWrapMes.Items.Add("Anual");
+
+            foreach (int mes in meses)
+            {
+                boxWrapMes.Items.Add(mes.ToString());
+            }
+
+            //boxWrapMes.SelectedValue = "Anual";
+        }
+
+        public void SeleccionMesDDetalles(object sender, RoutedEventArgs e)
+        {
+            string anio = (string)boxWrapDDetalles.SelectedValue;
+            string mes = (string)boxWrapMes.SelectedValue;
+
+            if (mes != "Anual")
+            {
+                IniciarPanelVentasMes(desempenoSeccionActual.IdSeccion, "ventas", Convert.ToInt32(mes), Convert.ToInt32(anio));
+                DataContext = this;
+            } else
+            {
+                
+            }
         }
 
         /// <summary>
@@ -779,6 +941,25 @@ namespace InterfazGrafica
         private void TDSeleccionSeccion(object sender, MouseButtonEventArgs e)
         {
             Debug.WriteLine("Doble Click");
+        }
+
+        private void GenerarReporteDesempeno(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog explorador = new System.Windows.Forms.SaveFileDialog();
+            explorador.Filter = "Pdf Files|*.pdf";
+            explorador.ShowDialog();
+            if (explorador.FileName != "")
+            {
+                reporteSolicitud = new Reportes.ReporteSolicitudes();
+                reporteSolicitud.RutaFichero = explorador.FileName;
+                reporteSolicitud.GenerarReporte();
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = explorador.FileName;
+                proc.Start();
+                proc.Close();
+            }
+
+
         }
 
         /* ----------------------------------------------------------------------
@@ -805,8 +986,30 @@ namespace InterfazGrafica
             }
         }
 
+        public double ValorGraficoObjetivoMes
+        {
+            get { return valorGraficoObjetivoMes; }
+            set
+            {
+                valorGraficoObjetivoMes = value;
+                OnPropertyChanged("ValorGraficoObjetivoMes");
+            }
+        }
+
+        public double ValorGraficoCapacitados
+        {
+            get { return valorGraficoCapacitados; }
+            set
+            {
+                valorGraficoCapacitados = value;
+                OnPropertyChanged("ValorGraficoCapacitados");
+            }
+        }
+
         public string[] LabelsAnioFiscal { get; set; }
+        public string[] LabelsVentasMes { get; set; }
         public SeriesCollection SeriesVentasAnuales { get; set; }
+        public SeriesCollection SeriesVentasMes { get; set; }
         public SeriesCollection SeriesReubicacionesAnuales { get; set; }
         public SeriesCollection SeriesComparacionRAnuales { get; set; }
         public Func<double, string> FormatoReubicaciones { get; set; }
@@ -825,9 +1028,36 @@ namespace InterfazGrafica
          *                          PP. PANEL PREGUNTAS
          * ----------------------------------------------------------------------*/
 
+        Dictionary<string, Pregunta> preguntas;
+
+        public void ObtenerPreguntas()
+        {
+            AdminEncuesta ae = new AdminEncuesta();
+            preguntas = ae.ObtenerPreguntas();
+        }
+
+        public void LlenarTablaPreguntas()
+        {
+            foreach (KeyValuePair<string, Pregunta> pregunta in preguntas)
+            {
+                if (pregunta.Value.Tipo.ToLower() != "gqm")
+                    tablaPreguntas.Items.Add(pregunta.Value);
+            }
+        }
+
+        public void LlenarTablaPreguntasGQM()
+        {
+            foreach (KeyValuePair<string, Pregunta> pregunta in preguntas)
+            {
+                if (pregunta.Value.Tipo.ToLower() == "gqm")
+                    tablaPreguntas.Items.Add(pregunta.Value);
+            }
+        }
+
         private void IniciarPanelPreguntas()
         {
-
+            ObtenerPreguntas();
+            LlenarTablaPreguntas();
         }
 
         /* ----------------------------------------------------------------------
