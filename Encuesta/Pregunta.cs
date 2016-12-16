@@ -11,11 +11,14 @@ namespace DST
     /// </summary>
     public class Pregunta
     {
-        private string descripcion;
+        private int id;
+        private string pregunta;
         //private Dictionary<string, double> alternativas; // <id, valor>
-        private List<Alternativa> alternativas;
-        private Tuple<double, double, double> respuesta; // <grado, frecuencia, resultado>
+        private Dictionary<string, Alternativa> alternativas;
+        private Tuple<double, double, double> respuesta360; // <grado, frecuencia, resultado>
+        private double respuestaNormal;
         private List<string> componentes; // HB/HD/CF.
+        private string tipo;
 
         /// <summary>
         /// Constructor, inicializa una pregunta vacia.
@@ -23,8 +26,23 @@ namespace DST
         public Pregunta()
         {
             //alternativas = new Dictionary<string, double>();
-            alternativas = new List<Alternativa>();
-            respuesta = new Tuple<double, double, double>(-1, -1, -1);
+            alternativas = new Dictionary<string, Alternativa>();
+            respuesta360 = new Tuple<double, double, double>(-1, -1, -1);
+            respuestaNormal = -1;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="pregunta"></param>
+        /// <param name="alternativas"></param>
+        public Pregunta(int id, string pregunta, Dictionary<string, Alternativa> alternativas, string tipo)
+        {
+            this.id = id;
+            this.pregunta = pregunta;
+            this.alternativas = alternativas;
+            this.tipo = tipo;
         }
 
         /// <summary>
@@ -76,7 +94,7 @@ namespace DST
             if (frecuencia >= 0)
             {
                 resultado = grado * frecuencia;
-                Respuesta = new Tuple<double, double, double>(grado, frecuencia, resultado);
+                respuesta360 = new Tuple<double, double, double>(grado, frecuencia, resultado);
             } else
             {
                 // Si la pregunta no tiene frecuencia.
@@ -93,16 +111,22 @@ namespace DST
             set { alternativas = value; }
         }*/
 
-        public List<Alternativa> Alternativas
+        public Dictionary<string, Alternativa> Alternativas
         {
             get { return alternativas; }
             set { alternativas = value; }
         }
 
-        public Tuple<double, double, double> Respuesta
+        public Tuple<double, double, double> Respuesta360
         {
-            get { return respuesta; }
-            set { respuesta = value; }
+            get { return respuesta360; }
+            set { respuesta360 = value; }
+        }
+
+        public double RespuestaNormal
+        {
+            get { return respuestaNormal; }
+            set { respuestaNormal = value; }
         }
 
         public List<string> Componentes
@@ -113,8 +137,20 @@ namespace DST
 
         public string Descripcion
         {
-            get { return descripcion; }
-            set { descripcion = value; }
+            get { return pregunta; }
+            set { pregunta = value; }
+        }
+
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        public string Tipo
+        {
+            get { return tipo; }
+            set { tipo = value; }
         }
     }
 }

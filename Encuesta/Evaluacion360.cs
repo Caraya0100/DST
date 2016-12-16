@@ -111,7 +111,7 @@ namespace DST
                 resultado = 0;
                 foreach (Pregunta pregunta in preguntas)
                 {
-                    resultado += pregunta.Respuesta.Item3; // Resultado respuesta.
+                    resultado += pregunta.Respuesta360.Item3; // Resultado respuesta.
                 }
 
                 resultado = resultado / preguntas.Count;

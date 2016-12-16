@@ -99,5 +99,196 @@ namespace DST
             return preguntas;
         }
 
+        public void InsertarPregunta(string pregunta, string tipo)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("INSERT INTO preguntas(pregunta,tipo) VALUES('" + pregunta + "', '" + tipo + "');");
+
+            bd.Close();
+        }
+
+        public void InsertarAlternativa(string alternativa, string descripcion, double valor, string tipo)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("INSERT INTO alternativas(alternativa,descripcion, valor, tipo) VALUES('" + alternativa + "', '" + descripcion + "', " + valor + ", '" + tipo + "');");
+
+            bd.Close();
+        }
+
+        public void InsertarAlternativaPregunta(int idPregunta, string alternativa)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("INSERT INTO alternativasPreguntas(idPregunta, alternativa) VALUES(" + idPregunta + ", '" + alternativa + "');");
+
+            bd.Close();
+        }
+
+        public void InsertarComponentePregunta(int idPregunta, string idComponente)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("INSERT INTO componentesPreguntas(idPregunta, idComponente) VALUES(" + idPregunta + ", '" + idComponente + "');");
+
+            bd.Close();
+        }
+
+        public Alternativa ObtenerAlternativa(string alternativa)
+        {
+            Alternativa al = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM alternativas WHERE alternativa='" + alternativa + "';");
+
+            if (bd.Consulta.Read())
+            {
+                al = new Alternativa(
+                    bd.Consulta.GetString("alternativa"),
+                    bd.Consulta.GetString("descripcion"),
+                    bd.Consulta.GetDouble("valor"),
+                    bd.Consulta.GetString("tipo")
+                );
+            }
+
+            bd.Close();
+
+            return al;
+        }
+
+        public Dictionary<string, Alternativa> ObtenerAlterantivasPregunta(int idPregunta)
+        {
+            Dictionary<string, Alternativa> alternativas = new Dictionary<string, Alternativa>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM alternativasPreguntas WHERE idPregunta=" + idPregunta + ";");
+
+            while (bd.Consulta.Read())
+            {
+                string alternativa = bd.Consulta.GetString("alternativa");
+                alternativas.Add(alternativa, ObtenerAlternativa(alternativa));
+            }
+
+            bd.Close();
+
+            return alternativas;
+        }
+
+        public Dictionary<string, Pregunta> ObtenerPreguntas()
+        {
+            Dictionary<string, Pregunta> preguntas = new Dictionary<string, Pregunta>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM preguntas;");
+
+            while (bd.Consulta.Read())
+            {
+                int id = bd.Consulta.GetInt32("id");
+                preguntas.Add(id.ToString(), new Pregunta(
+                    id,
+                    bd.Consulta.GetString("pregunta"),
+                    ObtenerAlterantivasPregunta(id),
+                    bd.Consulta.GetString("tipo")
+                ));
+            }
+
+            bd.Close();
+
+            return preguntas;
+        }
+
+        public Pregunta ObtenerPregunta(int idPregunta)
+        {
+            Pregunta pregunta = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM preguntas WHERE idPregunta=" + idPregunta + ";");
+
+            if (bd.Consulta.Read())
+            {
+                pregunta = new Pregunta(
+                    bd.Consulta.GetInt32("id"),
+                    bd.Consulta.GetString("pregunta"),
+                    ObtenerAlterantivasPregunta(idPregunta),
+                    bd.Consulta.GetString("tipo")
+                );
+            }
+
+            bd.Close();
+
+            return pregunta;
+        }
+
+        public void ModificarAlternativa(string alternativaActual, string alternativa, string descripcion, double valor, string tipo)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE alternativas SET alternativa='" + alternativa + "', descripcion='" + descripcion + "', valor=" + valor + ", tipo='" + tipo + "' WHERE alternativa='" + alternativaActual + "';");
+
+            bd.Close();
+        }
+
+        public void ModificarPregunta(int idPregunta, string pregunta, string tipo)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE preguntas SET pregunta='" + pregunta + "', tipo='" + tipo + "' WHERE idPregunta=" + idPregunta + ";");
+
+            bd.Close();
+        }
+
+        public void EliminarAlternativa(string alternativa)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM alternativas WHERE alternativa='" + alternativa + "';");
+
+            bd.Close();
+        }
+
+        public void EliminarPregunta(int idPregunta)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM preguntas WHERE idPregunta=" + idPregunta + ";");
+
+            bd.Close();
+        }
+
+        public void EliminarAlternativaPregunta(int idPregunta, string alternativa)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM alternativasPreguntas WHERE idPregunta=" + idPregunta + " AND alternativa='" + alternativa + "';");
+
+            bd.Close();
+        }
     }
 }
