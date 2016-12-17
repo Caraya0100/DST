@@ -23,6 +23,26 @@ namespace DST
         private double ventasPlan;
         private double actualAnterior;
         private double actualPlan;
+        private string tipo;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="idSeccion"></param>
+        /// <param name="perfil"></param>
+        /// <param name="trabajadores"></param>
+        public Seccion(string nombre, int idSeccion, Perfil perfil, Dictionary<string, Trabajador> trabajadores, double ventasActuales, double ventasAnioAnterior, double ventasPlan, string tipo)
+        {
+            this.nombre = nombre;
+            this.idSeccion = idSeccion;
+            this.perfil = perfil;
+            this.trabajadores = trabajadores;
+            this.ventasActuales = ventasActuales;
+            this.ventasAnioAnterior = ventasAnioAnterior;
+            this.ventasPlan = ventasPlan;
+            this.tipo = tipo;
+        }
 
         /// <summary>
         /// Constructor.
@@ -139,6 +159,12 @@ namespace DST
         {
             get { return actualPlan; }
             set { actualPlan = value; }
+        }
+
+        public string Tipo
+        {
+            get { return tipo; }
+            set { tipo = value; }
         }
     }
 }

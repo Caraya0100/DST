@@ -233,7 +233,8 @@ namespace DST
                     obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0) ), 
                     ventas.Item1, 
                     ventas.Item2, 
-                    ventas.Item3
+                    ventas.Item3,
+                    bd.Consulta.GetString("tipoSeccion")
                 );
                 secciones.Add( nuevaSeccion );
             }

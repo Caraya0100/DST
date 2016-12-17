@@ -167,6 +167,30 @@ namespace DST
             return al;
         }
 
+        public Dictionary<string, Alternativa> ObtenerAlternativasPorTipo(string tipo)
+        {
+            Dictionary<string, Alternativa> alternativas = new Dictionary<string, Alternativa>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM alternativas WHERE tipo='" + tipo + "';");
+
+            while (bd.Consulta.Read())
+            {
+                alternativas.Add(bd.Consulta.GetString("alternativa"), new Alternativa(
+                    bd.Consulta.GetString("alternativa"),
+                    bd.Consulta.GetString("descripcion"),
+                    bd.Consulta.GetDouble("valor"),
+                    bd.Consulta.GetString("tipo")
+                ));
+            }
+
+            bd.Close();
+
+            return alternativas;
+        }
+
         public Dictionary<string, Alternativa> ObtenerAlterantivasPregunta(int idPregunta)
         {
             Dictionary<string, Alternativa> alternativas = new Dictionary<string, Alternativa>();
@@ -187,6 +211,28 @@ namespace DST
             return alternativas;
         }
 
+        public List<string> ObtenerComponentesPregunta(int idPregunta)
+        {
+            List<string> componentes = new List<string>();
+            AdminPerfil ap = new AdminPerfil();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM componentesPreguntas WHERE idPregunta=" + idPregunta + ";");
+
+            while (bd.Consulta.Read())
+            {
+                string idComponente = bd.Consulta.GetString("idComponente");
+                Componente componente = ap.ObtenerComponente(idComponente);
+                componentes.Add(componente.ID);
+            }
+
+            bd.Close();
+
+            return componentes;
+        }
+
         public Dictionary<string, Pregunta> ObtenerPreguntas()
         {
             Dictionary<string, Pregunta> preguntas = new Dictionary<string, Pregunta>();
@@ -203,6 +249,7 @@ namespace DST
                     id,
                     bd.Consulta.GetString("pregunta"),
                     ObtenerAlterantivasPregunta(id),
+                    ObtenerComponentesPregunta(id),
                     bd.Consulta.GetString("tipo")
                 ));
             }
@@ -219,7 +266,7 @@ namespace DST
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT * FROM preguntas WHERE idPregunta=" + idPregunta + ";");
+            bd.ConsultaMySql("SELECT * FROM preguntas WHERE id=" + idPregunta + ";");
 
             if (bd.Consulta.Read())
             {
@@ -227,6 +274,7 @@ namespace DST
                     bd.Consulta.GetInt32("id"),
                     bd.Consulta.GetString("pregunta"),
                     ObtenerAlterantivasPregunta(idPregunta),
+                    ObtenerComponentesPregunta(idPregunta),
                     bd.Consulta.GetString("tipo")
                 );
             }
@@ -247,13 +295,54 @@ namespace DST
             bd.Close();
         }
 
-        public void ModificarPregunta(int idPregunta, string pregunta, string tipo)
+        public void ActualizarPregunta(int idPregunta, string pregunta, string tipo)
         {
             BaseDeDatos bd = new BaseDeDatos();
 
             bd.Open();
 
-            bd.Insertar("UPDATE preguntas SET pregunta='" + pregunta + "', tipo='" + tipo + "' WHERE idPregunta=" + idPregunta + ";");
+            bd.Insertar("UPDATE preguntas SET pregunta='" + pregunta + "', tipo='" + tipo + "' WHERE id=" + idPregunta + ";");
+
+            bd.Close();
+        }
+
+        public void ActualizarPregunta(Pregunta pregunta)
+        {
+            ActualizarPregunta(pregunta.ID, pregunta.ToString(), pregunta.Tipo);
+
+            // Se insertan los componentes (no deben existir previamente en la bd).
+            if (pregunta.Tipo.ToLower() != "gqm")
+            {
+                foreach (string componente in pregunta.Componentes)
+                {
+                    InsertarComponentePregunta(pregunta.ID, componente);
+                }
+            }
+
+            // Se insertan las alternativas (no deben existir previamente en la bd).
+            if (pregunta.Tipo.ToLower() == "360" || pregunta.Tipo.ToLower() == "normal" || pregunta.Tipo.ToLower() == "gqm")
+            {
+                foreach (KeyValuePair<string, Alternativa> alternativa in pregunta.Alternativas)
+                {
+                    InsertarAlternativaPregunta(pregunta.ID, alternativa.Key);
+                }
+                if (pregunta.Tipo.ToLower() == "360")
+                {
+                    foreach (KeyValuePair<string, Alternativa> frecuencia in pregunta.Frecuencias)
+                    {
+                        InsertarAlternativaPregunta(pregunta.ID, frecuencia.Key);
+                    }
+                }
+            }
+        }
+
+        public void ActualizarAlternativa(string alternativaActual, string alternativa, string descripcion, double valor, string tipo)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE alternativas SET alternativa='" + alternativa + "', descripcion='" + descripcion + "', valor=" + valor + ", tipo='" + tipo + "' WHERE alternativa='" + alternativaActual + "';");
 
             bd.Close();
         }
@@ -275,7 +364,7 @@ namespace DST
 
             bd.Open();
 
-            bd.Insertar("DELETE FROM preguntas WHERE idPregunta=" + idPregunta + ";");
+            bd.Insertar("DELETE FROM preguntas WHERE id=" + idPregunta + ";");
 
             bd.Close();
         }
@@ -289,6 +378,55 @@ namespace DST
             bd.Insertar("DELETE FROM alternativasPreguntas WHERE idPregunta=" + idPregunta + " AND alternativa='" + alternativa + "';");
 
             bd.Close();
+        }
+
+        public void EliminarAlternativasPregunta(int idPregunta)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM alternativasPreguntas WHERE idPregunta=" + idPregunta + ";");
+
+            bd.Close();
+        }
+
+        public void EliminarAlternativasPregunta(Pregunta pregunta)
+        {
+            foreach (KeyValuePair<string, Alternativa> alternativa in pregunta.Alternativas)
+            {
+                EliminarAlternativaPregunta(pregunta.ID, alternativa.Key);
+            }
+        }
+
+        public void EliminarComponentePregunta(int idPregunta, string idComponente)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM componentesPreguntas WHERE idPregunta=" + idPregunta + " AND idComponente='" + idComponente + "';");
+
+            bd.Close();
+        }
+
+        public void EliminarComponentesPregunta(int idPregunta)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("DELETE FROM componentesPreguntas WHERE idPregunta=" + idPregunta + ";");
+
+            bd.Close();
+        }
+
+        public void EliminarComponentesPregunta(Pregunta pregunta)
+        {
+            foreach (string componente in pregunta.Componentes)
+            {
+                EliminarComponentePregunta(pregunta.ID, componente);
+            }
         }
     }
 }
