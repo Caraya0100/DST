@@ -111,6 +111,7 @@
     <Compile Include="Paneles\VisorSolicitudes.cs" />
     <Compile Include="Paneles\VisorUsuarios.cs" />
     <Compile Include="Reportes\Fuentes.cs" />
+    <Compile Include="Reportes\ReporteDesempenoSeccion.cs" />
     <Compile Include="Reportes\ReporteSolicitudes.cs" />
     <Compile Include="Reportes\ReportesTrabajador.cs" />
     <Compile Include="Reportes\Textos.cs" />

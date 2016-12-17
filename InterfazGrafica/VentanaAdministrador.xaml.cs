@@ -83,7 +83,7 @@ namespace InterfazGrafica
             IniciarTablaDesempeno();
             IniciarPanelComponentes();
             IniciarPanelReglas();
-            IniciarPanelPreguntas();
+            IniciarPanelPreguntas("encuesta");
 
         }
         /// <summary>
@@ -945,20 +945,27 @@ namespace InterfazGrafica
 
         private void GenerarReporteDesempeno(object sender, RoutedEventArgs e)
         {
+            
             System.Windows.Forms.SaveFileDialog explorador = new System.Windows.Forms.SaveFileDialog();
             explorador.Filter = "Pdf Files|*.pdf";
             explorador.ShowDialog();
             if (explorador.FileName != "")
             {
-                reporteSolicitud = new Reportes.ReporteSolicitudes();
-                reporteSolicitud.RutaFichero = explorador.FileName;
-                reporteSolicitud.GenerarReporte();
+                Reportes.ReporteDesempenoSeccion reporte = new Reportes.ReporteDesempenoSeccion(desempenoSeccionActual, Convert.ToInt32(boxWrapDDetalles.SelectedValue));
+
+                reporte.RutaFichero = explorador.FileName;
+                reporte.GenerarReporte();
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();
                 proc.StartInfo.FileName = explorador.FileName;
                 proc.Start();
                 proc.Close();
             }
 
+
+        }
+
+        private void IrPanelIngresoDesempeno(object sender, RoutedEventArgs e)
+        {
 
         }
 
@@ -1029,6 +1036,9 @@ namespace InterfazGrafica
          * ----------------------------------------------------------------------*/
 
         Dictionary<string, Pregunta> preguntas;
+        Pregunta preguntaActual;
+        Alternativa alternativaActual;
+        string tipoActualPreguntas;
 
         public void ObtenerPreguntas()
         {
@@ -1038,6 +1048,7 @@ namespace InterfazGrafica
 
         public void LlenarTablaPreguntas()
         {
+            tablaPreguntas.Items.Clear();
             foreach (KeyValuePair<string, Pregunta> pregunta in preguntas)
             {
                 if (pregunta.Value.Tipo.ToLower() != "gqm")
@@ -1054,14 +1065,88 @@ namespace InterfazGrafica
             }
         }
 
-        private void IniciarPanelPreguntas()
+        /// <summary>
+        /// Inicia el panel de preguntas.
+        /// </summary>
+        /// <param name="tipo">"encuesta" (evaluacion competencias) u 
+        /// "gqm" (evaluación desempeño sección)</param>
+        private void IniciarPanelPreguntas(string tipo)
         {
             ObtenerPreguntas();
-            LlenarTablaPreguntas();
+            tipoActualPreguntas = tipo;
+            if (tipo == "encuesta") LlenarTablaPreguntas();
+            else if (tipo == "gqm") LlenarTablaPreguntasGQM();
+        }
+
+        private void IniciarPanelPregunta(Pregunta pregunta)
+        {
+            AdminPerfil ap = new AdminPerfil();
+            Dictionary<string, Componente> componentes = new Dictionary<string, Componente>();
+            txtPregunta.Text = pregunta.ToString();
+
+            if (pregunta.Tipo.ToLower() == "gqm")
+            {
+                boxTipoComponentes.Visibility = Visibility.Collapsed;
+                listComponentes.Visibility = Visibility.Collapsed;
+                boxTipoPregunta.Items.Clear();
+                boxTipoPregunta.Items.Add("Desempeño");
+                boxTipoPregunta.SelectedValue = "Desempeño";
+                SeleccionTipoPregunta(null,null);
+                boxTipoPregunta.IsEnabled = false;
+            }
+            else
+            {
+                boxTipoComponentes.SelectedValue = "Habilidades blandas";
+                SeleccionPreguntaTipoComponente(null,null);
+                boxTipoPregunta.IsEnabled = true;
+                boxTipoPregunta.Items.Clear();
+                boxTipoPregunta.Items.Add("Evaluacion 360");
+                boxTipoPregunta.Items.Add("Normal");
+                boxTipoPregunta.Items.Add("Ingreso de datos");
+
+                if (pregunta.Tipo.ToLower() == "nornal")
+                        boxTipoPregunta.SelectedValue = "Normal";
+                else if (pregunta.Tipo.ToLower() == "datos")
+                    boxTipoPregunta.SelectedValue = "Ingreso de datos";
+                else
+                    boxTipoPregunta.SelectedValue = "Evaluacion 360";
+
+                SeleccionTipoPregunta(null, null);
+            }
+        }
+
+        private void MarcarComponentesPregunta(Pregunta pregunta, ListBox lista)
+        {
+            foreach (string componente in pregunta.Componentes)
+            {
+                lista.SelectedItems.Add(componente);
+            }
+        }
+
+        private void LlenarListaAlternativas(Dictionary<string, Alternativa> alternativas, ListBox lista)
+        {
+            lista.Items.Clear();
+            foreach (KeyValuePair<string, Alternativa> alternativa in alternativas)
+            {
+                lista.Items.Add(alternativa.Key);
+            }
+        }
+
+        private void LlenarBoxAlternativa(string tipoAlternativa)
+        {
+            AdminEncuesta ae = new AdminEncuesta();
+            Dictionary<string, Alternativa> alternativas = ae.ObtenerAlternativasPorTipo(tipoAlternativa);
+
+            boxAlternativa.Items.Clear();
+            foreach (KeyValuePair<string, Alternativa> al in alternativas)
+            {
+                boxAlternativa.Items.Add(al.Key);
+            }
+            boxAlternativa.Items.Add("+ Nueva alternativa");
         }
 
         /* ----------------------------------------------------------------------
-         *                          PP.1 EVENTOS BOTONES
+         *                          PP.1 EVENTOS
          * ----------------------------------------------------------------------*/
 
         /// <summary>
@@ -1071,9 +1156,10 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void AgregarPregunta(object sender, RoutedEventArgs e)
         {
+            preguntaActual = new Pregunta();
+            preguntaActual.Tipo = tipoActualPreguntas;
+            IniciarPanelPregunta(preguntaActual);
             panelPreguntas.Visibility = Visibility.Hidden;
-            // Limpiamos los campos y hacemos visible el panel del componente.
-            
             panelPregunta.Visibility = Visibility.Visible;
         }
 
@@ -1084,18 +1170,122 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void EditarPregunta(object sender, RoutedEventArgs e)
         {
+            preguntaActual = (Pregunta)tablaPreguntas.SelectedItem;
+            IniciarPanelPregunta(preguntaActual);
+            panelPreguntas.Visibility = Visibility.Hidden;
+            panelPregunta.Visibility = Visibility.Visible;
+        }
 
+        private void EliminarPregunta(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void AceptarPregunta(object sender, RoutedEventArgs e)
+        {
+            AdminEncuesta ae = new AdminEncuesta();
+            string tipoPregunta = (string)boxTipoPregunta.SelectedValue;
+
+            // Primero borramos todas las componentes y alternativas de la pregunta.
+            ae.EliminarAlternativasPregunta(preguntaActual.ID);
+            ae.EliminarComponentesPregunta(preguntaActual.ID);
+
+            // Actualizamos la pregunta.
+            if (tipoPregunta == "Evaluacion 360") preguntaActual.Tipo = "360";
+            if (tipoPregunta == "Desempeño") preguntaActual.Tipo = "gqm";
+            if (tipoPregunta == "Normal") preguntaActual.Tipo = "normal";
+            if (tipoPregunta == "Ingreso de datos") preguntaActual.Tipo = "datos";
+
+            preguntaActual.Descripcion = txtPregunta.Text;
+            preguntaActual.Tipo = tipoPregunta;
+
+            if (preguntaActual.Tipo.ToString() != "gqm")
+            {
+                List<string> nuevosComponentes = new List<string>();
+
+                foreach (var componente in listComponentes.SelectedItems)
+                {
+                    nuevosComponentes.Add((string)componente);
+                }
+
+                preguntaActual.Componentes = nuevosComponentes;
+            }
+
+            if (preguntaActual.Tipo.ToString() != "datos")
+            {
+                Dictionary<string, Alternativa> nuevasAlternativas = new Dictionary<string, Alternativa>();
+                Dictionary<string, Alternativa> nuevasFrecuencias = new Dictionary<string, Alternativa>();
+
+                foreach (var alternativa in listAlternativas.SelectedItems)
+                {
+                    nuevasAlternativas.Add(
+                        (string)alternativa,
+                        ae.ObtenerAlternativa((string)alternativa)
+                    );
+                }
+                // Solo las preguntas 360 tienen frecuencias.
+                if (preguntaActual.Tipo.ToString() == "360")
+                {
+                    foreach (var frecuencia in listFrecuencias.Items)
+                    {
+                        nuevasFrecuencias.Add(
+                            (string)frecuencia,
+                            ae.ObtenerAlternativa((string)frecuencia)
+                        );
+                    }
+                }
+
+                preguntaActual.Alternativas = nuevasAlternativas;
+                preguntaActual.Frecuencias = nuevasFrecuencias;
+            }
+
+            ae.ActualizarPregunta(preguntaActual);
+            IniciarPanelPreguntas(tipoActualPreguntas);
+            VolverPanelPreguntas(null, null);
         }
 
         private void IrPanelAlternativa(object sender, RoutedEventArgs e)
         {
+            AdminEncuesta ae = new AdminEncuesta();
+            string nombreBoton = (sender as Button).Name;
+            object item = null;
+
+            if (nombreBoton == "btnConfigurarAlternativas")
+                item = listAlternativas.SelectedValue;
+            else if (nombreBoton == "btnConfigurarFrecuencias")
+                item = listFrecuencias.SelectedValue;
+
+            alternativaActual = ae.ObtenerAlternativa((string)item);
+
+            if (alternativaActual == null)
+            {
+                alternativaActual = new Alternativa();
+                alternativaActual.Tipo = preguntaActual.Tipo;
+            }
+
+            LlenarBoxAlternativa(alternativaActual.Tipo);
+
+            if (alternativaActual.Nombre == "")
+                boxAlternativa.SelectedValue = "+ Nueva alternativa";
+            else
+                boxAlternativa.SelectedValue = alternativaActual.Nombre;
+
             panelPregunta.Visibility = Visibility.Hidden;
             panelAlternativa.Visibility = Visibility.Visible;
         }
 
         private void RemoverAlternativa(object sender, RoutedEventArgs e)
         {
+            preguntaActual.Alternativas.Remove((string)listAlternativas.SelectedValue);
+            listAlternativas.Items.Remove(listAlternativas.SelectedItem);
+            LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
+        }
 
+        private void RemoverFrecuencia(object sender, RoutedEventArgs e)
+        {
+            preguntaActual.Frecuencias.Remove((string)listFrecuencias.SelectedValue);
+            listFrecuencias.Items.Remove(listFrecuencias.SelectedItem);
+            LlenarListaAlternativas(preguntaActual.Frecuencias, listFrecuencias);
         }
 
         /// <summary>
@@ -1105,7 +1295,55 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void AceptarAlternativa(object sender, RoutedEventArgs e)
         {
+            AdminEncuesta ae = new AdminEncuesta();
+            string nombreActual = alternativaActual.Nombre;
+            bool actualizar = false;
 
+            if (alternativaActual.Nombre != "")
+                actualizar = true;
+
+            alternativaActual.Nombre = txtNombreAlternativa.Text;
+            alternativaActual.Descripcion = txtDescAlternativa.Text;
+            alternativaActual.Valor = Convert.ToDouble(txtValorAlternativa.Text);
+
+            if (actualizar)
+            {
+                ae.ActualizarAlternativa(
+                    nombreActual,
+                    alternativaActual.Nombre,
+                    alternativaActual.Descripcion,
+                    alternativaActual.Valor,
+                    alternativaActual.Tipo
+                );
+                // Actualizamos los datos de la pregunta.
+                preguntaActual = ae.ObtenerPregunta(preguntaActual.ID);
+                // Si la variable actualizada no esta en la pregunta, la agregamos.
+                if (alternativaActual.Tipo.ToLower() == "frecuencia" && !preguntaActual.Frecuencias.ContainsKey(alternativaActual.Nombre))
+                {
+                    preguntaActual.Frecuencias.Add(alternativaActual.Nombre, alternativaActual);
+                }
+                else if (!preguntaActual.Alternativas.ContainsKey(alternativaActual.Nombre))
+                {
+                    preguntaActual.Alternativas.Add(alternativaActual.Nombre, alternativaActual);
+                }
+            } else
+            {
+                ae.InsertarAlternativa(
+                    alternativaActual.Nombre,
+                    alternativaActual.Descripcion,
+                    alternativaActual.Valor,
+                    alternativaActual.Tipo
+                );
+                ae.InsertarAlternativaPregunta(
+                    preguntaActual.ID, 
+                    alternativaActual.Nombre
+                );
+                // Actualizamos los datos de la pregunta.
+                preguntaActual = ae.ObtenerPregunta(preguntaActual.ID);
+            }
+
+            IniciarPanelPregunta(preguntaActual);
+            VolverPanelPregunta(null, null);
         }
 
         /// <summary>
@@ -1138,6 +1376,73 @@ namespace InterfazGrafica
         {
             panelPregunta.Visibility = Visibility.Hidden;
             panelPreguntas.Visibility = Visibility.Visible;
+        }
+
+        private void SeleccionPreguntaTipoComponente(object sender, RoutedEventArgs e)
+        {
+            AdminPerfil ap = new AdminPerfil();
+            string tipoComponente = (string)boxTipoComponentes.SelectedValue;
+            Dictionary<string, Componente> componentes = new Dictionary<string, Componente>();
+
+            if (tipoComponente == "Habilidades blandas")
+                componentes = ap.ObtenerComponentesPorTipo(PerfilConstantes.HB);
+            else if (tipoComponente == "Habilidades duras")
+                componentes = ap.ObtenerComponentesPorTipo(PerfilConstantes.HD);
+            else if (tipoComponente == "Caracteristicas fisicas")
+                componentes = ap.ObtenerComponentesPorTipo(PerfilConstantes.CF);
+
+            listComponentes.Items.Clear();
+            foreach (KeyValuePair<string, Componente> componente in componentes)
+            {
+                listComponentes.Items.Add(componente.Key);
+            }
+
+            MarcarComponentesPregunta(preguntaActual, listComponentes);
+        }
+
+        private void SeleccionTipoPregunta(object sender, RoutedEventArgs e)
+        {
+            AdminPerfil ap = new AdminPerfil();
+            string tipoPregunta = (string)boxTipoPregunta.SelectedValue;
+            Dictionary<string, Componente> alternativas = new Dictionary<string, Componente>();
+
+            if (tipoPregunta == "Evaluacion 360")
+            {
+                LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
+                LlenarListaAlternativas(preguntaActual.Frecuencias, listFrecuencias);
+                wrapAlternativa.Visibility = Visibility.Visible;
+                wrapFrecuencias.Visibility = Visibility.Visible;
+            } else if (tipoPregunta == "Normal" || tipoPregunta == "Desempeño")
+            {
+                LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
+                wrapAlternativa.Visibility = Visibility.Visible;
+                wrapFrecuencias.Visibility = Visibility.Collapsed;
+            } else if (tipoPregunta == "Ingreso de datos")
+            {
+                wrapAlternativa.Visibility = Visibility.Collapsed;
+                wrapFrecuencias.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void SeleccionAlternativa(object sender, RoutedEventArgs e)
+        {
+            string alternativa = (string)boxAlternativa.SelectedItem;
+
+            if (alternativa == "+ Nueva alternativa")
+            {
+                string tipo = alternativaActual.Tipo; // guardamos para no pierdala.
+                alternativaActual = new Alternativa();
+                alternativaActual.Tipo = tipo;
+            } else
+            {
+                Debug.WriteLine("_Alternativa: " + alternativa);
+                AdminEncuesta ae = new AdminEncuesta();
+                alternativaActual = ae.ObtenerAlternativa(alternativa);
+            }
+
+            txtNombreAlternativa.Text = alternativaActual.Nombre;
+            txtDescAlternativa.Text = alternativaActual.Descripcion;
+            txtValorAlternativa.Text = alternativaActual.Valor.ToString();
         }
 
         /* ----------------------------------------------------------------------

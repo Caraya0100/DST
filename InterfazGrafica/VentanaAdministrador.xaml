@@ -40,7 +40,11 @@
                         <Button x:Name="btnDetallesSeccion" Content="Ver Detalles" Click="DetallesDesempenoSeccion" VerticalAlignment="Top" Margin="239,30,0,0" HorizontalAlignment="Left" Width="370"/>
                     </StackPanel>
                     <StackPanel x:Name="panelDDetalles" HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="799" Visibility="Hidden">
-                        <ScrollViewer Height="469">
+                        <WrapPanel x:Name="wrapDSuperior" Height="35">
+                            <Button x:Name="btnDIngreso" Content="Ingresar datos desempeño" Click="IrPanelIngresoDesempeno" VerticalAlignment="Top" Width="143" Margin="490,5,0,0" HorizontalAlignment="Right" Height="25" FontSize="9"/>
+                            <Button x:Name="btnDReporte" Content="Generar reporte" Click="GenerarReporteDesempeno" VerticalAlignment="Top" Width="143" Margin="10,5,0,0" HorizontalAlignment="Right" Height="25" FontSize="9"/>
+                        </WrapPanel>
+                        <ScrollViewer Height="437">
                             <WrapPanel x:Name="WrapDDetalles" Height="1800">
                                 <Label x:Name="lblNombreSeccion" Content="Sección" Width="782" Height="43" FontSize="24" HorizontalContentAlignment="Center"/>
                                 <Label x:Name="lblInfoSeccion" Content="Detalles del desempeño de la sección." Width="782" Height="44" HorizontalContentAlignment="Center"/>
@@ -117,7 +121,7 @@
                                 <Button x:Name="btnDGenerarReporte" Content="Generar reporte" Click="GenerarReporteDesempeno" VerticalAlignment="Top" Margin="239,20,0,0" HorizontalAlignment="Left" Width="370"/>
                             </WrapPanel>
                         </ScrollViewer>
-                        <Button x:Name="btnDesempenoResumen" Content="Volver al Resumen" Click="ResumenDesempenoSecciones" VerticalAlignment="Top" Margin="239,20,0,0" HorizontalAlignment="Left" Width="370"/>
+                        <Button x:Name="btnDesempenoResumen" Content="Volver al Resumen" Click="ResumenDesempenoSecciones" VerticalAlignment="Top" Margin="239,10,0,0" HorizontalAlignment="Left" Width="370"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -201,7 +205,7 @@
                     </Button>
                 </Grid>
             </TabItem>
-            <TabItem Name="itemEvaluacion" Header="Evaluación">
+            <TabItem Name="itemEvaluacion" Header="Preguntas">
                 <Grid Background="#FFFBFBFB">
                     <StackPanel x:Name="panelPreguntas">
                         <WrapPanel x:Name="wrapPreguntas">
@@ -212,22 +216,20 @@
                                     <DataGridTextColumn Header="Pregunta" Binding="{Binding Descripcion}"></DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <Button x:Name="agregarPregunta" Content="Agregar pregunta" Click="AgregarPregunta" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
-                            <Button x:Name="editarPregunta" Content="Editar pregunta" Click="EditarPregunta" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAgregarPregunta" Content="Agregar pregunta" Click="AgregarPregunta" VerticalAlignment="Top" Width="139" Margin="292,0,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="bntEditarPregunta" Content="Editar pregunta" Click="EditarPregunta" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnEliminarPregunta" Content="Eliminar pregunta" Click="EliminarPregunta" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                     <StackPanel x:Name="panelPregunta" Visibility="Hidden">
                         <ScrollViewer x:Name="scrollWrapPreguntas" Height="515">
                             <WrapPanel x:Name="wrapPregunta" Height="1000">
                                 <Label x:Name="lblPregunta" Content="Pregunta" Width="795" Height="69" FontSize="24" HorizontalContentAlignment="Center"/>
-                                <Label x:Name="lblNombrePregunta" Content="Nombre:" Margin="15
-                                         ,0,0,0" Width="114"/>
-                                <TextBox x:Name="txtNombrePregunta" Width="622" Margin="15,0,0,20" HorizontalAlignment="Right"/>
                                 <Label x:Name="lblDescPregunta" Content="Pregunta:" Margin="15
                                          ,0,0,0" Width="115"/>
-                                <TextBox x:Name="txtDescPregunta" Width="622" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                                <TextBox x:Name="txtPregunta" Width="622" Margin="15,0,0,20" HorizontalAlignment="Right"/>
                                 <Label x:Name="lblTipoComponentes" Content="Tipo componentes:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="115"/>
-                                <ComboBox x:Name="boxTipoComponentes" Width="622" SelectedValuePath="Content" Margin="15,0,0,20" Height="29">
+                                <ComboBox x:Name="boxTipoComponentes" Width="622" SelectedValuePath="Content" Margin="15,0,0,20" Height="29" SelectionChanged="SeleccionPreguntaTipoComponente">
                                     <ComboBoxItem Content="Habilidades blandas"/>
                                     <ComboBoxItem Content="Habilidades duras"/>
                                     <ComboBoxItem Content="Caracteristicas fisicas"/>
@@ -236,26 +238,23 @@
                                 <ListBox x:Name="listComponentes" SelectionMode="Multiple" Width="617" Margin="20,0,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
                                 </ListBox>
                                 <Label x:Name="lblTipoPregunta" Content="Tipo pregunta:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="115"/>
-                                <ComboBox x:Name="boxTipoPregunta" Width="619" SelectedValuePath="Content" Margin="15,0,0,0">
-                                    <ComboBoxItem Content="Evaluación 360"/>
-                                    <ComboBoxItem Content="Normal"/>
-                                    <ComboBoxItem Content="Ingreso de datos"/>
+                                <ComboBox x:Name="boxTipoPregunta" Width="619" Margin="15,0,0,0" SelectionChanged="SeleccionTipoPregunta">
                                 </ComboBox>
                                 <WrapPanel x:Name="wrapAlternativas" Width="797" Height="226">
                                     <Label x:Name="lblAlternativas" Content="Alternativas:" Margin="15,20,0,0" HorizontalAlignment="Right" Width="112"/>
-                                    <ListBox x:Name="listAlternativas" SelectionMode="Multiple" Width="617" Margin="20,20,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
+                                    <ListBox x:Name="listAlternativas" Width="617" Margin="20,20,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
                                     </ListBox>
-                                    <Button x:Name="configurarAlternativas" Content="Configuración" Click="IrPanelAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
-                                    <Button x:Name="removerAlternativa" Content="Remover alternativa" Click="RemoverAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                                    <Button x:Name="btnConfigurarAlternativas" Content="Configuración" Click="IrPanelAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
+                                    <Button x:Name="btnRemoverAlternativa" Content="Remover alternativa" Click="RemoverAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                                 </WrapPanel>
                                 <WrapPanel x:Name="wrapFrecuencias" Width="797" Height="272">
                                     <Label x:Name="lblFrecuencias" Content="Frecuencias:" Margin="15,20,0,0" HorizontalAlignment="Right" Width="112"/>
-                                    <ListBox x:Name="listFrecuencias" SelectionMode="Multiple" Width="617" Margin="20,20,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
+                                    <ListBox x:Name="listFrecuencias" Width="617" Margin="20,20,0,20" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="149">
                                     </ListBox>
-                                    <Button x:Name="configurarFrecuencias" Content="Configuración" Click="IrPanelAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
-                                    <Button x:Name="removerFrecuencia" Content="Remover frecuencia" Click="RemoverAlternativa" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                                    <Button x:Name="btnConfigurarFrecuencias" Content="Configuración" Click="IrPanelAlternativa" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
+                                    <Button x:Name="btnRemoverFrecuencia" Content="Remover frecuencia" Click="RemoverFrecuencia" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                                 </WrapPanel>
-                                <Button x:Name="btnAceptarPregunta" Content="Aceptar" Click="AgregarPregunta" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
+                                <Button x:Name="btnAceptarPregunta" Content="Aceptar" Click="AceptarPregunta" VerticalAlignment="Top" Width="139" Margin="450,0,0,0" HorizontalAlignment="Right"/>
                                 <Button x:Name="btnVolverPreguntas" Content="Volver a las preguntas" Click="VolverPanelPreguntas" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                             </WrapPanel>
                         </ScrollViewer>
@@ -265,7 +264,7 @@
                             <Label x:Name="lblAlternativa" Content="Alternativa" Width="795" Height="44" FontSize="24" HorizontalContentAlignment="Center"/>
                             <Label x:Name="lblInfoAlternativa" Content="En este panel podras agregar o modificar la alternativa para la pregunta." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="34" HorizontalContentAlignment="Center"/>
                             <Label x:Name="lblBoxAlternativa" Content="Alternativa:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74"/>
-                            <ComboBox x:Name="boxAlternativa" Width="654" Margin="15,0,0,20" Height="29">
+                            <ComboBox x:Name="boxAlternativa" Width="654" Margin="15,0,0,20" Height="29" SelectionChanged="SeleccionAlternativa">
                             </ComboBox>
                             <Label x:Name="lblNombreAlternativa" Content="Nombre:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
                             <TextBox x:Name="txtNombreAlternativa" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
@@ -273,9 +272,13 @@
                             <TextBox x:Name="txtDescAlternativa" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
                             <Label x:Name="lblValorAlternativa" Content="Valor:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
                             <TextBox x:Name="txtValorAlternativa" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
-                            <Label x:Name="lblBoxTipoAlternativa" Content="Tipo:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74"/>
-                            <ComboBox x:Name="boxTipoAlternativa" Width="654" Margin="15,0,0,20" Height="29">
-                            </ComboBox>
+                            <!-- <Label x:Name="lblBoxTipoAlternativa" Content="Tipo:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74" IsEnabled="False"/>
+                            <ComboBox x:Name="boxTipoAlternativa" SelectedValuePath="Content" Width="654" Margin="15,0,0,20" Height="29" IsEnabled="False">
+                                <ComboBoxItem Content="grado"/>
+                                <ComboBoxItem Content="frecuencia"/>
+                                <ComboBoxItem Content="normal"/>
+                                <ComboBoxItem Content="gqm"/>
+                            </ComboBox> -->
                             <Button x:Name="btnAceptarAlternativa" Content="Aceptar" Click="AceptarAlternativa" VerticalAlignment="Top" Width="143" Margin="290,10,0,20" HorizontalAlignment="Right"/>
                             <Button x:Name="btnEliminarAlternativa" Content="Eliminar" Click="EliminarAlternativa" VerticalAlignment="Top" Width="143" Margin="20,10,0,20" HorizontalAlignment="Right"/>
                             <Button x:Name="btnVolverPanelPregunta" Content="Volver" Click="VolverPanelPregunta" VerticalAlignment="Top" Width="143" Margin="20,10,0,20" HorizontalAlignment="Right"/>
