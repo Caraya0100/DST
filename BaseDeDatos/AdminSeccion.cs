@@ -57,11 +57,11 @@ namespace DST
         /// <param name="nombre"></param>
         /// <param name="puntaje"></param>
         /// <param name="importancia"></param>
-        public void InsertarComponentePerfilSeccion(int idSeccion, string nombre, float puntaje, float importancia)
+        public void InsertarComponentePerfilSeccion(int idSeccion, string nombre, double puntaje, double importancia)
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,nombre,puntaje,importancia) "
+            cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia) "
                 + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString() + ","
                 + importancia.ToString() + ");";
             cmd.ExecuteNonQuery();
@@ -212,6 +212,7 @@ namespace DST
         {
             List<Seccion> secciones = new List<Seccion>();
             AdminDesempeño ad = new AdminDesempeño();
+            AdminEncuesta ae = new AdminEncuesta();
             AdminTrabajador obtenerTrabajadores = new AdminTrabajador();
             BaseDeDatos bd = new BaseDeDatos();
 
@@ -222,9 +223,13 @@ namespace DST
             {
                 int idSeccion = bd.Consulta.GetInt16(0);
                 string fecha = ad.ObtenerUltimaFecha();
-                Tuple<double, double, double> ventas = ad.ObtenerVentas(idSeccion, fecha);
+                string tipo = bd.Consulta.GetString("tipoSeccion");
+                Tuple<double, double, double> ventas = null;
 
-                if (ventas == null) ventas = new Tuple<double, double, double>(1,1,1);
+                if (tipo.ToLower() == "ventas")
+                    ventas = ad.ObtenerVentas(idSeccion, fecha);
+
+                if (ventas == null) ventas = new Tuple<double, double, double>(-1,-1,-1);
 
                 Seccion nuevaSeccion = new Seccion(
                     bd.Consulta.GetString(1),
@@ -236,9 +241,68 @@ namespace DST
                     ventas.Item3,
                     bd.Consulta.GetString("tipoSeccion")
                 );
+
+                if (tipo.ToLower() == "gqm")
+                {
+                    nuevaSeccion.Preguntas = ae.ObtenerPreguntasSeccion(bd.Consulta.GetInt32("id"));
+                }
+
                 secciones.Add( nuevaSeccion );
             }
             
+
+            bd.Close();
+
+            return secciones;
+        }
+
+        /// <summary>
+        /// Funcion que retorna una lista de las secciones con todos sus campos.
+        /// Esta debe ser usada en la ventana del administrador.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, Seccion> ObtenerDiccionarioSecciones()
+        {
+            Dictionary<string, Seccion> secciones = new Dictionary<string, Seccion>();
+            AdminDesempeño ad = new AdminDesempeño();
+            AdminEncuesta ae = new AdminEncuesta();
+            AdminTrabajador obtenerTrabajadores = new AdminTrabajador();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+            bd.ConsultaMySql("SELECT * FROM secciones;");
+
+            while (bd.Consulta.Read())
+            {
+                int idSeccion = bd.Consulta.GetInt16(0);
+                string fecha = ad.ObtenerUltimaFecha();
+                string tipo = bd.Consulta.GetString("tipoSeccion");
+                Tuple<double, double, double> ventas = null;
+
+                if (tipo.ToLower() == "ventas")
+                    ventas = ad.ObtenerVentas(idSeccion, fecha);
+
+                if (ventas == null) ventas = new Tuple<double, double, double>(-1, -1, -1);
+
+                Seccion nuevaSeccion = new Seccion(
+                    bd.Consulta.GetString(1),
+                    bd.Consulta.GetInt16(0),
+                    ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)),
+                    obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0)),
+                    ventas.Item1,
+                    ventas.Item2,
+                    ventas.Item3,
+                    bd.Consulta.GetString("tipoSeccion")
+                );
+
+                if (tipo.ToLower() == "gqm")
+                {
+                    nuevaSeccion.Preguntas = ae.ObtenerPreguntasSeccion(bd.Consulta.GetInt32("id"));
+                }
+
+                secciones.Add(nuevaSeccion.IdSeccion.ToString(), nuevaSeccion);
+            }
+
 
             bd.Close();
 

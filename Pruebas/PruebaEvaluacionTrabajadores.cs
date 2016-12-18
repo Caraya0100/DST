@@ -11,6 +11,41 @@ namespace DST
         public PruebaEvaluacionTrabajadores()
         {
             AdminSeccion adminSeccion = new AdminSeccion();
+            AdminTrabajador adminTrabajador = new AdminTrabajador();
+            List<Seccion> secciones = adminSeccion.ObtenerSecciones();
+
+            foreach (Seccion seccion in secciones)
+            {
+                Perfil perfilEvaluadoSeccion = EvaluacionPerfil.Ejecutar(seccion.Perfil, seccion.IdSeccion);
+                Console.WriteLine();
+                Console.WriteLine("Sección: " + seccion.Nombre);
+                Console.WriteLine("HB: " + perfilEvaluadoSeccion.HB.Puntaje + " importancia " + perfilEvaluadoSeccion.HB.Importancia + " HD: " + perfilEvaluadoSeccion.HD.Puntaje + " importancia " + perfilEvaluadoSeccion.HD.Importancia + " CF: " + perfilEvaluadoSeccion.CF.Puntaje + " importancia " + perfilEvaluadoSeccion.CF.Importancia);
+                Console.WriteLine("------------------------------------------");
+
+                EvaluacionTrabajador et = null;
+                Dictionary<string, Trabajador> trabajadores = adminTrabajador.ObtenerTrabajadoresSeccion(seccion.IdSeccion);
+
+                foreach(KeyValuePair<string, Trabajador> trabajador in trabajadores)
+                {
+                    // Evaluamos solamente a los que tengan el perfil completo.
+                    if (trabajador.Value.Perfil.Blandas.Count > 0)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Trabajador : " + trabajador.Value.Rut);
+                        et = new EvaluacionTrabajador(trabajador.Value);
+                        et.EvaluarCapacidad(perfilEvaluadoSeccion, seccion.IdSeccion);
+
+                        Console.WriteLine("HB: " + et.PerfilEvaluado.HB.Puntaje + " HD: " + et.PerfilEvaluado.HD.Puntaje + " CF: " + et.PerfilEvaluado.CF.Puntaje);
+                        Console.WriteLine("Igualdad HB: " + et.IgualdadHB + " Igualdad HD: " + et.IgualdadHD + " Igualdad CF: " + et.IgualdadCF + " Capacidad: " + et.Capacidad);
+                    }
+                    
+                }
+            }
+        }
+
+        public PruebaEvaluacionTrabajadores(int something)
+        {
+            AdminSeccion adminSeccion = new AdminSeccion();
             Dictionary<string, Seccion> secciones;
             List<Seccion> s = adminSeccion.ObtenerSecciones();
             secciones = new Dictionary<string, Seccion>();

@@ -5,11 +5,9 @@
         xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-        xmlns:local="clr-namespace:DST"
+        xmlns:local="clr-namespace:InterfazGrafica"
         Title="DST" Height="635.527" Width="1071.184" ResizeMode="CanMinimize" IsWindowDraggable="True" Closing="CerrarSesion" Loaded="EventosIniciales">
-    <Window.Resources>
-        <local:ConvertirValorTabla x:Key="ConvertirValorTabla"/>
-    </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="18*"/>
@@ -51,10 +49,8 @@
                                 <Label x:Name="lblAvisoReubicacion" Content="El desempeño de los ultimos tres meses ha estado bajo lo esperado.&#xD;&#xA;Se recomienda realizar reubiaciones en la sección de trabajo." Width="552" Margin="120,0,0,0" Height="70" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFCD4141" Foreground="White" FontSize="14" Visibility="Collapsed"/>
                                 <Label x:Name="lblDUltimoMes" Content="Desempeño Ultimo Mes" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <WrapPanel x:Name="wrapGraficosVentas">
-                                    <lvc:Gauge x:Name="graficoDAnterior" Uses360Mode="True" From="0" To="2" FromColor="Lime"
-                            Value="{Binding ValorGraficoDAnterior}" LabelFormatter= "{Binding FormatoPorcentaje}" Margin="0,0,0,0" Width="398" Height="148"/>
-                                    <lvc:Gauge x:Name="graficoDPlan" Uses360Mode="True" From="0" To="2" FromColor="Lime"
-                            Value="{Binding ValorGraficoDPlan}" LabelFormatter= "{Binding FormatoPorcentaje}" Margin="0,0,0,0" Width="386" Height="148"/>
+                                    <local:GraficoGauge360 x:Name="graficoDAnterior" Width="398" Height="148" />
+                                    <local:GraficoGauge360 x:Name="graficoDPlan" Width="386" Height="148" />
                                     <Label x:Name="lblDAnterior" Content="Desempeño Respecto a las &#xA;Ventas del Año Anterior" Width="399" Height="68" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                     <Label x:Name="lblDPlan" Content="Desempeño Respecto a las &#xD;&#xA;Ventas del Plan" Width="384" Height="67" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 </WrapPanel>
@@ -68,32 +64,11 @@
                                 <ComboBox x:Name="boxWrapMes" Width="229" HorizontalAlignment="Left" Margin="20,0,0,20" SelectionChanged="SeleccionMesDDetalles">
                                 </ComboBox>
                                 <WrapPanel x:Name="panelDatosAnuales" Height="2000">
-                                    <lvc:CartesianChart x:Name="graficoDesempenoAnuales" Series="{Binding SeriesVentasAnuales}" LegendLocation="Right" Width="782" Height="348">
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Desempeño" LabelFormatter="{Binding YFormatoVentasAnuales}"/>
-                                        </lvc:CartesianChart.AxisY>
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Title="Mes" Labels="{Binding LabelsAnioFiscal}"/>
-                                        </lvc:CartesianChart.AxisX>
-                                    </lvc:CartesianChart>
+                                    <local:GraficoVentasAnuales x:Name="GraficoVentasAnuales" Width="782" Height="348" />
                                     <Label x:Name="lblDReubicaciones" Content="Reubicaciones Trabajadores" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" Margin="0,15,0,0"/>
-                                    <lvc:CartesianChart x:Name="graficoDReubicaciones" Series="{Binding SeriesReubicacionesAnuales}" LegendLocation="Right" Width="782" Height="348">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Title="Mes" Labels="{Binding LabelsAnioFiscal}"></lvc:Axis>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Reubiciones" LabelFormatter="{Binding FormatoReubicaciones}"></lvc:Axis>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
+                                    <local:GraficoReubicacionesAnuales x:Name="GraficoReubicacionesAnuales" Width="782" Height="348" />
                                     <Label x:Name="lblDComparacionR" Content="Trabajadores Capacitados" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" Margin="0,15,0,0"/>
-                                    <lvc:CartesianChart x:Name="graficoDComparacionR" Series="{Binding SeriesComparacionRAnuales}" LegendLocation="Right" Width="782" Height="348">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Title="Mes" Labels="{Binding LabelsAnioFiscal}"></lvc:Axis>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Reubiciones" LabelFormatter="{Binding FormatoReubicaciones}"></lvc:Axis>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
+                                    <local:GraficoComparacionAnualEmpleados x:Name="GraficoCAnualEmpleados" Width="782" Height="348" />
                                 </WrapPanel>
                                 <WrapPanel x:Name="panelDatosMensuales" Height="600" Visibility="Collapsed">
                                     <lvc:CartesianChart x:Name="graficoVentasMes" Series="{Binding SeriesVentasMes}" LegendLocation="Right" Width="779" Height="178">
@@ -122,6 +97,30 @@
                             </WrapPanel>
                         </ScrollViewer>
                         <Button x:Name="btnDesempenoResumen" Content="Volver al Resumen" Click="ResumenDesempenoSecciones" VerticalAlignment="Top" Margin="239,10,0,0" HorizontalAlignment="Left" Width="370"/>
+                    </StackPanel>
+                    <StackPanel x:Name="panelDIngreso" HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="799" Visibility="Hidden">
+                        <WrapPanel x:Name="wrapIngresoVentas" Height="520">
+                            <Label x:Name="lblDIngresoVentas" Content="Desempeño Ultimo Mes" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblInfoDIngresoVentas" Content="Ingresa las ventas del ultimo mes para calcular el desempeño de la sección." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblVentasActuales" Content="Ventas mes:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
+                            <TextBox x:Name="txtVentasActuales" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblVentasPlan" Content="Ventas plan:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
+                            <TextBox x:Name="txtVentasPlan" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAceptarIngresoVentas" Content="Aceptar" Click="AceptarIngresoVentas" VerticalAlignment="Top" Width="143" Margin="469,10,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnVolverPanelDDetallesVentas" Content="Volver" Click="VolverPanelDDetalles" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                        </WrapPanel>
+                        <WrapPanel x:Name="wrapIngresoObjetivos" Height="520" Visibility="Collapsed">
+                            <Label x:Name="lblDIngresoObjetivos" Content="Desempeño Ultimo Mes" Width="798" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
+                            <Label x:Name="lblInfoDIngresoObjetivos" Content="Conteste las preguntas para calcular el desempeño de la seccion en el ultimo mes." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
+                            <ListBox x:Name="listObjetivos" Width="736" Margin="35,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderBrush="Gray" BorderThickness="1" Height="244" SelectionChanged="SeleccionPreguntaObjetivo">
+                            </ListBox>
+                            <Label x:Name="lblRepuestaObjetivo" Content="Respuesta:" Margin="35,20,0,0" HorizontalAlignment="Right" Width="724" Height="29" HorizontalContentAlignment="Left"/>
+                            <ComboBox x:Name="boxRespuestaObjetivo" Width="733" Margin="35,0,0,0" SelectionChanged="SeleccionRepuestaObjetivo">
+                            </ComboBox>
+                            <Button x:Name="btnAceptarRespuestasObjetivo" Content="Aceptar" Click="AceptarRespuestasObjetivo" VerticalAlignment="Top" Width="143" Margin="316,10,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnModificarPreguntasObjetivo" Content="Modificar Preguntas" Click="IrPanelPreguntasGqm" VerticalAlignment="Top" Width="156" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnVolverPanelDDetalles" Content="Volver" Click="VolverPanelDDetalles" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                        </WrapPanel>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -308,11 +307,18 @@
             </TabItem>
             <TabItem Name="itemReglas" Header="Reglas">
                 <Grid Background="#FFFBFBFB">
-                    <ScrollViewer Name="scrollPanelReglas" HorizontalAlignment="Left" Height="286" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="545" VerticalScrollBarVisibility="Hidden" Visibility="Hidden">
-                        <StackPanel Name="panelReglasSecciones" Orientation="Vertical" >
+                    <StackPanel Name="panelReglasSecciones" Orientation="Vertical" >
+                        <Label x:Name="lblReglasSecciones" Content="Reglas Secciones" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
+                        <Label x:Name="lblInfoReglasSecciones" Content="Selecciona una seccion para ver sus reglas." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
+                            <DataGrid x:Name="tablaReglasSecciones" AutoGenerateColumns="False" VerticalAlignment="Top" Height="333" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="33,0,30,0" BorderBrush="Gray" BorderThickness="1">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Sección" Binding="{Binding Nombre}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        <Button x:Name="btnIrReglasSeccion" Content="Ver reglas" Click="VerSeccionReglas" VerticalAlignment="Top" Margin="239,30,0,0" HorizontalAlignment="Left" Width="370"/>
+
                         </StackPanel>
-                    </ScrollViewer>
-                    <StackPanel x:Name="panelReglasSeccion">
+                    <StackPanel x:Name="panelReglasSeccion" Visibility="Hidden">
                         <WrapPanel x:Name="wrapReglasSeccion" Height="815">
                             <Label x:Name="lblReglasSeccion" Content="Edición de Reglas" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
                             <Label x:Name="lblInfoReglasSeccion" Content="En este panel podras editar las reglas que luego serán usadas en la evaluacion de la capacidad de los trabajdores." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
@@ -328,9 +334,10 @@
                                     <DataGridTextColumn Header="Regla" Binding="{Binding Texto}"></DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <Button x:Name="btnAgregarRegla" Content="Agregar" Click="IrPanelRegla" VerticalAlignment="Top" Width="143" Margin="326,10,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAgregarRegla" Content="Agregar" Click="IrPanelRegla" VerticalAlignment="Top" Width="143" Margin="179,10,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="btnModificarRegla" Content="Modificar" Click="IrPanelRegla" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
                             <Button x:Name="btnEliminarRegla" Content="Eliminar" Click="EliminarRegla" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnVolverReglasSecciones" Content="Volver" Click="VolverReglasSecciones" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                     <StackPanel x:Name="panelRegla" Visibility="Hidden">
@@ -410,7 +417,7 @@
                             <ComboBox x:Name="boxTipoComponente" Width="668" SelectedValuePath="Content" Margin="15,0,0,20" SelectionChanged="SeleccionTipoComponente" Height="27">
                                 <ComboBoxItem Content="Habilidad blanda"/>
                                 <ComboBoxItem Content="Habilidad dura"/>
-                                <ComboBoxItem Content="Caracteristicas fisica"/>
+                                <ComboBoxItem Content="Caracteristica fisica"/>
                             </ComboBox>
                             <Label x:Name="lblValoresComponente" Content="Valores:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74"/>
                             <ComboBox x:Name="boxValoresComponente" Width="668" SelectedValuePath="Content" Margin="15,0,0,0" SelectionChanged="SeleccionValoresComponente">
@@ -438,7 +445,6 @@
                             <lvc:CartesianChart x:Name="graficoFP" Series="{Binding Series}" LegendLocation="Right" Width="782" Height="220"/>
                             <Button x:Name="btnAceptar" Content="Aceptar" Click="AceptarOpcionesAvanzadas" VerticalAlignment="Top" Width="131" Margin="30,30,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="btnEditarFP" Content="Editar función" Click="IrPanelFP" VerticalAlignment="Top" Width="155" Margin="20,30,0,0" HorizontalAlignment="Right"/>
-                            <Button x:Name="btnEliminarFP" Content="Eliminar función" Click="EliminarFP" VerticalAlignment="Top" Width="140" Margin="20,30,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="btnOpcionComponente" Content="Volver opciones componente" Click="VolverPanelComponente" Width="238" Margin="15,30,0,0" Height="30"/>
                         </WrapPanel>
                     </StackPanel>
@@ -472,8 +478,9 @@
                                 <Label x:Name="lblValorDerechaArriba" Content="Derecha Abajo:" Margin="15,0,0,0" Width="93"/>
                                 <TextBox x:Name="txtValorDerechaArriba" Width="75" Margin="15,0,0,20" HorizontalAlignment="Right"/>
                             </WrapPanel>
-                            <Button x:Name="btnAceptarFp" Content="Aceptar" Click="AceptarFP" VerticalAlignment="Top" Width="238" Margin="279,50,0,0" HorizontalAlignment="Right"/>
-                            <Button x:Name="btnVolverAvanzadas" Content="Volver a las opciones" Click="VolverOpcionesAvanzadas" Width="238" Margin="15,50,0,0" Height="30"/>
+                            <Button x:Name="btnAceptarFp" Content="Aceptar" Click="AceptarFP" VerticalAlignment="Top" Width="148" Margin="279,50,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnEliminarFP" Content="Eliminar función" Click="EliminarFP" VerticalAlignment="Top" Width="140" Margin="20,50,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnVolverAvanzadas" Content="Volver a las opciones" Click="VolverOpcionesAvanzadas" Width="164" Margin="15,50,0,0" Height="30"/>
                         </WrapPanel>
                     </StackPanel>
                 </Grid>

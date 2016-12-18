@@ -17,7 +17,7 @@ namespace DST
 
         public PruebaEvaluacion360()
         {
-            Encuesta360 encuesta = new Encuesta360();
+            /*Encuesta360 encuesta = new Encuesta360();
             no = new Alternativa("No desarrollada", "Necesita significativas mejoras para lograr enficiencia en esta conducta.", 0.0);
             d = new Alternativa("Necesita desarrollarse", "Necesita algunas mejoras para ser eficiente en esta conducta.", 25.0);
             c = new Alternativa("Competente", "Generalmente capacitado en esta conducta.", 50.0);
@@ -43,7 +43,7 @@ namespace DST
             pregunta.Descripcion = descripcion;
             pregunta.Componentes = componentes;
 
-            return pregunta;
+            return pregunta;*/
         }
     }
 }

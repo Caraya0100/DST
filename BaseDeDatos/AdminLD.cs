@@ -363,7 +363,7 @@ namespace DST
 
             bd.Open();
 
-            bd.Insertar("UPDATE funcionTrapezoide SET valorInferiorIzquierdo=" + inferiorIzq.ToString() + ", valorSuperiorIzquierdo=" + superioIzq.ToString() + ", valorSuperiorDerecho=" + superiorDerch.ToString() + ", valorInferiorDerecho=" + inferiorDerch.ToString() + " WHERE nombreValor='" + nombreValor + "' AND nombreVariable='" + nombreVariable + "';");
+            bd.Insertar("UPDATE funcionTrapezoide SET valorInferiorIzquierdo=" + inferiorIzq.ToString() + ", valorSuperiorIzquierdo=" + superioIzq.ToString() + ", valorSuperiorDerecho=" + superiorDerch.ToString() + ", valorInferiorDerecho=" + inferiorDerch.ToString() + " WHERE nombreValorLing='" + nombreValor + "' AND nombreVariableLing='" + nombreVariable + "';");
 
             bd.Close();
         }
@@ -374,7 +374,45 @@ namespace DST
 
             bd.Open();
 
-            bd.Insertar("UPDATE funcionTriangular SET valorIzquierda=" + izquierda.ToString() + ", valorCentro=" + centro.ToString() + ", valorDerecha=" + derecha.ToString() + " WHERE nombreValor='" + nombreValor + "' AND nombreVariable='" + nombreVariable + "';");
+            bd.Insertar("UPDATE funcionTriangular SET valorIzquierda=" + izquierda.ToString() + ", valorCentro=" + centro.ToString() + ", valorDerecha=" + derecha.ToString() + " WHERE nombreValorLing='" + nombreValor + "' AND nombreVariableLing='" + nombreVariable + "';");
+
+            bd.Close();
+        }
+
+        public void EliminarValor(string nombreVariable, string nombreValor, string tipoFuncion)
+        {
+            AdminReglas ar = new AdminReglas();
+            BaseDeDatos bd = new BaseDeDatos();
+            bd.Open();
+
+            bd.Insertar("DELETE FROM valoresLing WHERE nombre='" + nombreValor + "' AND nombreVariableLing='" + nombreVariable + "' AND tipoFuncion='" + tipoFuncion + "';");
+
+            if (tipoFuncion == "triangular")
+                EliminarTriangular(nombreVariable, nombreValor);
+            else if (tipoFuncion == "trapezoidal")
+                EliminarTrapezoidal(nombreVariable, nombreValor);
+
+            ar.EliminarReglasNombreVariable(nombreVariable);
+
+            bd.Close();
+        }
+
+        public void EliminarTriangular(string nombreVariable, string nombreValor)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+            bd.Open();
+
+            bd.Insertar("DELETE FROM funcionTriangular WHERE nombreVariableLing='" + nombreVariable + "' AND nombreValorLing='" + nombreValor + "';");
+
+            bd.Close();
+        }
+
+        public void EliminarTrapezoidal(string nombreVariable, string nombreValor)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+            bd.Open();
+
+            bd.Insertar("DELETE FROM funcionTrapezoide WHERE nombreVariableLing='" + nombreVariable + "' AND nombreValorLing='" + nombreValor + "';");
 
             bd.Close();
         }

@@ -59,13 +59,29 @@ namespace DST
         public static Dictionary<string, double> Datos(Dictionary<string, Componente> componentes)
         {
             Dictionary<string, double> datos = new Dictionary<string, double>();
-
+            double totalImportancia = TotalImportancia(componentes);
             foreach (KeyValuePair<string, Componente> componente in componentes)
             {
-                datos.Add(componente.Key, componente.Value.Puntaje);
+                double puntaje = componente.Value.Puntaje;
+                double importancia = componente.Value.Importancia;
+                double puntajeNormalizado = puntaje * (importancia / totalImportancia);
+
+                datos.Add(componente.Key, puntaje/*Normalizado*/);
             }
 
             return datos;
+        }
+
+        private static double TotalImportancia(Dictionary<string, Componente> componentes)
+        {
+            double total = 0;
+
+            foreach (KeyValuePair<string, Componente> componente in componentes)
+            {
+                total += componente.Value.Importancia;
+            }
+
+            return total;
         }
 
         /// <summary>

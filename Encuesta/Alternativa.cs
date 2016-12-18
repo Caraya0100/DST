@@ -75,5 +75,10 @@ namespace DST
             get { return tipo; }
             set { tipo = value; }
         }
+
+        public override string ToString()
+        {
+            return nombre;
+        }
     }
 }

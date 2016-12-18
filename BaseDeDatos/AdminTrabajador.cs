@@ -64,7 +64,7 @@ namespace DST
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO componentesPerfilTrabajadores (rut,nombre,puntaje) "
+            cmd.CommandText = "INSERT INTO componentesPerfilTrabajadores (rut,id,puntaje) "
                 + " VALUES('" + rut + "','" + nombre + "'," + puntaje.ToString() + ");";
             cmd.ExecuteNonQuery();
 

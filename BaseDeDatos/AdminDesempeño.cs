@@ -52,6 +52,20 @@ namespace DST
             conn.Close();
         }
 
+        public void InsertarDesempeñoMensual(int idSeccion, string fecha, double ventasAñoActual, double ventasAñoAnterior,
+            double ventasPlan, int reubicaciones, int totalEmpleados, int empleadosCapacitados, int empleadosNoCapacitados)
+        {
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO desempeño (idSeccion,fecha,ventasAñoActual,ventasAñoAnterior,ventasPlan,"
+                + "reubicaciones,totalEmpleados,empleadosConAdvertencia) VALUES(" + idSeccion + ",'" + fecha + "',"
+                + ventasAñoActual.ToString() + "," + ventasAñoAnterior.ToString() + "," + ventasPlan.ToString()
+                + "," + reubicaciones.ToString() + "," + totalEmpleados.ToString() + "," + empleadosCapacitados
+                + ", " + empleadosNoCapacitados + ");";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
 
         /// <summary>
         /// Consulta para guardar los datos asociados a una reubicacion, esto para tener un historial.
@@ -133,6 +147,26 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
+        }
+
+        public double ObtenerVentasAnioAnterior(int idSeccion, int mes, int anio)
+        {
+            double ventas = 0;
+
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT ventasAñoAnterior FROM ventasAñoAnterior WHERE idSeccion=" + idSeccion + ", mes=" + mes + ", anio=" + anio + ";");
+
+            while (bd.Consulta.Read())
+            {
+                ventas = bd.Consulta.GetDouble("ventasAñoAnterior");
+            }
+
+            bd.Close();
+
+            return ventas;
         }
 
         /// <summary>
@@ -887,6 +921,17 @@ namespace DST
             }
 
             return new Tuple<int, int>(finalAnioFiscal, anioFinal);
+        }
+
+        public void InsertarPregunta(string fecha, double desempeno, int reubicaciones, int totalEmpleados, int empleadosCapacitados, int empleadosNoCapacitados)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("INSERT INTO desempeñoGQM(fecha, desempeno, reubicaciones, totalEmpleados, empleadosCapacitados, empleadosNoCapacitados) VALUES('" + fecha + "', " + desempeno + ", " + reubicaciones + ", " + totalEmpleados + ", " + empleadosCapacitados + ", " + empleadosNoCapacitados + ");");
+
+            bd.Close();
         }
     }
 }
