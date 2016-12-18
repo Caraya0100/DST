@@ -89,9 +89,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Desempeno\RespuestasGqm.cs" />
     <Compile Include="Estructuras\PreguntasYRespuestas.cs" />
     <Compile Include="Estructuras\Trabajador.cs" />
     <Compile Include="Estructuras\Usuario.cs" />
+    <Compile Include="Graficos\GraficoComparacionAnualEmpleados.xaml.cs">
+      <DependentUpon>GraficoComparacionAnualEmpleados.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graficos\GraficoGauge360.xaml.cs">
+      <DependentUpon>GraficoGauge360.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graficos\GraficoReubicacionesAnuales.xaml.cs">
+      <DependentUpon>GraficoReubicacionesAnuales.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graficos\GraficoVentasAnuales.xaml.cs">
+      <DependentUpon>GraficoVentasAnuales.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InteraccionBD\InteraccionDesempeno.cs" />
     <Compile Include="InteraccionBD\InteraccionEncuesta.cs" />
     <Compile Include="InteraccionBD\InteraccionSecciones.cs" />
@@ -135,6 +148,22 @@
     <Compile Include="Paneles\VisorHabilidades.cs" />
     <Compile Include="Paneles\VisorRanking.cs" />
     <Compile Include="Paneles\VisorTrabajador.cs" />
+    <Page Include="Graficos\GraficoComparacionAnualEmpleados.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graficos\GraficoGauge360.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graficos\GraficoReubicacionesAnuales.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graficos\GraficoVentasAnuales.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -82,7 +82,7 @@ namespace InterfazGrafica
             ObtenerSecciones();
             IniciarTablaDesempeno();
             IniciarPanelComponentes();
-            IniciarPanelReglas();
+            IniciarPanelReglasSecciones();
             IniciarPanelPreguntas("encuesta");
 
         }
@@ -605,6 +605,8 @@ namespace InterfazGrafica
         private double valorGraficoDPlan;
         private double valorGraficoObjetivoMes;
         private double valorGraficoCapacitados;
+        Pregunta preguntaSeccionActual;
+        Dictionary<string, string> respuestasSeccionActual; // pregunta, alternativa
 
         public void ObtenerSecciones()
         {
@@ -640,11 +642,13 @@ namespace InterfazGrafica
         /// <param name="actualPlan">Desempeño ventas actual/ventas plan</param>
         private void IniciarGraficosDesempeno(double actualAnterior, double actualPlan)
         {
-            ValorGraficoDAnterior = 0;
+            /*ValorGraficoDAnterior = 0;
             ValorGraficoDPlan = 0;
             ValorGraficoDAnterior = actualAnterior;
             ValorGraficoDPlan = actualPlan;
-            FormatoPorcentaje = x => x.ToString("P");
+            FormatoPorcentaje = x => x.ToString("P");*/
+            graficoDAnterior.Value = actualAnterior;
+            graficoDPlan.Value = actualPlan;
         }
 
         public void IniciarPanelVentasMes(int idSeccion, string tipoSeccion, int mes, int año)
@@ -671,130 +675,17 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarGraficoVentasAnuales(int idSeccion, int anio)
         {
-            AdminDesempeño ad = new AdminDesempeño();
-            ChartValues<double> anioActual = new ChartValues<double>();
-            ChartValues<double> anioAnterior = new ChartValues<double>();
-            ChartValues<double> ventasPlan = new ChartValues<double>();
-            Dictionary<string, Tuple<double, double, double>> ventas = ad.ObtenerVentasAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
-            string[] meses = new string[ventas.Count];
-
-            int mes = 0;
-            foreach (KeyValuePair<string, Tuple<double, double, double>> venta in ventas)
-            {
-                string[] m = venta.Key.Split('/');
-                meses[mes] = m[1];
-                mes += 1;
-                anioActual.Add(venta.Value.Item1);
-                anioAnterior.Add(venta.Value.Item2);
-                ventasPlan.Add(venta.Value.Item3);
-            }
-
-            SeriesVentasAnuales = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Ventas Año Actual",
-                    Values = anioActual,
-                    Fill = Brushes.Transparent
-                },
-                new LineSeries
-                {
-                    Title = "Ventas Año Anterior",
-                    Values = anioAnterior,
-                    Fill = Brushes.Transparent
-                },
-                new LineSeries
-                {
-                    Title = "Ventas Plan",
-                    Values = ventasPlan,
-                    Fill = Brushes.Transparent
-                }
-            };
-
-            LabelsAnioFiscal = meses;
-            YFormatoVentasAnuales = value => value + "$";
-
-            // Actualizamos el grafico (reinicio animaciones y actualización de datos).
-            graficoDesempenoAnuales.Update(true);
-
+            GraficoVentasAnuales.VentasAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
         }
 
         private void IniciarGraficoReubicacionesAnuales(int idSeccion, int anio)
         {
-            AdminDesempeño ad = new AdminDesempeño();
-            ChartValues<double> reubicaciones = new ChartValues<double>();
-            Dictionary<string, int> r = ad.ObtenerReubicacionesAnuales(idSeccion, inicioAnioFiscal, anio);
-            string[] meses = new string[r.Count];
-            int mes = 0;
-
-            foreach (KeyValuePair<string, int> reubicacion in r)
-            {
-                string[] m = reubicacion.Key.Split('/');
-                meses[mes] = m[1];
-                mes += 1;
-                reubicaciones.Add(Convert.ToDouble(reubicacion.Value));
-            }
-
-            SeriesReubicacionesAnuales = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Reubicaciones",
-                    Values = reubicaciones,
-                    MaxColumnWidth = 10
-                }
-            };
-
-            LabelsAnioFiscal = meses;
-            FormatoReubicaciones = value => value.ToString("N");
-            // Actualizamos el grafico (reinicio animaciones y actualización de datos).
-            graficoDReubicaciones.Update(true);
+            GraficoReubicacionesAnuales.ReubicacionesAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal,anio);
         }
 
         private void IniciarGraficoComparacionRAnuales(int idSeccion, int anio)
         {
-            AdminDesempeño ad = new AdminDesempeño();
-            ChartValues<double> totalEmpleados = new ChartValues<double>();
-            ChartValues<double> empleadosCapacitados = new ChartValues<double>();
-            Dictionary<string, int> te = ad.ObtenerTotalEmpleadosAnuales(idSeccion, inicioAnioFiscal, anio);
-            Dictionary<string, int> ec = ad.ObtenerEmpleadosCapacitadosAnuales(idSeccion, inicioAnioFiscal, anio);
-            string[] meses = new string[te.Count];
-            int mes = 0;
-
-            foreach (KeyValuePair<string, int> total in te)
-            {
-                string[] m = total.Key.Split('/');
-                meses[mes] = m[1];
-                mes += 1;
-                totalEmpleados.Add(Convert.ToDouble(total.Value));
-            }
-
-            foreach (KeyValuePair<string, int> empleados in ec)
-            {
-                empleadosCapacitados.Add(Convert.ToDouble(empleados.Value));
-            }
-
-            SeriesComparacionRAnuales = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Trabajadores",
-                    Values = totalEmpleados, 
-                    MaxColumnWidth = 10
-                },
-                new ColumnSeries
-                {
-                    Title = "Capacitados",
-                    Values = empleadosCapacitados,
-                    MaxColumnWidth = 10
-                }
-            };
-
-            LabelsAnioFiscal = meses;
-            FormatoReubicaciones = value => value.ToString("N");
-
-            // Actualizamos el grafico (reinicio animaciones y actualización de datos).
-            graficoDComparacionR.Update(true);
+            GraficoCAnualEmpleados.ComparativaAnual(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
         }
 
         public void IniciarPanelDatosAnuales(int idSeccion, int anio)
@@ -859,6 +750,20 @@ namespace InterfazGrafica
             FormatoPorcentaje = x => x.ToString("P");
         }
 
+        private void IniciarPanelIngresoObjetivos()
+        {
+            respuestasSeccionActual = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, Pregunta> pregunta in desempenoSeccionActual.Preguntas)
+            {
+                listObjetivos.Items.Add(pregunta.Value);
+            }
+        }
+
+        private void IniciarPanelIngresoVentas()
+        {
+
+        }
+
         /* ----------------------------------------------------------------------
          *                          PD.1 EVENTOS
          * ----------------------------------------------------------------------*/
@@ -885,6 +790,7 @@ namespace InterfazGrafica
 
             // Iniciamos los graficos.
             IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
+            DataContext = this;
             IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
             DataContext = this;
 
@@ -966,7 +872,133 @@ namespace InterfazGrafica
 
         private void IrPanelIngresoDesempeno(object sender, RoutedEventArgs e)
         {
+            string tipoSeccion = desempenoSeccionActual.Tipo;
+            if (tipoSeccion.ToLower() == "gqm")
+            {
+                IniciarPanelIngresoObjetivos();
+                panelDDetalles.Visibility = Visibility.Hidden;
+                panelDIngreso.Visibility = Visibility.Visible;
+                wrapIngresoVentas.Visibility = Visibility.Collapsed;
+                wrapIngresoObjetivos.Visibility = Visibility.Visible;
+            } else if (tipoSeccion.ToLower() == "ventas")
+            {
+                panelDDetalles.Visibility = Visibility.Hidden;
+                panelDIngreso.Visibility = Visibility.Visible;
+                wrapIngresoObjetivos.Visibility = Visibility.Collapsed;
+                wrapIngresoVentas.Visibility = Visibility.Visible;
+            }
+        }
 
+        private void IrPanelPreguntasGqm(object sender, RoutedEventArgs e)
+        {
+            IniciarPanelPreguntas("gqm");
+            itemEvaluacion.IsSelected = true;
+        }
+
+        private void VolverPanelDDetalles(object sender, RoutedEventArgs e)
+        {
+            panelDIngreso.Visibility = Visibility.Hidden;
+            panelDDetalles.Visibility = Visibility.Visible;
+        }
+
+        private void SeleccionPreguntaObjetivo(object sender, SelectionChangedEventArgs e)
+        {
+            preguntaSeccionActual = (Pregunta)listObjetivos.SelectedItem;
+
+            if (preguntaSeccionActual != null)
+            {
+                boxRespuestaObjetivo.Items.Clear();
+                foreach (KeyValuePair<string, Alternativa> alternativa in preguntaSeccionActual.Alternativas)
+                {
+                    boxRespuestaObjetivo.Items.Add(alternativa.Key);
+                }
+            }
+
+        }
+
+        private void SeleccionRepuestaObjetivo(object sender, SelectionChangedEventArgs e)
+        {
+            string idPregunta = preguntaSeccionActual.ID.ToString();
+
+            if (idPregunta !=null)
+            {
+                if (respuestasSeccionActual.ContainsKey(idPregunta))
+                {
+                    respuestasSeccionActual[idPregunta] = (string)boxRespuestaObjetivo.SelectedValue;
+                }
+                else
+                {
+                    respuestasSeccionActual.Add(idPregunta, (string)boxRespuestaObjetivo.SelectedValue);
+                }
+            }
+        }
+
+        private void AceptarIngresoVentas(object sender, RoutedEventArgs e)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            double ventasActuales = Convert.ToDouble(txtVentasActuales.Text);
+            double ventasPlan = Convert.ToDouble(txtVentasPlan.Text);
+            int anio = DateTime.Now.Year;
+            int mes = DateTime.Now.Month;
+            string fecha = anio + "-" + mes + "-01";
+            double ventasAnioAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, mes, anio);
+
+            ad.InsertarVentasAñoAnterior(
+                desempenoSeccionActual.IdSeccion,
+                mes.ToString(),
+                anio.ToString(),
+                ventasActuales
+            );
+            ad.InsertarVentasPlan(
+                desempenoSeccionActual.IdSeccion,
+                mes.ToString(),
+                anio.ToString(),
+                ventasPlan
+            );
+            ad.InsertarDesempeñoMensual(
+                desempenoSeccionActual.IdSeccion,
+                fecha,
+                ventasActuales,
+                ventasAnioAnterior,
+                ventasPlan,
+                0,
+                0,
+                0,
+                0
+            );
+        }
+
+        private void AceptarRespuestasObjetivo(object sender, RoutedEventArgs e)
+        {
+            AdminEncuesta ae = new AdminEncuesta();
+            AdminDesempeño ad = new AdminDesempeño();
+            List<double> respuestas = new List<double>();
+            double desempeno = -1;
+            string anio = DateTime.Now.Year.ToString();
+            string mes = DateTime.Now.Month.ToString();
+            string fecha = anio + "-" + mes + "-01";
+
+            foreach (KeyValuePair<string, string> respuesta in respuestasSeccionActual)
+            {
+                int idSeccion = desempenoSeccionActual.IdSeccion;
+                int idPregunta = Convert.ToInt32(respuesta.Key);
+                Alternativa alternativa = ae.ObtenerRespuestaSeccion(idSeccion, idPregunta, respuesta.Value);
+
+                if (alternativa == null)
+                {
+                    ae.InsertarRespuestaSeccion(idSeccion, idPregunta, respuesta.Value);
+                    alternativa = ae.ObtenerRespuestaSeccion(idSeccion, idPregunta, respuesta.Value);
+                } else
+                {
+                    ae.ActualizarRespuestaSeccion(idSeccion, idPregunta, respuesta.Value);
+                }
+
+                // Agregamos la respuesta, para usarla en la evaluación.
+                respuestas.Add(alternativa.Valor);
+            }
+
+            desempeno = EvaluacionDesempeno.EjecutarGqm(respuestas);
+            ad.InsertarPregunta(fecha, desempeno, 0, 0, 0, 0);
         }
 
         /* ----------------------------------------------------------------------
@@ -1058,6 +1090,7 @@ namespace InterfazGrafica
 
         public void LlenarTablaPreguntasGQM()
         {
+            tablaPreguntas.Items.Clear();
             foreach (KeyValuePair<string, Pregunta> pregunta in preguntas)
             {
                 if (pregunta.Value.Tipo.ToLower() == "gqm")
@@ -1084,9 +1117,22 @@ namespace InterfazGrafica
             Dictionary<string, Componente> componentes = new Dictionary<string, Componente>();
             txtPregunta.Text = pregunta.ToString();
 
+            // Si es una pregunta nueva, deshabilitamos las alternativas.
+            if (preguntaActual.ID == -1)
+            {
+                wrapAlternativas.IsEnabled = false;
+                wrapFrecuencias.IsEnabled = false;
+            } else
+            {
+                wrapAlternativas.IsEnabled = true;
+                wrapFrecuencias.IsEnabled = true;
+            }
+
             if (pregunta.Tipo.ToLower() == "gqm")
             {
+                lblTipoComponentes.Visibility = Visibility.Collapsed;
                 boxTipoComponentes.Visibility = Visibility.Collapsed;
+                lblComponentePregunta.Visibility = Visibility.Collapsed;
                 listComponentes.Visibility = Visibility.Collapsed;
                 boxTipoPregunta.Items.Clear();
                 boxTipoPregunta.Items.Add("Desempeño");
@@ -1096,6 +1142,10 @@ namespace InterfazGrafica
             }
             else
             {
+                lblTipoComponentes.Visibility = Visibility.Visible;
+                boxTipoComponentes.Visibility = Visibility.Visible;
+                lblComponentePregunta.Visibility = Visibility.Visible;
+                listComponentes.Visibility = Visibility.Visible;
                 boxTipoComponentes.SelectedValue = "Habilidades blandas";
                 SeleccionPreguntaTipoComponente(null,null);
                 boxTipoPregunta.IsEnabled = true;
@@ -1157,7 +1207,12 @@ namespace InterfazGrafica
         private void AgregarPregunta(object sender, RoutedEventArgs e)
         {
             preguntaActual = new Pregunta();
-            preguntaActual.Tipo = tipoActualPreguntas;
+
+            if (tipoActualPreguntas == "gqm")
+                preguntaActual.Tipo = "gqm";
+            else if (tipoActualPreguntas == "encuesta")
+                preguntaActual.Tipo = "360";
+
             IniciarPanelPregunta(preguntaActual);
             panelPreguntas.Visibility = Visibility.Hidden;
             panelPregunta.Visibility = Visibility.Visible;
@@ -1186,60 +1241,67 @@ namespace InterfazGrafica
             AdminEncuesta ae = new AdminEncuesta();
             string tipoPregunta = (string)boxTipoPregunta.SelectedValue;
 
-            // Primero borramos todas las componentes y alternativas de la pregunta.
-            ae.EliminarAlternativasPregunta(preguntaActual.ID);
-            ae.EliminarComponentesPregunta(preguntaActual.ID);
-
-            // Actualizamos la pregunta.
+            // Obtenemos la pregunta y su tipo.
+            preguntaActual.Descripcion = txtPregunta.Text;
             if (tipoPregunta == "Evaluacion 360") preguntaActual.Tipo = "360";
             if (tipoPregunta == "Desempeño") preguntaActual.Tipo = "gqm";
             if (tipoPregunta == "Normal") preguntaActual.Tipo = "normal";
             if (tipoPregunta == "Ingreso de datos") preguntaActual.Tipo = "datos";
 
-            preguntaActual.Descripcion = txtPregunta.Text;
-            preguntaActual.Tipo = tipoPregunta;
-
-            if (preguntaActual.Tipo.ToString() != "gqm")
+            if (preguntaActual.ID == -1)
             {
-                List<string> nuevosComponentes = new List<string>();
-
-                foreach (var componente in listComponentes.SelectedItems)
-                {
-                    nuevosComponentes.Add((string)componente);
-                }
-
-                preguntaActual.Componentes = nuevosComponentes;
-            }
-
-            if (preguntaActual.Tipo.ToString() != "datos")
+                // Insertamos la nueva pregunta.
+                ae.InsertarPreguntaSeccion(desempenoSeccionActual.IdSeccion, preguntaActual.ToString(), preguntaActual.Tipo);
+            } else
             {
-                Dictionary<string, Alternativa> nuevasAlternativas = new Dictionary<string, Alternativa>();
-                Dictionary<string, Alternativa> nuevasFrecuencias = new Dictionary<string, Alternativa>();
+                // Primero borramos todas las componentes y alternativas de la pregunta.
+                ae.EliminarAlternativasPregunta(preguntaActual.ID);
+                ae.EliminarComponentesPregunta(preguntaActual.ID);
 
-                foreach (var alternativa in listAlternativas.SelectedItems)
+                // Actualizamos la pregunta.
+                if (preguntaActual.Tipo.ToString() != "gqm")
                 {
-                    nuevasAlternativas.Add(
-                        (string)alternativa,
-                        ae.ObtenerAlternativa((string)alternativa)
-                    );
-                }
-                // Solo las preguntas 360 tienen frecuencias.
-                if (preguntaActual.Tipo.ToString() == "360")
-                {
-                    foreach (var frecuencia in listFrecuencias.Items)
+                    List<string> nuevosComponentes = new List<string>();
+
+                    foreach (var componente in listComponentes.SelectedItems)
                     {
-                        nuevasFrecuencias.Add(
-                            (string)frecuencia,
-                            ae.ObtenerAlternativa((string)frecuencia)
+                        nuevosComponentes.Add((string)componente);
+                    }
+
+                    preguntaActual.Componentes = nuevosComponentes;
+                }
+
+                if (preguntaActual.Tipo.ToString() != "datos")
+                {
+                    Dictionary<string, Alternativa> nuevasAlternativas = new Dictionary<string, Alternativa>();
+                    Dictionary<string, Alternativa> nuevasFrecuencias = new Dictionary<string, Alternativa>();
+
+                    foreach (var alternativa in listAlternativas.SelectedItems)
+                    {
+                        nuevasAlternativas.Add(
+                            (string)alternativa,
+                            ae.ObtenerAlternativa((string)alternativa)
                         );
                     }
+                    // Solo las preguntas 360 tienen frecuencias.
+                    if (preguntaActual.Tipo.ToString() == "360")
+                    {
+                        foreach (var frecuencia in listFrecuencias.Items)
+                        {
+                            nuevasFrecuencias.Add(
+                                (string)frecuencia,
+                                ae.ObtenerAlternativa((string)frecuencia)
+                            );
+                        }
+                    }
+
+                    preguntaActual.Alternativas = nuevasAlternativas;
+                    preguntaActual.Frecuencias = nuevasFrecuencias;
                 }
 
-                preguntaActual.Alternativas = nuevasAlternativas;
-                preguntaActual.Frecuencias = nuevasFrecuencias;
+                ae.ActualizarPregunta(preguntaActual);
             }
-
-            ae.ActualizarPregunta(preguntaActual);
+            
             IniciarPanelPreguntas(tipoActualPreguntas);
             VolverPanelPreguntas(null, null);
         }
@@ -1305,6 +1367,7 @@ namespace InterfazGrafica
             alternativaActual.Nombre = txtNombreAlternativa.Text;
             alternativaActual.Descripcion = txtDescAlternativa.Text;
             alternativaActual.Valor = Convert.ToDouble(txtValorAlternativa.Text);
+            alternativaActual.Tipo = preguntaActual.Tipo;
 
             if (actualizar)
             {
@@ -1321,10 +1384,12 @@ namespace InterfazGrafica
                 if (alternativaActual.Tipo.ToLower() == "frecuencia" && !preguntaActual.Frecuencias.ContainsKey(alternativaActual.Nombre))
                 {
                     preguntaActual.Frecuencias.Add(alternativaActual.Nombre, alternativaActual);
+                    ae.InsertarAlternativaPregunta(preguntaActual.ID, alternativaActual.Nombre);
                 }
                 else if (!preguntaActual.Alternativas.ContainsKey(alternativaActual.Nombre))
                 {
                     preguntaActual.Alternativas.Add(alternativaActual.Nombre, alternativaActual);
+                    ae.InsertarAlternativaPregunta(preguntaActual.ID, alternativaActual.Nombre);
                 }
             } else
             {
@@ -1408,17 +1473,21 @@ namespace InterfazGrafica
 
             if (tipoPregunta == "Evaluacion 360")
             {
+                preguntaActual.Tipo = "360";
                 LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
                 LlenarListaAlternativas(preguntaActual.Frecuencias, listFrecuencias);
                 wrapAlternativa.Visibility = Visibility.Visible;
                 wrapFrecuencias.Visibility = Visibility.Visible;
             } else if (tipoPregunta == "Normal" || tipoPregunta == "Desempeño")
             {
+                if (tipoPregunta == "Normal") preguntaActual.Tipo = "normal";
+                if (tipoPregunta == "Desempeño") preguntaActual.Tipo = "gqm";
                 LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
                 wrapAlternativa.Visibility = Visibility.Visible;
                 wrapFrecuencias.Visibility = Visibility.Collapsed;
             } else if (tipoPregunta == "Ingreso de datos")
             {
+                preguntaActual.Tipo = "datos";
                 wrapAlternativa.Visibility = Visibility.Collapsed;
                 wrapFrecuencias.Visibility = Visibility.Collapsed;
             }
@@ -1435,7 +1504,6 @@ namespace InterfazGrafica
                 alternativaActual.Tipo = tipo;
             } else
             {
-                Debug.WriteLine("_Alternativa: " + alternativa);
                 AdminEncuesta ae = new AdminEncuesta();
                 alternativaActual = ae.ObtenerAlternativa(alternativa);
             }
@@ -1575,6 +1643,7 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarNuevoComponente()
         {
+            btnOpcionesAvanzadas.IsEnabled = false;
             componenteActual = new Componente("", "", "", "");
             variableActual = new VariableLinguistica("defecto", 0, 100);
             ValoresDefectoComponente();
@@ -1587,6 +1656,7 @@ namespace InterfazGrafica
             txtLimiteInferior.Text = "" + variableActual.Min;
             txtLimiteSuperior.Text = "" + variableActual.Max;
             // Iniciamos los valores linguisticos por defecto.
+            boxFP.Items.Clear();
             foreach (KeyValuePair<string, ValorLinguistico> valor in variableActual.Valores)
             {
                 boxFP.Items.Add(valor.Key);
@@ -1611,6 +1681,7 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarComponente()
         {
+            btnOpcionesAvanzadas.IsEnabled = true;
             AdminLD adminLD = new AdminLD();
             componenteActual = (Componente)tablaComponentes.SelectedItem;
             variableActual = adminLD.ObtenerVariable(componenteActual.ID);
@@ -1628,10 +1699,12 @@ namespace InterfazGrafica
             else if (componenteActual.Tipo == PerfilConstantes.CF)
                 boxTipoComponente.SelectedValue = "Caracteristica fisica";
 
+            boxFP.Items.Clear();
             foreach (KeyValuePair<string, ValorLinguistico> valor in variableActual.Valores)
             {
                 boxFP.Items.Add(valor.Key);
             }
+            boxFP.Items.Add("+ Agregar nueva función");
             string funcion = (string)boxFP.Items[0];
             Type tipoFuncion = variableActual.Valores[funcion].Fp.GetType();
 
@@ -1792,53 +1865,77 @@ namespace InterfazGrafica
             string tipoFuncion = "triangular";
             //boxFP.SelectedValue = "Muy_baja";
 
-            if ((string)boxTipoFP.SelectedValue == "triangular")
+            if (valorActual.Nombre == "")
             {
-                FuncionTriangular fp = (FuncionTriangular)valorActual.Fp;
-                string izq = txtValorIzquierda.Text;
-                string centro = txtValorCentro.Text;
-                string derch = txtValorDerecha.Text;
-
-                if (izq != fp.ValorIzq.ToString() || centro != fp.ValorCentro.ToString() || derch != fp.ValorDerch.ToString())
+                string nombreValor = txtNombreFP.Text;
+                
+                if ((string)boxTipoFP.SelectedValue == "Triangular")
                 {
-                    fp.ValorIzq = Convert.ToDouble(izq);
-                    fp.ValorCentro = Convert.ToDouble(centro);
-                    fp.ValorDerch = Convert.ToDouble(derch);
-                    ald.ActualizarValoresTriangular(
-                        variableActual.Nombre, 
-                        valorActual.Nombre,
-                        fp.ValorIzq, fp.ValorCentro, fp.ValorDerch
-                    );
-                }
-            }
-            else if ((string)boxTipoFP.SelectedValue == "trapezoidal")
-            {
-                tipoFuncion = "trapezoidal";
-                FuncionTrapezoidal fp = (FuncionTrapezoidal)valorActual.Fp;
-                string izqAbajo = txtValorIzquierdaAbajo.Text;
-                string izqArriba = txtValorIzquierdaArriba.Text;
-                string derchArriba = txtValorDerechaArriba.Text;
-                string derchAbajo = txtValorDerechaAbajo.Text;
-
-                if (izqAbajo != fp.ValorIzqAbajo.ToString() || izqArriba != fp.ValorIzqAbajo.ToString() || derchArriba != fp.ValorDerchArriba.ToString() || derchAbajo != fp.ValorDerchAbajo.ToString())
+                    double valorIzq = Convert.ToDouble(txtValorIzquierda.Text);
+                    double valorCentro = Convert.ToDouble(txtValorCentro.Text);
+                    double valorDerch = Convert.ToDouble(txtValorDerecha.Text);
+                    ald.InsertarValorLinguistico(nombreValor, variableActual.Nombre, tipoFuncion);
+                    ald.InsertarFuncionTriangular(variableActual.Nombre, nombreValor, valorIzq, valorCentro, valorDerch);
+                } else if ((string)boxTipoFP.SelectedValue == "Trapezoidal")
                 {
-                    fp.ValorIzqAbajo = Convert.ToDouble(izqAbajo);
-                    fp.ValorIzqArriba = Convert.ToDouble(izqArriba);
-                    fp.ValorDerchArriba = Convert.ToDouble(derchArriba);
-                    fp.ValorDerchAbajo = Convert.ToDouble(derchAbajo);
-                    ald.ActualizarValoresTriangular(
-                        variableActual.Nombre,
-                        valorActual.Nombre,
-                        fp.ValorIzqAbajo, fp.ValorIzqArriba, 
-                        fp.ValorDerchArriba, fp.ValorDerchAbajo
-                    );
+                    tipoFuncion = "trapezoidal";
+                    double valorIzqAbajo = Convert.ToDouble(txtValorIzquierdaAbajo.Text);
+                    double valorIzqArriba = Convert.ToDouble(txtValorIzquierdaArriba.Text);
+                    double valorDerchArriba = Convert.ToDouble(txtValorDerechaArriba.Text);
+                    double valorDerchAbajo = Convert.ToDouble(txtValorDerechaAbajo.Text);
+                    ald.InsertarValorLinguistico(nombreValor, variableActual.Nombre, tipoFuncion);
+                    ald.InsertarFuncionTrapezoide(variableActual.Nombre, nombreValor, valorIzqAbajo, valorIzqArriba, valorDerchArriba, valorDerchAbajo);
                 }
-            }
-
-            if (valorActual.Nombre != txtNombreFP.Text)
+            } else
             {
-                ald.ActualizarNombreValor(txtNombreFP.Text, valorActual.Nombre, variableActual.Nombre, tipoFuncion);
-                valorActual.Nombre = txtNombreFP.Text;
+                if ((string)boxTipoFP.SelectedValue == "Triangular")
+                {
+                    FuncionTriangular fp = (FuncionTriangular)valorActual.Fp;
+                    string izq = txtValorIzquierda.Text;
+                    string centro = txtValorCentro.Text;
+                    string derch = txtValorDerecha.Text;
+
+                    if (izq != fp.ValorIzq.ToString() || centro != fp.ValorCentro.ToString() || derch != fp.ValorDerch.ToString())
+                    {
+                        fp.ValorIzq = Convert.ToDouble(izq);
+                        fp.ValorCentro = Convert.ToDouble(centro);
+                        fp.ValorDerch = Convert.ToDouble(derch);
+                        ald.ActualizarValoresTriangular(
+                            variableActual.Nombre,
+                            valorActual.Nombre,
+                            fp.ValorIzq, fp.ValorCentro, fp.ValorDerch
+                        );
+                    }
+                }
+                else if ((string)boxTipoFP.SelectedValue == "Trapezoidal")
+                {
+                    tipoFuncion = "trapezoidal";
+                    FuncionTrapezoidal fp = (FuncionTrapezoidal)valorActual.Fp;
+                    string izqAbajo = txtValorIzquierdaAbajo.Text;
+                    string izqArriba = txtValorIzquierdaArriba.Text;
+                    string derchArriba = txtValorDerechaArriba.Text;
+                    string derchAbajo = txtValorDerechaAbajo.Text;
+
+                    if (izqAbajo != fp.ValorIzqAbajo.ToString() || izqArriba != fp.ValorIzqAbajo.ToString() || derchArriba != fp.ValorDerchArriba.ToString() || derchAbajo != fp.ValorDerchAbajo.ToString())
+                    {
+                        fp.ValorIzqAbajo = Convert.ToDouble(izqAbajo);
+                        fp.ValorIzqArriba = Convert.ToDouble(izqArriba);
+                        fp.ValorDerchArriba = Convert.ToDouble(derchArriba);
+                        fp.ValorDerchAbajo = Convert.ToDouble(derchAbajo);
+                        ald.ActualizarValoresTriangular(
+                            variableActual.Nombre,
+                            valorActual.Nombre,
+                            fp.ValorIzqAbajo, fp.ValorIzqArriba,
+                            fp.ValorDerchArriba, fp.ValorDerchAbajo
+                        );
+                    }
+                }
+
+                if (valorActual.Nombre != txtNombreFP.Text)
+                {
+                    ald.ActualizarNombreValor(txtNombreFP.Text, valorActual.Nombre, variableActual.Nombre, tipoFuncion);
+                    valorActual.Nombre = txtNombreFP.Text;
+                }
             }
 
             panelFP.Visibility = Visibility.Hidden;
@@ -1904,6 +2001,11 @@ namespace InterfazGrafica
         {
             if ((string)boxFP.SelectedValue == "+ Agregar nueva función")
             {
+                valorActual = new ValorLinguistico("", new FuncionTriangular(0, 0, 50));
+                txtValorIzquierda.Text = "0";
+                txtValorCentro.Text = "0";
+                txtValorDerecha.Text = "50";
+                boxTipoFP.SelectedValue = "Triangular";
                 panelOpcionesAvanzadas.Visibility = Visibility.Hidden;
                 panelFP.Visibility = Visibility.Visible;
             }
@@ -2008,7 +2110,12 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void EliminarFP(object sender, RoutedEventArgs e)
         {
+            AdminLD al = new AdminLD();
+            string tipoFuncion = ((string)boxTipoFP.SelectedValue).ToLower();
 
+            al.EliminarValor(variableActual.Nombre, valorActual.Nombre, tipoFuncion);
+
+            VolverOpcionesAvanzadas(null,null);
         }
 
         /// <summary>
@@ -2045,31 +2152,19 @@ namespace InterfazGrafica
         private Seccion reglasSeccionActual;
         private Regla reglaActual;
 
-        private void IniciarPanelReglas()
+        private void IniciarPanelReglasSecciones()
         {
-            GeneraListaSeccionesReglas();
-            reglasSeccionActual = secciones["Cajas"];
-            ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
-            LlenarTablaReglas(reglasActuales);
+            tablaReglasSecciones.Items.Clear();
+            foreach (KeyValuePair<string, Seccion> seccion in secciones)
+            {
+                tablaReglasSecciones.Items.Add(seccion.Value);
+            }
         }
 
-        private void GeneraListaSeccionesReglas()
+        private void IniciarPanelReglas()
         {
-            reglasSeccionActual = secciones["Cajas"];
-
-            this.panelReglasSecciones.Children.Clear();
-            for (int i = 0; i < 10; i++)
-            {
-                VisorSecciones seccion = new VisorSecciones();
-                seccion.NombreSeccion = "Atencion a Clientes";
-                seccion.JefeSeccion = "Un jefe";
-                seccion.CantidadTrabajadores = "" + i;
-                seccion.IdenficadorVer = "I" + i;
-                seccion.IdentificadorEditar = "I" + i;
-                seccion.IdentificadorEliminar = "I" + i;
-                seccion.ControladorVer(VerSeccionReglas);
-                this.panelReglasSecciones.Children.Add(seccion.ConstructorInfo());
-            }
+            ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
+            LlenarTablaReglas(reglasActuales);
         }
 
         /// <summary>
@@ -2102,7 +2197,16 @@ namespace InterfazGrafica
 
         private void VerSeccionReglas(object sender, RoutedEventArgs e)
         {
-            reglasSeccionActual = secciones["Cajas"];
+            reglasSeccionActual = (Seccion)tablaReglasSecciones.SelectedItem;
+            IniciarPanelReglas();
+            panelReglasSecciones.Visibility = Visibility.Hidden;
+            panelReglasSeccion.Visibility = Visibility.Visible;
+        }
+
+        private void VolverReglasSecciones(object sender, RoutedEventArgs e)
+        {
+            panelReglasSeccion.Visibility = Visibility.Hidden;
+            panelReglasSecciones.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -2131,18 +2235,23 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void SeleccionTipoReglas(object sender, SelectionChangedEventArgs e)
         {
-
-            if ((string)boxTipoReglas.SelectedValue == "Habilidades blandas")
+            if (reglasSeccionActual != null)
             {
-                
-            }
-            else if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
-            {
-                
-            }
-            else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
-            {
-                
+                if ((string)boxTipoReglas.SelectedValue == "Habilidades blandas")
+                {
+                    ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
+                    LlenarTablaReglas(reglasActuales);
+                }
+                else if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
+                {
+                    ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HD);
+                    LlenarTablaReglas(reglasActuales);
+                }
+                else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
+                {
+                    ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.CF);
+                    LlenarTablaReglas(reglasActuales);
+                }
             }
         }
 
@@ -2204,17 +2313,19 @@ namespace InterfazGrafica
         private void SeleccionNoAntecedente(object sender, SelectionChangedEventArgs e)
         {
             AdminLD adminLD = new AdminLD();
-            Debug.WriteLine("Selected" + boxNoAntecedente.SelectedValue);
             string componente = (string)boxNoAntecedente.SelectedValue;
             VariableLinguistica variable = adminLD.ObtenerVariable(componente);
 
-            boxValoresNoAntecedente.Items.Clear();
-            foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
+            if (variable != null)
             {
-                boxValoresNoAntecedente.Items.Add(valor.Key);
-            }
+                boxValoresNoAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
+                {
+                    boxValoresNoAntecedente.Items.Add(valor.Key);
+                }
 
-            boxValoresNoAntecedente.SelectedIndex = 0;
+                boxValoresNoAntecedente.SelectedIndex = 0;
+            }
         }
 
         private void SeleccionOperadorRegla(object sender, SelectionChangedEventArgs e)
@@ -2237,6 +2348,17 @@ namespace InterfazGrafica
             VariableLinguistica consecuente;
             componentes = perfil.Blandas;
             consecuente = vm.HBPerfil;
+
+            if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
+            {
+                componentes = perfil.Duras;
+                consecuente = vm.HDPerfil;
+            }
+            else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
+            {
+                componentes = perfil.Fisicas;
+                consecuente = vm.CFPerfil;
+            }
 
             if ((string)((Button)sender).Content == "Agregar")
             {
@@ -2263,17 +2385,6 @@ namespace InterfazGrafica
             foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
             {
                 boxAntecedente.Items.Add(valor.Key);
-            }
-
-            if ((string)boxTipoReglas.SelectedValue == "Habilidades duras")
-            {
-                componentes = perfil.Duras;
-                consecuente = vm.HDPerfil;
-            }
-            else if ((string)boxTipoReglas.SelectedValue == "Caracteristicas fisicas")
-            {
-                componentes = perfil.Fisicas;
-                consecuente = vm.CFPerfil;
             }
             // Llenamos el comboBox del consecuente.
             boxValoresConsecuente.Items.Clear();
@@ -2362,9 +2473,9 @@ namespace InterfazGrafica
             string nombreValor = (string)boxValoresConsecuente.SelectedValue;
             VariableLinguistica consecuente = vm.HBPerfil;
 
-            if (nombreVariable == PerfilConstantes.HD)
+            if (nombreVariable.ToLower() == PerfilConstantes.HD)
                 consecuente = vm.HDPerfil;
-            else if (nombreVariable == PerfilConstantes.CF)
+            else if (nombreVariable.ToLower() == PerfilConstantes.CF)
                 consecuente = vm.CFPerfil;
 
             Tuple<string, ValorLinguistico> nuevoConsecuente = new Tuple<string, ValorLinguistico>(

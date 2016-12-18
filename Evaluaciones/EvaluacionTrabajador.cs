@@ -29,11 +29,10 @@ namespace DST
         /// </summary>
         /// <param name="perfilSeccion"></param>
         /// <param name="idSeccion"></param>
-        public EvaluacionCapacidad Capacidad(Perfil perfilSeccion, int idSeccion)
+        public EvaluacionCapacidad EvaluarCapacidad(Perfil perfilSeccion, int idSeccion)
         {
             ec = new EvaluacionCapacidad();
             AdminTrabajador at = new AdminTrabajador();
-            perfilSeccion = EvaluacionPerfil.Ejecutar(perfilSeccion, idSeccion);
 
             perfilSeccion.HB.Nombre = "HBS";
             perfilSeccion.HD.Nombre = "HDS";
@@ -41,21 +40,21 @@ namespace DST
 
             Perfil perfil = at.ObtenerPerfilTrabajador(trabajador.Rut);
             Perfil perfilTrabajador = ObtenerPerfilTrabajadorSeccion(perfil, perfilSeccion);
-            perfilTrabajador = EvaluacionPerfil.Ejecutar(perfilTrabajador, idSeccion);
+            perfilEvaluado = EvaluacionPerfil.Ejecutar(perfilTrabajador, idSeccion);
 
-            perfilTrabajador.HB.Nombre = "HBT";
-            perfilTrabajador.HD.Nombre = "HDT";
-            perfilTrabajador.CF.Nombre = "CFT";
+            perfilEvaluado.HB.Nombre = "HBT";
+            perfilEvaluado.HD.Nombre = "HDT";
+            perfilEvaluado.CF.Nombre = "CFT";
 
-            Console.WriteLine("HB: " + perfilTrabajador.HB.Puntaje + " HD: " + perfilTrabajador.HD.Puntaje + " CF: " + perfilTrabajador.CF.Puntaje);
+            //Console.WriteLine("HB: " + perfilEvaluado.HB.Puntaje + " HD: " + perfilEvaluado.HD.Puntaje + " CF: " + perfilEvaluado.CF.Puntaje);
 
             ec.Ejecutar(
                 perfilSeccion.HB,
                 perfilSeccion.HD,
                 perfilSeccion.CF,
-                perfilTrabajador.HB,
-                perfilTrabajador.HD,
-                perfilTrabajador.CF
+                perfilEvaluado.HB,
+                perfilEvaluado.HD,
+                perfilEvaluado.CF
             );
 
             return ec;
@@ -74,19 +73,52 @@ namespace DST
             foreach (KeyValuePair<string, Componente> componente in seccion.Blandas)
             {
                 perfil.AgregarComponente(trabajador.Blandas[componente.Key]);
+                perfil.Blandas[componente.Key].Importancia = seccion.Blandas[componente.Key].Importancia;
             }
 
             foreach (KeyValuePair<string, Componente> componente in seccion.Duras)
             {
                 perfil.AgregarComponente(trabajador.Duras[componente.Key]);
+                perfil.Duras[componente.Key].Importancia = seccion.Duras[componente.Key].Importancia;
             }
 
             foreach (KeyValuePair<string, Componente> componente in seccion.Fisicas)
             {
                 perfil.AgregarComponente(trabajador.Fisicas[componente.Key]);
+                perfil.Fisicas[componente.Key].Importancia = seccion.Fisicas[componente.Key].Importancia;
             }
 
             return perfil;
+        }
+
+        public Perfil PerfilEvaluado
+        {
+            get { return perfilEvaluado; }
+        }
+
+        public EvaluacionCapacidad EvaluacionCapacidad
+        {
+            get { return ec; }
+        }
+
+        public double IgualdadHB
+        {
+            get { return ec.CompatibilidadHB; }
+        }
+
+        public double IgualdadHD
+        {
+            get { return ec.CompatibilidadHD; }
+        }
+
+        public double IgualdadCF
+        {
+            get { return ec.CompatibilidadCF; }
+        }
+
+        public double Capacidad
+        {
+            get { return ec.Capaciddad; }
         }
     }
 }

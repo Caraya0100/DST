@@ -16,11 +16,16 @@ namespace DST
 
             new PruebaEvaluacionTrabajadores();
 
+            //new PruebaAdminMatching().InsertarComponentesMatching();
+            //new PruebaAdminMatching().InsertarComponentesSecciones();
+
+            //InsertarCFTrabajadores();
+
             //new PruebaInferencia().PruebaPropina(3.0, 8.0, 1.0);
 
             //prueba.obtenerEmpresa();
 
-            AdminBD prueba = new AdminBD();
+            /*AdminBD prueba = new AdminBD();
             AdminUsuario consultasUsuario = new AdminUsuario();
             AdminSeccion consultasSeccion = new AdminSeccion();
             AdminTrabajador consultasTrabajador = new AdminTrabajador();
@@ -102,8 +107,8 @@ namespace DST
 
             consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Responsabilidad", 28);
             consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Proactividad", 34);
-            consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Afabilidad", 55);
-            
+            consultasTrabajador.InsertarComponentePerfilTrabajador("21394182-3", "Afabilidad", 55);*/
+
 
             //prueba.ObtenerIdSeccion( "14263145-4" );
             //prueba.ObtenerNombreSeccion( "14263145-4" );
@@ -155,11 +160,8 @@ namespace DST
 
             /*
             AdminTrabajador consultasTrabajador = new AdminTrabajador();*/
-<<<<<<< HEAD
             /*AdminTrabajador consultasTrabajador = new AdminTrabajador();
-=======
             //AdminTrabajador consultasTrabajador = new AdminTrabajador();
->>>>>>> master
 
             List<Trabajador> trabajadores = consultasTrabajador.ObtenerTrabajadoresEmpresa();
 
@@ -178,6 +180,31 @@ namespace DST
                 Console.WriteLine("{0} {1}", seccion.IdSeccion, seccion.Nombre );
                 Console.ReadKey();
             }*/
+
+            Console.ReadKey();
+        }
+
+        public static void InsertarCFTrabajadores()
+        {
+            AdminSeccion adminSeccion = new AdminSeccion();
+            AdminTrabajador adminTrabajador = new AdminTrabajador();
+            List<Seccion> secciones = adminSeccion.ObtenerSecciones();
+
+            foreach (Seccion seccion in secciones)
+            {
+                Dictionary<string, Trabajador> trabajadores = adminTrabajador.ObtenerTrabajadoresSeccion(seccion.IdSeccion);
+
+                foreach (KeyValuePair<string, Trabajador> trabajador in trabajadores)
+                {
+                    Random rnd = new Random();
+                    double puntajeEdad = rnd.Next(18, 31);
+                    double puntajePresentacion = rnd.Next(0, 100);
+
+                    adminTrabajador.InsertarComponentePerfilTrabajador(trabajador.Value.Rut, "Edad", puntajeEdad);
+                    adminTrabajador.InsertarComponentePerfilTrabajador(trabajador.Value.Rut, "Presentacion_personal", puntajePresentacion);
+                    adminTrabajador.InsertarComponentePerfilTrabajador(trabajador.Value.Rut, "Discapacidad_fisica", 0.0);
+                }
+            }
         }
     }
 }

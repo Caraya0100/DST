@@ -26,6 +26,7 @@ namespace DST
         /// </summary>
         public Pregunta()
         {
+            id = -1;
             //alternativas = new Dictionary<string, double>();
             alternativas = new Dictionary<string, Alternativa>();
             frecuencias = new Dictionary<string, Alternativa>();

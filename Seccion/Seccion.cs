@@ -23,6 +23,7 @@ namespace DST
         private double ventasPlan;
         private double actualAnterior;
         private double actualPlan;
+        private Dictionary<string, Pregunta> preguntas;
         private string tipo;
 
         /// <summary>
@@ -165,6 +166,12 @@ namespace DST
         {
             get { return tipo; }
             set { tipo = value; }
+        }
+
+        public Dictionary<string, Pregunta> Preguntas
+        {
+            get { return preguntas; }
+            set { preguntas = value; }
         }
     }
 }

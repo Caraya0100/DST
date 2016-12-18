@@ -99,15 +99,17 @@ namespace DST
             return preguntas;
         }
 
-        public void InsertarPregunta(string pregunta, string tipo)
+        public int InsertarPregunta(string pregunta, string tipo)
         {
             BaseDeDatos bd = new BaseDeDatos();
 
             bd.Open();
 
-            bd.Insertar("INSERT INTO preguntas(pregunta,tipo) VALUES('" + pregunta + "', '" + tipo + "');");
+            bd.Insertar("INSERT INTO preguntas(pregunta,tipo,estado) VALUES('" + pregunta + "', '" + tipo + "', 1);");
 
             bd.Close();
+
+            return Convert.ToInt32(bd.Cmd.LastInsertedId);
         }
 
         public void InsertarAlternativa(string alternativa, string descripcion, double valor, string tipo)
@@ -117,6 +119,19 @@ namespace DST
             bd.Open();
 
             bd.Insertar("INSERT INTO alternativas(alternativa,descripcion, valor, tipo) VALUES('" + alternativa + "', '" + descripcion + "', " + valor + ", '" + tipo + "');");
+
+            bd.Close();
+        }
+
+        public void InsertarPreguntaSeccion(int idSeccion, string pregunta, string tipoPregunta)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            int idPregunta = InsertarPregunta(pregunta, tipoPregunta);
+
+            bd.Insertar("INSERT INTO preguntasSeccion(idSeccion,idPregunta) VALUES(" + idSeccion + ", " + idPregunta + ");");
 
             bd.Close();
         }
@@ -165,6 +180,17 @@ namespace DST
             bd.Close();
 
             return al;
+        }
+
+        public void InsertarRespuestaSeccion(int idSeccion, int idPregunta, string alternativa)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("INSERT INTO respuestasSeccion(idSeccion,idPregunta,alternativa) VALUES(" + idSeccion + ", " + idPregunta + ", '" + alternativa + "');");
+
+            bd.Close();
         }
 
         public Dictionary<string, Alternativa> ObtenerAlternativasPorTipo(string tipo)
@@ -284,6 +310,66 @@ namespace DST
             return pregunta;
         }
 
+        public Alternativa ObtenerRespuestaSeccion(int idPregunta, int idSeccion, string alternativa)
+        {
+            Alternativa al = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT alternativa FROM respuestasSeccion WHERE idPregunta=" + idPregunta + " AND idSeccion=" + idSeccion + " AND alternativa='"+ alternativa + "';");
+
+            if (bd.Consulta.Read())
+            {
+                al = ObtenerAlternativa(bd.Consulta.GetString("alternativa"));
+            }
+
+            bd.Close();
+
+            return al;
+        }
+
+        public Dictionary<string, Pregunta> ObtenerPreguntasSeccion(int idSeccion)
+        {
+            Dictionary<string, Pregunta> preguntas = new Dictionary<string, Pregunta>();
+
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT idPregunta FROM preguntasSeccion WHERE idSeccion=" + idSeccion + ";");
+
+            while (bd.Consulta.Read())
+            {
+                int idPregunta = bd.Consulta.GetInt32("idPregunta");
+                preguntas.Add(idPregunta.ToString(), ObtenerPregunta(idPregunta));
+            }
+
+            bd.Close();
+
+            return preguntas;
+        }
+
+        public Dictionary<string, Alternativa> ObtenerRespuestasSeccion(int idSeccion)
+        {
+            Dictionary<string, Alternativa> alternativas = new Dictionary<string, Alternativa>();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT * FROM respuestasSeccion WHERE idSeccion=" + idSeccion + ";");
+
+            while (bd.Consulta.Read())
+            {
+                string alternativa = bd.Consulta.GetString("alternativa");
+                alternativas.Add(alternativa, ObtenerAlternativa(alternativa));
+            }
+
+            bd.Close();
+
+            return alternativas;
+        }
+
         public void ModificarAlternativa(string alternativaActual, string alternativa, string descripcion, double valor, string tipo)
         {
             BaseDeDatos bd = new BaseDeDatos();
@@ -343,6 +429,17 @@ namespace DST
             bd.Open();
 
             bd.Insertar("UPDATE alternativas SET alternativa='" + alternativa + "', descripcion='" + descripcion + "', valor=" + valor + ", tipo='" + tipo + "' WHERE alternativa='" + alternativaActual + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarRespuestaSeccion(int idSeccion, int idPregunta, string alternativa)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE respuestasSeccion SET alternativa='" + alternativa + "' WHERE idSeccion='" + idSeccion + "' AND idPregunta='" + idPregunta + "';");
 
             bd.Close();
         }
