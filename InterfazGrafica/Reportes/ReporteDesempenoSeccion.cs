@@ -95,7 +95,7 @@ namespace InterfazGrafica.Reportes
         private void TablaDesempenoVentas()
         {
             AdminDesempeño ad = new AdminDesempeño();
-            List<int> meses = ad.ObtenerMesesAnio(seccion.IdSeccion, anio);
+            List<int> meses = ad.ObtenerMesesAnio(seccion.IdSeccion, anio, seccion.Tipo);
 
             reporte.NewPage();
             string textoTitulo = "DESEMPEÑO " + anio + " SECCION: " + seccion.Nombre;
@@ -163,9 +163,9 @@ namespace InterfazGrafica.Reportes
         {
             AdminDesempeño ad = new AdminDesempeño();
             int reubicaciones = ad.ObtenerReubicacionesMes(seccion.IdSeccion, mes, anio);
-            int total = ad.ObtenerTotalEmpleadosMes(seccion.IdSeccion, mes, anio);
-            int capacitados = ad.ObtenerEmpleadosCapacitadosMes(seccion.IdSeccion, mes, anio);
-            int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(seccion.IdSeccion, mes, anio);
+            int total = ad.ObtenerTotalEmpleadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
+            int capacitados = ad.ObtenerEmpleadosCapacitadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
+            int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
             double porcentajeCapacitados = (capacitados / total) * 100;
 
             tabla.AddCell(mes.ToString());

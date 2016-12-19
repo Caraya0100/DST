@@ -48,6 +48,7 @@
     <Compile Include="AdminBD.cs" />
     <Compile Include="AdminDesempeño.cs" />
     <Compile Include="AdminEncuesta.cs" />
+    <Compile Include="AdminFecha.cs" />
     <Compile Include="AdminLD.cs" />
     <Compile Include="AdminMatching.cs" />
     <Compile Include="AdminPerfil.cs" />

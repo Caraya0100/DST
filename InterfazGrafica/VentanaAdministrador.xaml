@@ -7,7 +7,6 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:InterfazGrafica"
         Title="DST" Height="635.527" Width="1071.184" ResizeMode="CanMinimize" IsWindowDraggable="True" Closing="CerrarSesion" Loaded="EventosIniciales">
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="18*"/>
@@ -28,11 +27,7 @@
                         <DataGrid x:Name="tablaDesempeno" AutoGenerateColumns="False" VerticalAlignment="Top" Height="333" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="33,0,30,0" BorderBrush="Gray" BorderThickness="1">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Sección" Binding="{Binding Nombre}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Desempeño % (Actual/Anterior)" Binding="{Binding ActualAnterior}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Desempeño % (Actual/Plan)" Binding="{Binding ActualPlan}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Ventas Actuales" Binding="{Binding VentasActuales}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Ventas Año Anterior" Binding="{Binding VentasAnioAnterior}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Ventas Plan" Binding="{Binding VentasPlan}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Desempeño %" Binding="{Binding Desempeno}"></DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         <Button x:Name="btnDetallesSeccion" Content="Ver Detalles" Click="DetallesDesempenoSeccion" VerticalAlignment="Top" Margin="239,30,0,0" HorizontalAlignment="Left" Width="370"/>
@@ -45,7 +40,7 @@
                         <ScrollViewer Height="437">
                             <WrapPanel x:Name="WrapDDetalles" Height="1800">
                                 <Label x:Name="lblNombreSeccion" Content="Sección" Width="782" Height="43" FontSize="24" HorizontalContentAlignment="Center"/>
-                                <Label x:Name="lblInfoSeccion" Content="Detalles del desempeño de la sección." Width="782" Height="44" HorizontalContentAlignment="Center"/>
+                                <Label x:Name="lblInfoSeccion" Content="Desempeño del ultimo mes de la sección." Width="782" Height="44" HorizontalContentAlignment="Center"/>
                                 <Label x:Name="lblAvisoReubicacion" Content="El desempeño de los ultimos tres meses ha estado bajo lo esperado.&#xD;&#xA;Se recomienda realizar reubiaciones en la sección de trabajo." Width="552" Margin="120,0,0,0" Height="70" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFCD4141" Foreground="White" FontSize="14" Visibility="Collapsed"/>
                                 <Label x:Name="lblDUltimoMes" Content="Desempeño Ultimo Mes" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <WrapPanel x:Name="wrapGraficosVentas">
@@ -55,47 +50,40 @@
                                     <Label x:Name="lblDPlan" Content="Desempeño Respecto a las &#xD;&#xA;Ventas del Plan" Width="384" Height="67" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 </WrapPanel>
                                 <WrapPanel x:Name="wrapGraficosObjetivo" Visibility="Collapsed">
-                                    <lvc:Gauge x:Name="graficoDObjetivo" Uses360Mode="True" From="0" To="2" FromColor="Lime"
-                            Value="{Binding ValorGraficoDAnterior}" LabelFormatter= "{Binding FormatoPorcentaje}" Margin="0,0,0,0" Width="774" Height="176"/>
+                                    <local:GraficoGauge360 x:Name="graficoDObjetivo" Width="774" Height="176" />
                                     <Label x:Name="lblDObjetivo" Content="Desempeño de la sección" Width="775" Height="54" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 </WrapPanel>
+                                <Separator Width="743" Margin="20,20,0,10"/>
+                                <Label x:Name="lblDetalles" Content="Detalles" Width="782" Height="43" FontSize="24" HorizontalContentAlignment="Center"/>
+                                <Label x:Name="lblInfoDetalles" Content="Detalles del desempeño de la sección segun al fecha." Width="782" Height="44" HorizontalContentAlignment="Center"/>
                                 <ComboBox x:Name="boxWrapDDetalles" Width="229" HorizontalAlignment="Left" Margin="150,0,0,20" SelectionChanged="SeleccionAnioDDetalles">
                                 </ComboBox>
                                 <ComboBox x:Name="boxWrapMes" Width="229" HorizontalAlignment="Left" Margin="20,0,0,20" SelectionChanged="SeleccionMesDDetalles">
                                 </ComboBox>
                                 <WrapPanel x:Name="panelDatosAnuales" Height="2000">
                                     <local:GraficoVentasAnuales x:Name="GraficoVentasAnuales" Width="782" Height="348" />
+                                    <local:GraficoObjetivosAnual x:Name="graficoObjetivosAnual" Width="782" Height="348" Visibility="Collapsed" />
                                     <Label x:Name="lblDReubicaciones" Content="Reubicaciones Trabajadores" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" Margin="0,15,0,0"/>
                                     <local:GraficoReubicacionesAnuales x:Name="GraficoReubicacionesAnuales" Width="782" Height="348" />
                                     <Label x:Name="lblDComparacionR" Content="Trabajadores Capacitados" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" Margin="0,15,0,0"/>
                                     <local:GraficoComparacionAnualEmpleados x:Name="GraficoCAnualEmpleados" Width="782" Height="348" />
                                 </WrapPanel>
-                                <WrapPanel x:Name="panelDatosMensuales" Height="600" Visibility="Collapsed">
-                                    <lvc:CartesianChart x:Name="graficoVentasMes" Series="{Binding SeriesVentasMes}" LegendLocation="Right" Width="779" Height="178">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Title="Ventas" Labels="{Binding LabelsVentasMes}"></lvc:Axis>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Dinero" LabelFormatter="{Binding YFormatoVentasAnuales}"></lvc:Axis>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
-                                    <lvc:Gauge x:Name="graficoMensualObjetivo" Uses360Mode="True" From="0" To="2" FromColor="Lime"
-                            Value="{Binding ValorGraficoObjetivoMes}" LabelFormatter= "{Binding FormatoPorcentaje}" Margin="0,0,0,0"  Width="778" Height="178" Visibility="Collapsed"/>
-                                    <Label x:Name="lblDMensajeActualAnterior" Content="No cumple con superar las ventas del año anterior" Width="739" Height="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="20,20,0,0"/>
+                                <WrapPanel x:Name="panelDatosMensuales" Height="1000" Visibility="Collapsed">
+                                    <local:GraficoVentasMes x:Name="graficoVentasMes" Width="782" Height="348" Margin="0,0,0,20" />
+                                    <local:GraficoGauge360 x:Name="graficoMensualObjetivo" Width="779" Height="178" Visibility="Collapsed" Margin="0,0,0,20" />
+                                    <Label x:Name="lblDMensajeActualAnterior" Content="No cumple con superar las ventas del año anterior" Width="739" Height="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="20,0,0,0"/>
                                     <Label x:Name="lblDMensajeActualPlan" Content="No cumple con superar las ventas plan" Width="739" Height="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="20,0,0,30"/>
+                                    <Label x:Name="lblDMensajeObjetivos" Content="No cumple con superar los objetivos" Width="739" Height="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="20,0,0,30" Visibility="Collapsed"/>
                                     <Label x:Name="lblDNumeroReubicaciones" Content="N° reubicaciones: " Width="109" Height="26" HorizontalAlignment="Left" HorizontalContentAlignment="left" VerticalContentAlignment="Center" Margin="20,0,0,0"/>
                                     <TextBox x:Name="txtNumeroReubicaciones" Width="50" Margin="15,0,0,0" HorizontalAlignment="Right" IsReadOnly="True"/>
                                     <Label x:Name="lblDNumeroCapacitados" Content="N° trabajadores capacitados: " Width="167" Height="26" HorizontalAlignment="Left" HorizontalContentAlignment="left" VerticalContentAlignment="Center" Margin="20,0,0,0"/>
                                     <TextBox x:Name="txtNumeroCapacitados" Width="50" Margin="15,0,0,0" HorizontalAlignment="Right" IsReadOnly="True"/>
                                     <Label x:Name="lblDNumeroNoCapacitados" Content="N° trabajadores no capacitados: " Width="179" Height="26" HorizontalAlignment="Left" HorizontalContentAlignment="left" VerticalContentAlignment="Center" Margin="20,0,0,0"/>
                                     <TextBox x:Name="txtNumeroNoCapacitados" Width="50" Margin="15,0,0,0" HorizontalAlignment="Right" IsReadOnly="True"/>
-                                    <lvc:Gauge x:Name="graficoDCapacitados" Uses360Mode="True" From="0" To="2" FromColor="Lime"
-                            Value="{Binding ValorGraficoCapacitados}" LabelFormatter= "{Binding FormatoPorcentaje}" Margin="0,20,0,0" Width="778" Height="130"/>
-                                    <Label x:Name="lblDCapacitados" Content="Porcentaje de trabajadores capacitados" Width="778" Height="28" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                    <local:GraficoGauge360 x:Name="graficoDCapacitados" Width="779" Height="178" Margin="0,30,0,0" />
+                                    <Label x:Name="lblDCapacitados" Content="Porcentaje de trabajadores capacitados" Width="778" Height="28" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,20,0,0"/>
                                 </WrapPanel>
-
                                 <Button x:Name="btnDGenerarReporte" Content="Generar reporte" Click="GenerarReporteDesempeno" VerticalAlignment="Top" Margin="239,20,0,0" HorizontalAlignment="Left" Width="370"/>
-
                             </WrapPanel>
                         </ScrollViewer>
                         <Button x:Name="btnDesempenoResumen" Content="Volver al Resumen" Click="ResumenDesempenoSecciones" VerticalAlignment="Top" Margin="239,10,0,0" HorizontalAlignment="Left" Width="370"/>

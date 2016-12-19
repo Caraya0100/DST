@@ -63,7 +63,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
@@ -133,11 +133,17 @@
     <Compile Include="Graficos\GraficoGauge360.xaml.cs">
       <DependentUpon>GraficoGauge360.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Graficos\GraficoObjetivosAnual.xaml.cs">
+      <DependentUpon>GraficoObjetivosAnual.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graficos\GraficoReubicacionesAnuales.xaml.cs">
       <DependentUpon>GraficoReubicacionesAnuales.xaml</DependentUpon>
     </Compile>
     <Compile Include="Graficos\GraficoVentasAnuales.xaml.cs">
       <DependentUpon>GraficoVentasAnuales.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graficos\GraficoVentasMes.xaml.cs">
+      <DependentUpon>GraficoVentasMes.xaml</DependentUpon>
     </Compile>
     <Compile Include="InteraccionBD\InteraccionDesempeno.cs" />
     <Compile Include="InteraccionBD\InteraccionEncuesta.cs" />
@@ -190,11 +196,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Graficos\GraficoObjetivosAnual.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Graficos\GraficoReubicacionesAnuales.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Graficos\GraficoVentasAnuales.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graficos\GraficoVentasMes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -23,8 +23,27 @@ namespace DST
         private double ventasPlan;
         private double actualAnterior;
         private double actualPlan;
+        private double desempenoGqm;
         private Dictionary<string, Pregunta> preguntas;
         private string tipo;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="idSeccion"></param>
+        /// <param name="perfil"></param>
+        /// <param name="trabajadores"></param>
+        public Seccion(string nombre, int idSeccion, Perfil perfil, Dictionary<string, Trabajador> trabajadores, double desempenoGqm, Dictionary<string, Pregunta> preguntas, string tipo)
+        {
+            this.nombre = nombre;
+            this.idSeccion = idSeccion;
+            this.perfil = perfil;
+            this.trabajadores = trabajadores;
+            this.desempenoGqm = desempenoGqm;
+            this.preguntas = preguntas;
+            this.tipo = tipo;
+        }
 
         /// <summary>
         /// Constructor.
@@ -162,16 +181,31 @@ namespace DST
             set { actualPlan = value; }
         }
 
-        public string Tipo
+        public double DesempenoGqm
         {
-            get { return tipo; }
-            set { tipo = value; }
+            get { return desempenoGqm; }
+            set { desempenoGqm = value; }
+        }
+
+        public double Desempeno
+        {
+            get
+            {
+                if (tipo.ToLower() == "ventas") return actualAnterior;
+                else return desempenoGqm;
+            }
         }
 
         public Dictionary<string, Pregunta> Preguntas
         {
             get { return preguntas; }
             set { preguntas = value; }
+        }
+
+        public string Tipo
+        {
+            get { return tipo; }
+            set { tipo = value; }
         }
     }
 }

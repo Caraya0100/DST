@@ -668,30 +668,124 @@ namespace InterfazGrafica
         /// <param name="actualPlan">Desempeño ventas actual/ventas plan</param>
         private void IniciarGraficosDesempeno(double actualAnterior, double actualPlan)
         {
-            /*ValorGraficoDAnterior = 0;
-            ValorGraficoDPlan = 0;
-            ValorGraficoDAnterior = actualAnterior;
-            ValorGraficoDPlan = actualPlan;
-            FormatoPorcentaje = x => x.ToString("P");*/
+            wrapGraficosObjetivo.Visibility = Visibility.Collapsed;
+            wrapGraficosVentas.Visibility = Visibility.Visible;
             graficoDAnterior.Value = actualAnterior;
             graficoDPlan.Value = actualPlan;
+        }
+
+        /// <summary>
+        /// Inicia los graficos de desempeño de una seccion.
+        /// </summary>
+        /// <param name="objetivo">El desempeño de la seccion segun los objetivos.</param>
+        private void IniciarGraficoObjetivo(double desempenoGqm)
+        {
+            wrapGraficosVentas.Visibility = Visibility.Collapsed;
+            wrapGraficosObjetivo.Visibility = Visibility.Visible;
+            graficoDObjetivo.Value = desempenoGqm;
         }
 
         public void IniciarPanelVentasMes(int idSeccion, string tipoSeccion, int mes, int año)
         {
             AdminDesempeño ad = new AdminDesempeño();
             int reubicaciones = ad.ObtenerReubicacionesMes(idSeccion, mes, año);
-            int capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, año);
-            int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(idSeccion, mes, año);
+            int capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, año, tipoSeccion);
+            int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(idSeccion, mes, año, tipoSeccion);
 
-            IniciarGraficoVentasMes(idSeccion, mes, año);
+            if (tipoSeccion.ToLower() == "ventas")
+                IniciarGraficoVentasMes(idSeccion, mes, año);
+            else if (tipoSeccion.ToLower() == "gqm")
+                IniciarGraficoMensualObjetivo(idSeccion, mes, año);
+
+            IniciarMensajesDesempeno();
             //IniciarGraficoMensualObjetivo(idSeccion, mes, año);
             txtNumeroReubicaciones.Text = reubicaciones.ToString();
             txtNumeroCapacitados.Text = capacitados.ToString();
             txtNumeroNoCapacitados.Text = noCapacitados.ToString();
-            IniciarGraficoDCapacitados(idSeccion, mes, año);
+            IniciarGraficoDCapacitados(idSeccion, mes, año, tipoSeccion);
             panelDatosAnuales.Visibility = Visibility.Collapsed;
             panelDatosMensuales.Visibility = Visibility.Visible;
+        }
+
+        public void IniciarMensajesDesempeno()
+        {
+            string tipo = desempenoSeccionActual.Tipo.ToLower();
+            SolidColorBrush fondo = Brushes.OrangeRed;
+            lblDMensajeActualPlan.Background = Brushes.OrangeRed;
+            SolidColorBrush texto = Brushes.White;
+
+            if (tipo == "ventas")
+            {
+                ChartValues<double> ventas = (ChartValues<double>)graficoVentasMes.SeriesCollection[0].Values;
+                double ventasActual = ventas[1];
+                double ventasAnterior = ventas[0];
+                double ventasPlan = ventas[2];
+                string mensajeActualAnterior = "No cumple con superar las ventas del año anterior";
+                string mensajeActualPlan = "No cumple con superar las ventas del plan";
+
+                if (ventasActual > ventasAnterior)
+                {
+                    mensajeActualAnterior = "Supera las ventas del año anterior";
+                    fondo = Brushes.LimeGreen;
+                } else if (ventasActual == ventasAnterior)
+                {
+                    mensajeActualAnterior = "Alcanza las ventas del año anterior";
+                    fondo = Brushes.AliceBlue;
+                }
+                if (ventasActual > ventasPlan)
+                {
+                    mensajeActualPlan = "Supera las ventas del plan";
+                    lblDMensajeActualPlan.Background = Brushes.LimeGreen;
+                }
+                else if (ventasActual == ventasPlan)
+                {
+                    mensajeActualPlan = "Alcanza las ventas del plan";
+                    lblDMensajeActualPlan.Background = Brushes.AliceBlue;
+                }
+
+                lblDMensajeActualAnterior.Content = mensajeActualAnterior;
+                lblDMensajeActualAnterior.Foreground = texto;
+                lblDMensajeActualAnterior.Background = fondo;
+                lblDMensajeActualPlan.Content = mensajeActualPlan;
+                lblDMensajeActualPlan.Foreground = texto;
+                lblDMensajeObjetivos.Visibility = Visibility.Collapsed;
+                lblDMensajeActualAnterior.Visibility = Visibility.Visible;
+                lblDMensajeActualPlan.Visibility = Visibility.Visible;
+            } else if (tipo == "gqm")
+            {
+                double desempeno = graficoMensualObjetivo.Value * 100;
+                string mensajeObjetivos = "No cumple con superar los objetivos";
+
+                if (desempeno > 100)
+                {
+                    mensajeObjetivos = "Cumple con superar los objetivos";
+                    fondo = Brushes.LimeGreen;
+                }
+                else if (desempeno == 100)
+                {
+                    mensajeObjetivos = "Alcanza los objetivos";
+                    fondo = Brushes.AliceBlue;
+                }
+
+                lblDMensajeObjetivos.Content = mensajeObjetivos;
+                lblDMensajeObjetivos.Foreground = texto;
+                lblDMensajeObjetivos.Background = fondo;
+                lblDMensajeActualAnterior.Visibility = Visibility.Collapsed;
+                lblDMensajeActualPlan.Visibility = Visibility.Collapsed;
+                lblDMensajeObjetivos.Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Inicia el grafico de las ventas anuales de una seccion.
+        /// <param name="seccion">Id de la seccion</param>
+        /// <param name="anio">Anio de las ventas</param>
+        /// </summary>
+        private void IniciarGraficoObjetivosAnuales(int idSeccion, int anio)
+        {
+            GraficoVentasAnuales.Visibility = Visibility.Collapsed;
+            graficoObjetivosAnual.Visibility = Visibility.Visible;
+            graficoObjetivosAnual.ObjetivosAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
         }
 
         /// <summary>
@@ -701,22 +795,32 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarGraficoVentasAnuales(int idSeccion, int anio)
         {
+            graficoObjetivosAnual.Visibility = Visibility.Collapsed;
+            GraficoVentasAnuales.Visibility = Visibility.Visible;
             GraficoVentasAnuales.VentasAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
         }
 
         private void IniciarGraficoReubicacionesAnuales(int idSeccion, int anio)
         {
-            GraficoReubicacionesAnuales.ReubicacionesAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal,anio);
+            GraficoReubicacionesAnuales.ReubicacionesAnuales(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio, desempenoSeccionActual.Tipo);
         }
 
         private void IniciarGraficoComparacionRAnuales(int idSeccion, int anio)
         {
-            GraficoCAnualEmpleados.ComparativaAnual(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio);
+            GraficoCAnualEmpleados.ComparativaAnual(desempenoSeccionActual.IdSeccion, inicioAnioFiscal, anio, desempenoSeccionActual.Tipo);
         }
 
         public void IniciarPanelDatosAnuales(int idSeccion, int anio)
         {
-            IniciarGraficoVentasAnuales(desempenoSeccionActual.IdSeccion, anio);
+            string tipo = desempenoSeccionActual.Tipo.ToLower();
+            if (tipo == "ventas")
+            {
+                IniciarGraficoVentasAnuales(desempenoSeccionActual.IdSeccion, anio);
+            } else if (tipo == "gqm")
+            {
+                IniciarGraficoObjetivosAnuales(desempenoSeccionActual.IdSeccion, anio);
+            }
+            
             IniciarGraficoReubicacionesAnuales(desempenoSeccionActual.IdSeccion, anio);
             IniciarGraficoComparacionRAnuales(desempenoSeccionActual.IdSeccion, anio);
             panelDatosMensuales.Visibility = Visibility.Collapsed;
@@ -725,55 +829,31 @@ namespace InterfazGrafica
 
         public void IniciarGraficoVentasMes(int idSeccion, int mes, int anio)
         {
-            AdminDesempeño ad = new AdminDesempeño();
-            ChartValues<double> anioActual = new ChartValues<double>();
-            ChartValues<double> anioAnterior = new ChartValues<double>();
-            ChartValues<double> ventasPlan = new ChartValues<double>();
-            Tuple<double, double, double> ventas = ad.ObtenerVentasMes(desempenoSeccionActual.IdSeccion, mes, anio);
-
-            anioActual.Add(ventas.Item1);
-            anioAnterior.Add(ventas.Item2);
-            ventasPlan.Add(ventas.Item3);
-
-            SeriesVentasMes = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Ventas Actuales",
-                    Values = anioActual,
-                    MaxColumnWidth = 10
-                },
-                new ColumnSeries
-                {
-                    Title = "Ventas Año Anterior",
-                    Values = anioAnterior,
-                    MaxColumnWidth = 10
-                },
-                new ColumnSeries
-                {
-                    Title = "Ventas Plan",
-                    Values = ventasPlan,
-                    MaxColumnWidth = 10
-                }
-            };
-
-            LabelsVentasMes = new string[] { mes.ToString() };
-            YFormatoVentasAnuales = value => value + "$";
+            graficoVentasMes.VentasMes(idSeccion, mes, anio);
+            graficoMensualObjetivo.Visibility = Visibility.Collapsed;
+            graficoVentasMes.Visibility = Visibility.Visible;
         }
 
         public void IniciarGraficoMensualObjetivo(int idSeccion, int mes, int anio)
         {
-            
+            AdminDesempeño ad = new AdminDesempeño();
+            double desempenoGqm = ad.ObtenerDesempenoGqm(idSeccion, mes, anio);
+
+            graficoMensualObjetivo.Value = desempenoGqm / 100;
+
+            graficoVentasMes.Visibility = Visibility.Collapsed;
+            graficoMensualObjetivo.Visibility = Visibility.Visible;
         }
 
-        public void IniciarGraficoDCapacitados (int idSeccion, int mes, int anio)
+        public void IniciarGraficoDCapacitados (int idSeccion, int mes, int anio, string tipoSeccion)
         {
             AdminDesempeño ad = new AdminDesempeño();
-            double total = ad.ObtenerTotalEmpleadosMes(idSeccion, mes, anio);
-            double capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, anio);
+            double total = ad.ObtenerTotalEmpleadosMes(idSeccion, mes, anio, tipoSeccion);
+            double capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, anio, tipoSeccion);
 
-            ValorGraficoCapacitados = capacitados / total;
-            FormatoPorcentaje = x => x.ToString("P");
+            capacitados = Math.Round((capacitados / total) * 100, 0);
+
+            graficoDCapacitados.Value =  capacitados / 100;
         }
 
         private void IniciarPanelIngresoObjetivos()
@@ -802,9 +882,9 @@ namespace InterfazGrafica
         private void DetallesDesempenoSeccion(object sender, RoutedEventArgs e)
         {
             desempenoSeccionActual = (Seccion)tablaDesempeno.SelectedItem;
-            DateTime fechaActual = DateTime.Now;
             AdminDesempeño ad = new AdminDesempeño();
-            List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion);
+            DateTime fechaActual = DateTime.Now;
+            List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion, desempenoSeccionActual.Tipo);
 
             // Iniciamos los comboBox con los años y los meses.
             boxWrapDDetalles.Items.Clear();
@@ -812,13 +892,20 @@ namespace InterfazGrafica
             {
                 boxWrapDDetalles.Items.Add(anio.ToString());
             }
-            //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
 
+            string tipoSeccion = desempenoSeccionActual.Tipo.ToLower();
             // Iniciamos los graficos.
-            IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
-            DataContext = this;
+            if (tipoSeccion == "ventas")
+            {
+                IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
+            }
+            else if (tipoSeccion == "gqm")
+            {
+                IniciarGraficoObjetivo(desempenoSeccionActual.DesempenoGqm / 100);
+            }
+
+            //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
             IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
-            DataContext = this;
 
             // Hacemos visible el panel del desempeño de la seccion.
             panelDResumen.Visibility = Visibility.Hidden;
@@ -830,18 +917,19 @@ namespace InterfazGrafica
 
         public void SeleccionAnioDDetalles(object sender, RoutedEventArgs e)
         {
+            string anio = (string)boxWrapDDetalles.SelectedValue;
             AdminDesempeño ad = new AdminDesempeño();
-            List<int> meses = ad.ObtenerMesesAnio(desempenoSeccionActual.IdSeccion, DateTime.Now.Year);
+            List<int> meses = ad.ObtenerMesesAnio(desempenoSeccionActual.IdSeccion, Convert.ToInt32(anio), desempenoSeccionActual.Tipo);
 
             boxWrapMes.Items.Clear();
             boxWrapMes.Items.Add("Anual");
-
             foreach (int mes in meses)
             {
                 boxWrapMes.Items.Add(mes.ToString());
             }
+            boxWrapMes.SelectedValue = "Anual";
 
-            //boxWrapMes.SelectedValue = "Anual";
+            IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, Convert.ToInt32(anio));
         }
 
         public void SeleccionMesDDetalles(object sender, RoutedEventArgs e)
@@ -849,13 +937,16 @@ namespace InterfazGrafica
             string anio = (string)boxWrapDDetalles.SelectedValue;
             string mes = (string)boxWrapMes.SelectedValue;
 
-            if (mes != "Anual")
+            if (mes != null)
             {
-                IniciarPanelVentasMes(desempenoSeccionActual.IdSeccion, "ventas", Convert.ToInt32(mes), Convert.ToInt32(anio));
-                DataContext = this;
-            } else
-            {
-                
+                if (mes != "Anual")
+                {
+                    IniciarPanelVentasMes(desempenoSeccionActual.IdSeccion, desempenoSeccionActual.Tipo, Convert.ToInt32(mes), Convert.ToInt32(anio));
+                }
+                else
+                {
+                    IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, Convert.ToInt32(anio));
+                }
             }
         }
 
@@ -2189,8 +2280,11 @@ namespace InterfazGrafica
 
         private void IniciarPanelReglas()
         {
-            ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
-            LlenarTablaReglas(reglasActuales);
+            if (reglasSeccionActual != null)
+            {
+                ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
+                LlenarTablaReglas(reglasActuales);
+            }
         }
 
         /// <summary>

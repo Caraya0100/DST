@@ -158,7 +158,7 @@ namespace DST
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT ventasAñoAnterior FROM ventasAñoAnterior WHERE idSeccion=" + idSeccion + ", mes=" + mes + ", anio=" + anio + ";");
+            bd.ConsultaMySql("SELECT ventasAñoAnterior FROM ventasAñoAnterior WHERE idSeccion=" + idSeccion + " AND mes=" + mes + " AND anio=" + anio + ";");
 
             while (bd.Consulta.Read())
             {
@@ -175,14 +175,17 @@ namespace DST
         /// </summary>
         /// <param name="idSeccion"></param>
         /// <returns></returns>
-        public List<int> ObtenerAnios(int idSeccion)
+        public List<int> ObtenerAnios(int idSeccion, string tipoSeccion)
         {
             List<int> anios = new List<int>();
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT DISTINCT YEAR(fecha) AS anio FROM desempeño WHERE idSeccion=" + idSeccion + " ORDER BY anio ASC;");
+            bd.ConsultaMySql("SELECT DISTINCT YEAR(fecha) AS anio FROM " + tabla + " WHERE idSeccion=" + idSeccion + " ORDER BY anio ASC;");
 
             while (bd.Consulta.Read())
             {
@@ -200,14 +203,17 @@ namespace DST
         /// <param name="idSeccion"></param>
         /// <param name="anio"></param>
         /// <returns></returns>
-        public List<int> ObtenerMesesAnio(int idSeccion, int anio)
+        public List<int> ObtenerMesesAnio(int idSeccion, int anio, string tipoSeccion)
         {
             List<int> meses = new List<int>();
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT DISTINCT MONTH(fecha) AS mes FROM desempeño WHERE idSeccion=" + idSeccion + " AND YEAR(fecha)='" + anio + "' ORDER BY mes ASC;");
+            bd.ConsultaMySql("SELECT DISTINCT MONTH(fecha) AS mes FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND YEAR(fecha)='" + anio + "' ORDER BY mes ASC;");
 
             while (bd.Consulta.Read())
             {
@@ -256,9 +262,29 @@ namespace DST
             return ventas;
         }
 
-        public Dictionary<string, int> ObtenerReubicacionesAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        public double ObtenerDesempenoGqm(int idSeccion, int mes, int anio)
         {
-            Dictionary<string, int> reubicaciones = new Dictionary<string, int>();
+            double desempeno = 0;
+            //string fecha = anio + "-" + mes + "-01";
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT desempeño FROM desempeñoGQM WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                desempeno = bd.Consulta.GetDouble(0);
+            }
+
+            bd.Close();
+
+            return desempeno;
+        }
+
+        public Dictionary<string, double> ObtenerDesempenoGqmAnual(int idSeccion, int inicioAnioFiscal, int anio)
+        {
+            Dictionary<string, double> desempenos = new Dictionary<string, double>();
             Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
             int finalAnioFiscal = fechaFinal.Item1;
             int anioFinal = fechaFinal.Item2;
@@ -266,7 +292,32 @@ namespace DST
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT fecha, reubicaciones FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;;");
+            bd.ConsultaMySql("SELECT * FROM desempeñoGQM WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+
+            while (bd.Consulta.Read())
+            {
+                desempenos.Add(bd.Consulta.GetString("fecha"), bd.Consulta.GetDouble(2));
+            }
+
+            bd.Close();
+
+            return desempenos;
+        }
+
+        public Dictionary<string, int> ObtenerReubicacionesAnuales(int idSeccion, int inicioAnioFiscal, int anio, string tipoSeccion)
+        {
+            Dictionary<string, int> reubicaciones = new Dictionary<string, int>();
+            Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
+            int finalAnioFiscal = fechaFinal.Item1;
+            int anioFinal = fechaFinal.Item2;
+            BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT fecha, reubicaciones FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;;");
 
             while (bd.Consulta.Read())
             {
@@ -288,17 +339,20 @@ namespace DST
         /// <param name="inicioAnioFiscal"></param>
         /// <param name="anio"></param>
         /// <returns></returns>
-        public Dictionary<string, int> ObtenerTotalEmpleadosAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        public Dictionary<string, int> ObtenerTotalEmpleadosAnuales(int idSeccion, int inicioAnioFiscal, int anio, string tipoSeccion)
         {
             Dictionary<string, int> empleados = new Dictionary<string, int>();
             Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
             int finalAnioFiscal = fechaFinal.Item1;
             int anioFinal = fechaFinal.Item2;
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT fecha, totalEmpleados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+            bd.ConsultaMySql("SELECT fecha, totalEmpleados FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
 
             while (bd.Consulta.Read())
             {
@@ -320,17 +374,20 @@ namespace DST
         /// <param name="inicioAnioFiscal"></param>
         /// <param name="anio"></param>
         /// <returns></returns>
-        public Dictionary<string, int> ObtenerEmpleadosCapacitadosAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        public Dictionary<string, int> ObtenerEmpleadosCapacitadosAnuales(int idSeccion, int inicioAnioFiscal, int anio, string tipoSeccion)
         {
             Dictionary<string, int> empleados = new Dictionary<string, int>();
             Tuple<int, int> fechaFinal = ObtenerFechaFinal(inicioAnioFiscal, anio);
             int finalAnioFiscal = fechaFinal.Item1;
             int anioFinal = fechaFinal.Item2;
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT fecha, empleadosCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
+            bd.ConsultaMySql("SELECT fecha, empleadosCapacitados FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND fecha BETWEEN '" + anio + "-" + inicioAnioFiscal + "-01' AND '" + anioFinal + "-" + finalAnioFiscal + "-01' ORDER BY fecha ASC;");
 
             while (bd.Consulta.Read())
             {
@@ -427,14 +484,17 @@ namespace DST
             return reubicaciones;
         }
 
-        public int ObtenerTotalEmpleadosMes(int idSeccion, int mes, int anio)
+        public int ObtenerTotalEmpleadosMes(int idSeccion, int mes, int anio, string tipoSeccion)
         {
             int empleados = 0;
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT totalEmpleados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+            bd.ConsultaMySql("SELECT totalEmpleados FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
 
             if (bd.Consulta.Read())
             {
@@ -446,14 +506,17 @@ namespace DST
             return empleados;
         }
 
-        public int ObtenerEmpleadosCapacitadosMes(int idSeccion, int mes, int anio)
+        public int ObtenerEmpleadosCapacitadosMes(int idSeccion, int mes, int anio, string tipoSeccion)
         {
             int empleados = 0;
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT empleadosCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+            bd.ConsultaMySql("SELECT empleadosCapacitados FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
 
             if (bd.Consulta.Read())
             {
@@ -465,14 +528,17 @@ namespace DST
             return empleados;
         }
 
-        public int ObtenerEmpleadosNoCapacitadosMes(int idSeccion, int mes, int anio)
+        public int ObtenerEmpleadosNoCapacitadosMes(int idSeccion, int mes, int anio, string tipoSeccion)
         {
             int empleados = 0;
             BaseDeDatos bd = new BaseDeDatos();
+            string tabla = "desempeño";
+
+            if (tipoSeccion.ToLower() == "gqm") tabla = "desempeñoGQM";
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT empleadosNoCapacitados FROM desempeño WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+            bd.ConsultaMySql("SELECT empleadosNoCapacitados FROM " + tabla + " WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
 
             if (bd.Consulta.Read())
             {

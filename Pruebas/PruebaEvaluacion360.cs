@@ -43,7 +43,7 @@ namespace DST
             pregunta.Descripcion = descripcion;
             pregunta.Componentes = componentes;*/
 
-            return pregunta;*/
+            /*return pregunta;*/
         }
     }
 }

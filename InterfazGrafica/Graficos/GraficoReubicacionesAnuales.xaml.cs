@@ -28,11 +28,11 @@ namespace InterfazGrafica
             InitializeComponent();
         }
 
-        public void ReubicacionesAnuales(int idSeccion, int inicioAnioFiscal, int anio)
+        public void ReubicacionesAnuales(int idSeccion, int inicioAnioFiscal, int anio, string tipoSeccion)
         {
             AdminDesempeño ad = new AdminDesempeño();
             ChartValues<double> reubicaciones = new ChartValues<double>();
-            Dictionary<string, int> r = ad.ObtenerReubicacionesAnuales(idSeccion, inicioAnioFiscal, anio);
+            Dictionary<string, int> r = ad.ObtenerReubicacionesAnuales(idSeccion, inicioAnioFiscal, anio, tipoSeccion);
             string[] meses = new string[r.Count];
             int mes = 0;
 
