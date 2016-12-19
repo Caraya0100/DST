@@ -28,13 +28,13 @@ namespace InterfazGrafica
             InitializeComponent();
         }
 
-        public void ComparativaAnual(int idSeccion, int inicioAnioFiscal, int anio)
+        public void ComparativaAnual(int idSeccion, int inicioAnioFiscal, int anio, string tipoSeccion)
         {
             AdminDesempeño ad = new AdminDesempeño();
             ChartValues<double> totalEmpleados = new ChartValues<double>();
             ChartValues<double> empleadosCapacitados = new ChartValues<double>();
-            Dictionary<string, int> te = ad.ObtenerTotalEmpleadosAnuales(idSeccion, inicioAnioFiscal, anio);
-            Dictionary<string, int> ec = ad.ObtenerEmpleadosCapacitadosAnuales(idSeccion, inicioAnioFiscal, anio);
+            Dictionary<string, int> te = ad.ObtenerTotalEmpleadosAnuales(idSeccion, inicioAnioFiscal, anio, tipoSeccion);
+            Dictionary<string, int> ec = ad.ObtenerEmpleadosCapacitadosAnuales(idSeccion, inicioAnioFiscal, anio, tipoSeccion);
             string[] meses = new string[te.Count];
             int mes = 0;
 

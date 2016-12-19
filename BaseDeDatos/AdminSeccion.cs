@@ -231,25 +231,37 @@ namespace DST
 
                 if (ventas == null) ventas = new Tuple<double, double, double>(-1,-1,-1);
 
-                Seccion nuevaSeccion = new Seccion(
-                    bd.Consulta.GetString(1),
-                    bd.Consulta.GetInt16(0),
-                    ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)), 
-                    obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0) ), 
-                    ventas.Item1, 
-                    ventas.Item2, 
-                    ventas.Item3,
-                    bd.Consulta.GetString("tipoSeccion")
-                );
-
-                if (tipo.ToLower() == "gqm")
+                Seccion nuevaSeccion = null;
+                if (tipo.ToLower() == "ventas")
                 {
-                    nuevaSeccion.Preguntas = ae.ObtenerPreguntasSeccion(bd.Consulta.GetInt32("id"));
+                    nuevaSeccion = new Seccion(
+                        bd.Consulta.GetString(1),
+                        bd.Consulta.GetInt16(0),
+                        ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)),
+                        obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0)),
+                        ventas.Item1,
+                        ventas.Item2,
+                        ventas.Item3,
+                        bd.Consulta.GetString("tipoSeccion")
+                    );
+                } else if (tipo.ToLower() == "gqm")
+                {
+                    fecha = new AdminFecha().FechaConFormato(fecha);
+                    string mes = fecha.Split('-')[1];
+                    string anio = fecha.Split('-')[0];
+                    nuevaSeccion = new Seccion(
+                        bd.Consulta.GetString(1),
+                        bd.Consulta.GetInt16(0),
+                        ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)),
+                        obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0)),
+                        ad.ObtenerDesempenoGqm(bd.Consulta.GetInt16(0), Convert.ToInt32(mes), Convert.ToInt32(anio)),
+                        ae.ObtenerPreguntasSeccion(bd.Consulta.GetInt32("id")),
+                        tipo
+                    );
                 }
 
                 secciones.Add( nuevaSeccion );
             }
-            
 
             bd.Close();
 
