@@ -271,7 +271,7 @@ namespace DST
             string ptje = "" + puntaje;
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO respuestasSeccion(idSeccion, puntaje, idPregunta, idHabilidad, tipoHabilidad)"
+            cmd.CommandText = "INSERT INTO respuestasSeccionEncuesta(idSeccion, puntaje, idPregunta, idHabilidad, tipoHabilidad)"
                 +" Values ("+idSeccion+","+ptje.Replace(",",".")+","+idPregunta+",'"+idHabilidad+"','"+tipoHabilidad+"')";
             Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
@@ -282,7 +282,7 @@ namespace DST
         {
             double valor=0.0;
             conn.Open();
-            cmd.CommandText = "SELECT SUM(puntaje)/count(*) FROM respuestasSeccion WHERE idHabilidad='"+habilidad+"' AND puntaje not like -1;";
+            cmd.CommandText = "SELECT SUM(puntaje)/count(*) FROM respuestasSeccionEncuesta WHERE idHabilidad='"+habilidad+"' AND puntaje not like -1;";
             consulta = cmd.ExecuteReader();
             Console.WriteLine(cmd.CommandText.ToString());
             while (consulta.Read())
