@@ -110,6 +110,7 @@ namespace InterfazGrafica
             {
                 /*abre ventana admin*/
                 VentanaAdministrador administrador = new VentanaAdministrador();
+                administrador.IdAdministrador = rutFormateado;
                 administrador.Show();
                 this.Hide();
             }

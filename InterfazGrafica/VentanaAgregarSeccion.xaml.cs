@@ -60,20 +60,50 @@ namespace InterfazGrafica
         /// <param name="sender"></param>
         /// <param name="e"></param>
         async private void AgregaNuevaSeccion(object sender, RoutedEventArgs e)
-        {
+        {           
             if (CamposCompletos())
             {
-                if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.AgregarNuevaSeccion()))
+                if (!edicion)
                 {
-                    /*Agregar datos a BD*/
+                    if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.AgregarNuevaSeccion()))
+                    {
+                        /*Agregar datos a BD*/
+                        string jefe = this.listaJefeSeccion.SelectedItem as string;
+                        string tipo = string.Empty;
+                        if (indicadorDesemp.SelectedIndex == 0)
+                            tipo = "VENTAS";
+                        else if (indicadorDesemp.SelectedIndex == 1)
+                            tipo = "GQM";
+                        //string seccion = this.nombreSeccion.Text;
+                        datosSeccion.NombreSeccion = this.nombreSeccion.Text;
+                        datosSeccion.RutJefeSeccion = datosUsuario.RutUsuario(jefe);
+                        datosSeccion.TipoMedicion = tipo;
+                        datosSeccion.NuevaSeccion();
+                        int id = datosSeccion.IdSeccionPorNombreSeccion();
+                        datosSeccion.GuardarComponentesPerfil(id, "hb");
+                        datosSeccion.GuardarComponentesPerfil(id, "hd");
+                        datosSeccion.GuardarComponentesPerfil(id, "cf");
+                        CamposVacios();
+                        cuadroMensajes.NuevaSeccionAgregada();
+                        //this.Close();
+                    }
+                }
+                else
+                {
                     string jefe = this.listaJefeSeccion.SelectedItem as string;
+                    string tipo = string.Empty;
+                    if (indicadorDesemp.SelectedIndex == 0)
+                        tipo = "VENTAS";
+                    else if (indicadorDesemp.SelectedIndex == 1)
+                        tipo = "GQM";
                     //string seccion = this.nombreSeccion.Text;
                     datosSeccion.NombreSeccion = this.nombreSeccion.Text;
-                    datosSeccion.RutJefeSeccion = datosUsuario.RutUsuario(jefe); 
-                    datosSeccion.NuevaSeccion();                   
+                    datosSeccion.RutJefeSeccion = datosUsuario.RutUsuario(jefe);
+                    datosSeccion.TipoMedicion = tipo;
+                    int id = datosSeccion.IdSeccionPorNombreSeccion();
+                    datosSeccion.ActualizarSeccion(id);
                     CamposVacios();
                     cuadroMensajes.NuevaSeccionAgregada();
-                    //this.Close();
                 }
             }
             else 
@@ -100,8 +130,9 @@ namespace InterfazGrafica
                 camposCompletos++;
             if (!descripcionSeccion.Text.Equals(""))
                 camposCompletos++;
-
-            if (camposCompletos == 2)//3 CON DESCRIPCION
+            if (indicadorDesemp.SelectedIndex != -1)
+                camposCompletos++;
+            if (camposCompletos == 3)//3 CON DESCRIPCION
                 return true;
             else return false;
         }
@@ -111,6 +142,7 @@ namespace InterfazGrafica
             nombreSeccion.Text = "";
             listaJefeSeccion.SelectedIndex = -1;
             descripcionSeccion.Text = "";
+            indicadorDesemp.SelectedIndex = -1;
         }
 
         public string Seccion

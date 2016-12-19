@@ -38,7 +38,7 @@ namespace DST
         /// </summary>
         /// <param name="nombre"></param>
         /// <param name="rutJefe"></param>
-        public void InsertarSeccion(string nombre, string descripcion, string rutJefe)
+       /* public void InsertarSeccion(string nombre, string descripcion, string rutJefe)
         {
             conn.Open();
 
@@ -47,7 +47,7 @@ namespace DST
             cmd.ExecuteNonQuery();
 
             conn.Close();
-        }
+        }*/
 
         /// <summary>
         /// Consulta para insertar un componente de un perfil de seccion. Se debe indicar el id de la seccion
@@ -61,10 +61,25 @@ namespace DST
         {
             conn.Open();
 
+            try
+            {
+                cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia,estado) "
+                    + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString() + ","
+                    + importancia.ToString() + ", true);";
+                Console.WriteLine(cmd.CommandText.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR EN BD:" + e);
+            }
+
+
             cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia) "
                 + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString() + ","
                 + importancia.ToString() + ");";
             cmd.ExecuteNonQuery();
+
 
             conn.Close();
         }
@@ -74,12 +89,13 @@ namespace DST
         /// </summary>
         /// <param name="idSeccion"></param>
         /// <param name="nuevoPuntaje"></param>
-        public void ModificarPuntajePerfilSeccion(int idSeccion, string nombreComponente, float nuevoPuntaje)
+        public void ModificarPuntajePerfilSeccion(int idSeccion, string nombreComponente, double nuevoPuntaje)
         {
             conn.Open();
 
-            cmd.CommandText = "UPDATE componentesPerfilSecciones SET puntaje =" + nuevoPuntaje.ToString() + " WHERE "
-                + "nombre='" + nombreComponente + "' AND idSeccion=" + idSeccion + ";";
+            cmd.CommandText = "UPDATE componentesPerfilSecciones SET puntaje =" + nuevoPuntaje.ToString("0.0").Replace(",",".") + " WHERE "
+                + "id='" + nombreComponente + "' AND idSeccion=" + idSeccion + ";";
+            Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -90,12 +106,13 @@ namespace DST
         /// </summary>
         /// <param name="idSeccion"></param>
         /// <param name="nuevaImportancia"></param>
-        public void ModificarImportanciaPerfilSeccion(int idSeccion, string nombreComponente, float nuevaImportancia)
+        public void ModificarImportanciaPerfilSeccion(int idSeccion, string nombreComponente, string nuevaImportancia)//cambio float por double
         {
             conn.Open();
 
             cmd.CommandText = "UPDATE componentesPerfilSecciones SET importancia =" + nuevaImportancia.ToString()
-                + " WHERE nombre='" + nombreComponente + "' AND idSeccion =" + idSeccion + ";";
+                + " WHERE id='" + nombreComponente + "' AND idSeccion =" + idSeccion + ";";
+            //Console.WriteLine("LA CONSULTAX: "+cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -120,7 +137,7 @@ namespace DST
             }
 
             Console.WriteLine("Id: {0}", idSeccion);
-            Console.ReadKey();
+            //Console.ReadKey();
 
             conn.Close();
 
@@ -188,13 +205,14 @@ namespace DST
             Perfil perfilSeccion = new Perfil();
 
             conn2.Open();
-            cmd2.CommandText = "SELECT c.id, c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia FROM componentesPerfil AS c,"
-                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.id=s.id;";
+            cmd2.CommandText = "SELECT c.id, c.nombre,c.descripcion,c.tipo,s.puntaje,s.importancia, s.estado FROM componentesPerfil AS c,"
+                + "componentesPerfilSecciones AS s WHERE s.idSeccion=" + idSeccion.ToString() + " AND c.id=s.id AND s.estado=true;";
             consulta2 = cmd2.ExecuteReader();
             while (consulta2.Read())
             {
                 Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2), 
-                    consulta2.GetString(3),consulta2.GetDouble(4), consulta2.GetDouble(5));
+                    consulta2.GetString(3),consulta2.GetDouble(4), consulta2.GetDouble(5),consulta2.GetBoolean(6));
+                Console.WriteLine("ENCONSULTA: "+consulta2.GetBoolean(6));
                 perfilSeccion.AgregarComponente(nuevoComponente);
             }
 
@@ -314,11 +332,12 @@ namespace DST
         /// </summary>
         /// <param name="nombre"></param>
         /// <param name="rutJefe"></param>
-        public void InsertarSeccion(string nombre, string rutJefe)
+        public void InsertarSeccion(string nombre, string rutJefe, string tipoSeccion)
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO secciones (nombre,rutJefe) VALUES('" + nombre + "','" + rutJefe + "');";
+            cmd.CommandText = "INSERT INTO secciones (nombre,rutJefe,tipoSeccion) VALUES('" + nombre + "','" + rutJefe + "','"+tipoSeccion+"');";
+            Console.WriteLine("INSERTAR SECCION: "+cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -383,12 +402,12 @@ namespace DST
         /// <param name="idSeccion"></param>
         /// <param name="nuevoNombre"></param>
         /// <param name="nuevoRutJefe"></param>
-        public void ModificarDatosSeccion(int idSeccion, string nuevoNombre, string nuevoRutJefe)
+        public void ModificarDatosSeccion(int idSeccion, string nuevoNombre, string nuevoRutJefe, string tipo)
         {
             conn.Open();
 
             cmd.CommandText = "UPDATE secciones SET nombre='" + nuevoNombre + "', rutJefe='"
-                + nuevoRutJefe + " WHERE id=" + idSeccion.ToString() + ";";
+                + nuevoRutJefe + "', tipoSeccion='"+tipo+"' WHERE id=" + idSeccion.ToString() + ";";
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -487,51 +506,72 @@ namespace DST
         /*************************************************************
          *                  MIS CONSULTAS
          * *******************************************************/
-        public List<string> ObtenerComponentesHD()
+        public List<Componente> ObtenerComponentesHD()
         {
-            List<string> listaComponentes = new List<string>();
+            List<Componente> listaComponentes = new List<Componente>();
 
             conn3.Open();
-            cmd3.CommandText = "SELECT nombre FROM componentesPerfil WHERE tipo = 'hd';";
+            cmd3.CommandText = "SELECT id,nombre FROM componentesPerfil WHERE tipo = 'hd';";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
             {
-                listaComponentes.Add(consulta3.GetString(0));
+                Componente preguntas = new Componente
+                    (
+                        consulta3.GetString(0),
+                        consulta3.GetString(1),
+                        "",
+                        ""
+                    );
+                listaComponentes.Add(preguntas);
             }
             conn3.Close();
 
             return listaComponentes;
         }
 
-        public List<string> ObtenerComponentesHB()
+        public List<Componente> ObtenerComponentesHB()
         {
-            List<string> listaComponentes = new List<string>();
-
+            List<Componente> listaComponentes = new List<Componente>();
+            
             conn3.Open();
-            cmd3.CommandText = "SELECT nombre FROM componentesPerfil WHERE tipo = 'hb';";
+            cmd3.CommandText = "SELECT id,nombre FROM componentesPerfil WHERE tipo = 'hb';";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
-            {
-                listaComponentes.Add(consulta3.GetString(0));
+            {                
+                Componente preguntas = new Componente
+                    (
+                        consulta3.GetString(0),
+                        consulta3.GetString(1),
+                        "",
+                        ""
+                    );
+                listaComponentes.Add(preguntas);
             }
             conn3.Close();
 
             return listaComponentes;
         }
 
-        public List<string> ObtenerComponentesCF()
+        public List<Componente> ObtenerComponentesCF()
         {
-            List<string> listaComponentes = new List<string>();
+            List<Componente> listaComponentes = new List<Componente>();
 
             conn3.Open();
-            cmd3.CommandText = "SELECT nombre FROM componentesPerfil WHERE tipo = 'cf'";
+            cmd3.CommandText = "SELECT id,nombre FROM componentesPerfil WHERE tipo = 'cf';";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
             {
-                listaComponentes.Add(consulta3.GetString(0));
+                Componente preguntas = new Componente
+                    (
+                        consulta3.GetString(0),
+                        consulta3.GetString(1),
+                        "",
+                        ""
+                    );
+                listaComponentes.Add(preguntas);
             }
             conn3.Close();
 
@@ -543,7 +583,8 @@ namespace DST
             try
             {
                 conn.Open();
-                cmd.CommandText = "DELETE FROM componentesPerfilSecciones WHERE nombre='" + nombre + "' AND idSeccion=" + idSeccion + ";";
+                //cmd.CommandText = "DELETE FROM componentesPerfilSecciones WHERE id='" + nombre + "' AND idSeccion=" + idSeccion + ";";
+                cmd.CommandText ="UPDATE componentesperfilsecciones SET estado=false, importancia=0.0 WHERE id='"+nombre+"' AND idSeccion = "+idSeccion+";";
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
@@ -553,13 +594,13 @@ namespace DST
             }
         }
 
-        public List<string> ObtenerComponentesHDSeccion(int idSeccion)
+        public List<string> ObtenerComponentesHDSeccion(int idSeccion)//arreglado
         {
             List<string> listaComponentes = new List<string>();
 
             conn3.Open();
-            cmd3.CommandText = "SELECT DISTINCT t1.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
-                                + "ON t2.tipo = 'hd' AND t1.idSeccion= " + idSeccion + ";";
+            cmd3.CommandText = "SELECT DISTINCT t2.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
+                                + "ON t2.tipo = 'hd' AND t1.id= t2.id AND t1.estado =true AND t1.idSeccion= " + idSeccion + ";";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
@@ -571,13 +612,13 @@ namespace DST
         }
 
 
-        public List<string> ObtenerComponentesHBSeccion(int idSeccion)
+        public List<string> ObtenerComponentesHBSeccion(int idSeccion)//arreglado
         {
             List<string> listaComponentes = new List<string>();
 
             conn3.Open();
-            cmd3.CommandText = "SELECT DISTINCT t1.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
-                                + "ON t2.tipo = 'hb' AND t1.idSeccion= " + idSeccion + ";";
+            cmd3.CommandText = "SELECT DISTINCT t2.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
+                                + "ON t2.tipo = 'hb' AND t1.id= t2.id AND t1.estado =true AND t1.idSeccion= " + idSeccion + ";";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
@@ -588,13 +629,13 @@ namespace DST
             return listaComponentes;
         }
 
-        public List<string> ObtenerComponentesCFSeccion(int idSeccion)
+        public List<string> ObtenerComponentesCFSeccion(int idSeccion)//arreglado
         {
             List<string> listaComponentes = new List<string>();
 
             conn3.Open();
-            cmd3.CommandText = "SELECT DISTINCT t1.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
-                                + "ON t2.tipo = 'cf' AND t1.idSeccion= " + idSeccion + ";";
+            cmd3.CommandText = "SELECT DISTINCT t2.nombre FROM componentesperfilsecciones AS t1 INNER JOIN componentesperfil AS t2 "
+                                + "ON t2.tipo = 'cf' AND t1.id= t2.id AND t1.estado =true AND t1.idSeccion= " + idSeccion + ";";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
@@ -603,6 +644,109 @@ namespace DST
             }
             conn3.Close();
             return listaComponentes;
+        }
+
+        public double ObtenerImportanciaHDSeccion(int idSeccion)
+        {
+            double puntajeHD = 0;
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT importancia FROM componentesperfilsecciones WHERE id='hd' AND idSeccion =" + idSeccion + ";";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                puntajeHD = consulta3.GetDouble(0);
+            }
+
+            conn3.Close();
+
+            return puntajeHD;
+        }
+
+        public double ObtenerImportanciaHBSeccion(int idSeccion)
+        {
+            double puntajeHD = 0;
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT importancia FROM componentesperfilsecciones WHERE id='hb' AND idSeccion =" + idSeccion + ";";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                puntajeHD = consulta3.GetDouble(0);
+            }
+
+            conn3.Close();
+
+            return puntajeHD;
+        }
+
+        public double ObtenerImportanciaCFSeccion(int idSeccion)
+        {
+            double puntajeHD = 0;
+
+            conn3.Open();
+            cmd3.CommandText = "SELECT importancia FROM componentesperfilsecciones WHERE id='cf' AND idSeccion =" + idSeccion + ";";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                puntajeHD = consulta3.GetDouble(0);
+            }
+
+            conn3.Close();
+
+            return puntajeHD;
+        }
+
+        public void HabilitarComponentePerfilSeccion(int idSeccion,string idPregunta)
+        {
+            conn.Open();
+            try
+            {
+                cmd.CommandText = "UPDATE componentesPerfilSecciones SET estado=true WHERE idseccion="+idSeccion+" AND id='"+idPregunta+"';";                    
+                Console.WriteLine(cmd.CommandText.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR EN BD:" + e);
+            }
+            conn.Close();
+        }
+
+        public void DeshabilitarComponentePerfilSeccion(int idSeccion, string idPregunta)
+        {
+            conn.Open();
+            try
+            {
+                cmd.CommandText = "UPDATE componentesPerfilSecciones SET estado=false WHERE idseccion=" + idSeccion + " AND id='" + idPregunta + "';";
+                Console.WriteLine(cmd.CommandText.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR EN BD:" + e);
+            }
+            conn.Close();
+        }
+
+
+        public int ObtenerIdSeccionPorNombre(string nombreSeccion)
+        {
+            int id =-1;
+            conn3.Open();
+            cmd3.CommandText = "SELECT id FROM secciones WHERE nombre='"+nombreSeccion+"';";
+            Console.WriteLine(cmd3.CommandText.ToString());
+            consulta3 = cmd3.ExecuteReader();
+            while (consulta3.Read())
+            {
+                id = consulta3.GetInt32(0);
+            }
+
+            conn3.Close();
+            return id;
         }
     }
 }

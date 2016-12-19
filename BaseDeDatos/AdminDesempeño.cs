@@ -81,6 +81,7 @@ namespace DST
             cmd.CommandText = "INSERT INTO reubicaciones (rut,idSeccionAnterior,idSeccionNueva,fecha) VALUES('"
                 + rut + "'," + idSeccionAnterior.ToString() + "," + idSeccionNueva.ToString() + ",'"
                 + fecha + "');";
+            Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -515,14 +516,15 @@ namespace DST
         /// <param name="fechaSolicitud"></param>
         /// <param name="idSeccionActual"></param>
         /// <param name="idSeccionSolicitada"></param>
-        public void CambiarEstadoSolicitud(string nuevoEstado, string fechaSolicitud, int idSeccionActual,
-            int idSeccionSolicitada )
+        public void CambiarEstadoSolicitud(string nuevoEstado, int idSeccionActual,
+            int idSeccionSolicitada, string rut )
         {
             conn.Open();
 
-            cmd.CommandText = "UPDATE solicitudes SET estadoSolicitud='" + nuevoEstado + "' WHERE fechaSolicitud='"
-                + fechaSolicitud + "' AND idSeccionActual=" + idSeccionActual.ToString() + " AND idSeccionSolicitada="
-                + idSeccionSolicitada.ToString() + ";"; 
+            cmd.CommandText = "UPDATE solicitudes SET estadoSolicitud='" + nuevoEstado + "'"
+                +" WHERE idSeccionActual=" + idSeccionActual.ToString() + " AND idSeccionSolicitada="
+                + idSeccionSolicitada.ToString() + " AND rutSolicitud='"+rut+"';";
+            Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -823,12 +825,12 @@ namespace DST
          *                              MIS CONSULTAS
          * *************************************************************************/
 
-        public double ObtenerCapacidadGeneralRanking(string rutTrabajador)
+        public double ObtenerCapacidadGeneral(string rutTrabajador)
         {
             double puntajeCF = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+            cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador +"';";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -895,6 +897,35 @@ namespace DST
             return puntajeCF;
         }
 
+
+        public double ObtenerCapacidadGeneralRanking(string rutTrabajador, int idSeccion)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "' AND idSeccionEvaluacion=" + idSeccion + ";";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
+
+        public void ReubicarTrabajador(int idSeccion, string rut)
+        {
+            conn.Open();
+
+            cmd.CommandText = "UPDATE Trabajadores SET idSeccion = "+idSeccion+" WHERE rut='"+rut+"';";
+            Console.WriteLine(cmd.CommandText.ToString());
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
         /// <summary>
         /// Obtiene el mes y el año final a partir de la fecha de inicio 
         /// para el periodo anual.
@@ -932,6 +963,7 @@ namespace DST
             bd.Insertar("INSERT INTO desempeñoGQM(fecha, desempeno, reubicaciones, totalEmpleados, empleadosCapacitados, empleadosNoCapacitados) VALUES('" + fecha + "', " + desempeno + ", " + reubicaciones + ", " + totalEmpleados + ", " + empleadosCapacitados + ", " + empleadosNoCapacitados + ");");
 
             bd.Close();
+
         }
     }
 }

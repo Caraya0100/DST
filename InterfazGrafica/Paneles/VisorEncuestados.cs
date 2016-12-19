@@ -25,6 +25,7 @@ namespace InterfazGrafica
         private Button habilitarEncuesta;
         private Separator delimitador;
 
+
         public VisorEncuestados(System.Windows.RoutedEventHandler controladorEventos)
         {
             this.contenedorInfo = new Canvas();
@@ -140,6 +141,22 @@ namespace InterfazGrafica
         {
             get { return habilitarEncuesta.Name; }
             set { habilitarEncuesta.Name = value; }
+        }
+
+        public bool Habilitado
+        {
+            get { return habilitarEncuesta.IsEnabled; }
+            set { habilitarEncuesta.IsEnabled = value; }
+        }
+
+        public void ColorDeshabilitado()
+        {
+            this.estado.Foreground = Brushes.DarkGreen;
+            this.nombre.Foreground = Brushes.DarkGreen;
+            this.apellido.Foreground = Brushes.DarkGreen;
+            this.nombre.FontWeight = System.Windows.FontWeights.Bold;
+            this.apellido.FontWeight = System.Windows.FontWeights.Bold;
+            this.estado.FontWeight = System.Windows.FontWeights.Bold;
         }
     }
 }

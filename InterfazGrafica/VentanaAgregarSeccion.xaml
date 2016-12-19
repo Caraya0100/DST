@@ -23,6 +23,7 @@
         <Label Content="Nombre Sección" Grid.Column="1" HorizontalAlignment="Left" Margin="31,27,0,0" Grid.Row="1" VerticalAlignment="Top" Width="176"/>
         <Label Content="Jefe De Sección" Grid.Column="1" HorizontalAlignment="Left" Margin="31,28,0,0" Grid.Row="2" VerticalAlignment="Top" Width="176"/>
         <Label Content="Descripción" Grid.Column="1" HorizontalAlignment="Left" Margin="31,21,0,0" Grid.Row="3" VerticalAlignment="Top" Width="176" Visibility="Hidden"/>
+        <Label Content="Indicador de Desempeño" Height="40" Grid.Column="1" Margin="31,34,415,0" Grid.Row="3" RenderTransformOrigin="0.676,0.563"></Label>
         <TextBox Name="nombreSeccion" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="251,27,0,0" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Top" Width="282"/>
         <ComboBox Name="listaJefeSeccion" Grid.Column="1" HorizontalAlignment="Left" Margin="251,28,0,0" Grid.Row="2" VerticalAlignment="Top" Width="282" RenderTransformOrigin="0.475,-0.052"/>
         <Button Name="agregarJefe"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="50"  Canvas.Left="437" Canvas.Top="10" Grid.Column="1" Margin="557,14,0,0" Grid.Row="2" Click="AgregaNuevoUsuario">
@@ -38,6 +39,10 @@
         </Button>
         <Separator Grid.Column="1" HorizontalAlignment="Left" Height="16" Margin="10,58,0,0" Grid.Row="1" VerticalAlignment="Top" Width="602"/>
         <Separator Grid.Column="1" HorizontalAlignment="Left" Height="16" Margin="10,5,0,0" Grid.Row="3" VerticalAlignment="Top" Width="602"/>
-        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="16" Margin="5,22,0,0" Grid.Row="4" VerticalAlignment="Top" Width="602" Visibility="Hidden"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left" Height="16" Margin="5,22,0,0" Grid.Row="4" VerticalAlignment="Top" Width="602" Visibility="Visible"/>
+        <ComboBox Name="indicadorDesemp" Grid.Column="1" HorizontalAlignment="Left" Margin="251,38,0,0" Grid.Row="3" VerticalAlignment="Top" Width="282">
+            <ComboBoxItem Content="Ventas"></ComboBoxItem>
+            <ComboBoxItem Content="GQM"></ComboBoxItem>
+        </ComboBox>
     </Grid>
 </Controls:MetroWindow>

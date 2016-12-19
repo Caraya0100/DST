@@ -34,18 +34,16 @@ namespace InterfazGrafica
     public partial class VentanaJefeSeccion : MetroWindow, INotifyPropertyChanged
     {
         VentanaAsignacionHabilidades asignacionHabilidades;
-        Canvas panelHabilidadesSeleccionado;   
-        private double  valorCapacidad;
-        private bool panelDefaultHB = true;
-        private bool panelDefaultHD = true;
-        private bool panelDefaultCF = true;
+        StackPanel panelHabilidadesSeleccionado;   
+        private double  valorCapacidad;        
         private bool cambiosPanelHB = false;
         private bool cambiosPanelHD = false;
         private bool cambiosPanelCF = false;
         Dictionary<string, double> diccionarioHabilidades;
         Dictionary<string, double> diccionarioHD;
-        Dictionary<string, double> diccionarioHB;
+        Dictionary<string, double> diccionarioHB;        
         Dictionary<string, double> diccionarioCF;
+        List<Perfil> habilidadesPerfilActulizado;
         AnimacionScroll animadorRanking;
         AnimacionScroll animadorTrabajadores;
         AnimacionScroll animadorEvaluacion;
@@ -54,12 +52,7 @@ namespace InterfazGrafica
         DatosDePrueba datosTrabajador; 
         List<Trabajador> trabajadores;
         List<Trabajador> trabajadoresRanking;
-        List<string> nombres;//dato de prueba
-        List<string> apellidos;//dato de prueba
-        List<int> edades;//dato de prueba
-        List<string> sexo;//dato de prueba
-        List<string> listaHab = new List<string>();//dato de prueba
-        List<double> listaPje = new List<double>();//dato de prueba
+        List<string> nombres;//dato de prueba      
         Reportes.ReportesTrabajador reporte;
         /*interaccion con BD*/
         private InteraccionBD.InteraccionTrabajadores datosTrabajadores;
@@ -90,8 +83,16 @@ namespace InterfazGrafica
         List<Perfil> perfilRanking;
         List<Trabajador> trabajadorRanking;
         string trabajadorSeleccionado;
+        string rutTrabajadorRanking;
         /*configuracion perfil*/
         string tipoHabilidad;
+        /*evaluacion*/
+        string rutEvaluado;
+        List<string> rutEvaluados;
+       /*General*/
+        string itemReporte;
+        Trabajador trabajadorActual;
+        string rutAdministrador;
 
         public VentanaJefeSeccion()
         {
@@ -100,11 +101,7 @@ namespace InterfazGrafica
             this.datosTrabajador = new DatosDePrueba();  
             /*Inicializacion de datos de prueba*/
             this.datosTrabajador = new DatosDePrueba();
-            nombres     = datosTrabajador.Nombres;
-            apellidos   = datosTrabajador.Apellido;
-            edades      = datosTrabajador.Edad;
-            sexo        = datosTrabajador.Sexo;
-            listaPje    = datosTrabajador.PuntajesHB;            
+            nombres     = datosTrabajador.Nombres;                       
 
             trabajadores = new List<Trabajador>();
             trabajadoresRanking = new List<Trabajador>();
@@ -127,6 +124,8 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarComponentes()
         {
+            /**/
+            panelHabilidadesSeleccionado = contenedor_HB;
             /*datos trabajadores*/
             datosTrabajadores = new InteraccionBD.InteraccionTrabajadores();
             datosSeccion = new InteraccionBD.InteraccionSecciones();
@@ -143,29 +142,23 @@ namespace InterfazGrafica
             diccionarioHD = new Dictionary<string, double>();
             diccionarioHB = new Dictionary<string, double>();
             diccionarioCF = new Dictionary<string, double>();
-
-            for (int i = 0; i < datosTrabajador.HabilidadesBlandas.Length; i++)
-                diccionarioHB.Add(datosTrabajador.HabilidadesBlandas[i], datosTrabajador.PuntajesGenerales[i]);
-
-            for (int i = 0; i < datosTrabajador.HabilidadesDuras.Length; i++)
-                diccionarioHD.Add(datosTrabajador.HabilidadesDuras[i], datosTrabajador.PuntajesGenerales[i]);
-
-            for (int i = 0; i < datosTrabajador.CaracteristicasFisicas.Length; i++)
-                diccionarioCF.Add(datosTrabajador.CaracteristicasFisicas[i], datosTrabajador.PuntajesGenerales[i]);
+          
             
             /*Inicia graficos en cero*/
             AsignacionValoresGraficoCircular(0.0);
             /*Interaccion de mensajes a usario*/
-            cuadroMensajes = new Mensajes(this);
-            /*Inicializa los paneles con la informacion de trabajadores*/
-            //GeneradorRankingPrueba();
-            //GeneraListaTrabajadores();
+            cuadroMensajes = new Mensajes(this);     
+           
             /*inicializa los movimientos del scroll*/
             animadorRanking         = new AnimacionScroll();
             animadorTrabajadores    = new AnimacionScroll();
             animadorEvaluacion      = new AnimacionScroll();
             /*especificacion de seccion*/
-            datosTrabajadores.IdSeccion = idSeccion;     
+            datosTrabajadores.IdSeccion = idSeccion;   
+            /*evaluacion*/
+            rutEvaluados = new List<string>();
+            itemReporte = "Trabajadores";
+            idJefeSeccion = string.Empty;
         }
         /// <summary>
         /// Controlador de cierre de sesion.
@@ -184,15 +177,26 @@ namespace InterfazGrafica
                     Console.WriteLine("cantidad: " + contenedor_CF.Children.Count);
                     /*guardar los cambios en la BD*/
                     foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioHB)
-                        Console.WriteLine("HB: "+habilidadPuntaje.Key+" Puntaje: "+habilidadPuntaje.Value);
-                    foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioHD)
-                        Console.WriteLine("HD: " + habilidadPuntaje.Key + " Puntaje: " + habilidadPuntaje.Value);
-                    foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioCF)
-                        Console.WriteLine("CF: " + habilidadPuntaje.Key + " Puntaje: " + habilidadPuntaje.Value);
+                    {
+                        Console.WriteLine("HB: " + habilidadPuntaje.Key + " Puntaje: " + habilidadPuntaje.Value);
+                        datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);
+                    }
 
-                    Console.WriteLine("HBG"+this.grado_importancia_HB.Content);
-                    Console.WriteLine("HDG" + this.grado_importancia_HD.Content);
-                    Console.WriteLine("CFG" +this.grado_importancia_CF.Content);
+                    foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioHD)
+                    {
+                        Console.WriteLine("HD: " + habilidadPuntaje.Key + " Puntaje: " + habilidadPuntaje.Value);
+                        datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);
+                    }
+
+                    foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioCF)
+                    {
+                        Console.WriteLine("CF: " + habilidadPuntaje.Key + " Puntaje: " + habilidadPuntaje.Value);
+                        datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);
+                    }
+                    
+                    datosSeccion.ActualizacionImportanciasHabilidades("cf", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                    datosSeccion.ActualizacionImportanciasHabilidades("hd", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                    datosSeccion.ActualizacionImportanciasHabilidades("hb", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));                
                     /*cierra la aplicacion*/
                     App.Current.Shutdown();
                     
@@ -206,6 +210,26 @@ namespace InterfazGrafica
                 App.Current.Shutdown();
             }
         }
+
+        private void GeneracionReportes(object sender, RoutedEventArgs e)
+        {
+            if (itemReporte.Equals("Trabajadores"))
+            {
+                GenerarReporteTrabajador();
+            }
+            else if (itemReporte.Equals("Evaluacion"))
+            {
+
+            }
+            else if (itemReporte.Equals("Perfil"))
+            {
+
+            }
+            else if(itemReporte.Equals("Ranking"))
+            {
+
+            }
+        }
         /// <summary>
         /// Metodo que controla la opcion seleccionada por el usuario, en el panel general.
         /// </summary>
@@ -213,43 +237,56 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void seleccionItem(object sender, SelectionChangedEventArgs e)
         {
-            if (itemTrabajadores.IsSelected)
-            {
-                IniciarDatosSeccion();
-                GeneraListaTrabajadores();
-                this.hostRanking.Visibility = Visibility.Hidden;
-                deshabilitaEtiquetasTrabajador();
-                animadorRanking.detenerAnimacionVertical();
-                animadorEvaluacion.detenerAnimacionHorizontal();
-                animadorTrabajadores.comenzarAnimacionHorizontal();                
-            }
-            else if (itemEvaluacion.IsSelected)
+            e.Handled = true;
+            var tabElegido = sender as System.Windows.Controls.TabControl;
+            if (e.OriginalSource == this.tabGeneral)
             {                
-                deshabilitaEtiquetasRanking();
-                deshabilitaEtiquetasTrabajador();
-                animadorRanking.detenerAnimacionVertical();
-                animadorTrabajadores.detenerAnimacionHorizontal();
-                animadorEvaluacion.comenzarAnimacionHorizontal();
-                GeneraListaEvaluados();
+                if (itemTrabajadores.IsSelected)
+                {
+                    IniciarDatosSeccion();
+                    GeneraListaTrabajadores();
+                    this.hostRanking.Visibility = Visibility.Hidden;
+                    deshabilitaEtiquetasTrabajador();
+                    animadorRanking.detenerAnimacionVertical();
+                    animadorEvaluacion.detenerAnimacionHorizontal();
+                    animadorTrabajadores.comenzarAnimacionHorizontal();
+                    itemReporte = "Trabajadores";
+                }
+                else if (itemEvaluacion.IsSelected)
+                {
+                    deshabilitaEtiquetasRanking();
+                    deshabilitaEtiquetasTrabajador();
+                    animadorRanking.detenerAnimacionVertical();
+                    animadorTrabajadores.detenerAnimacionHorizontal();
+                    animadorEvaluacion.comenzarAnimacionHorizontal();
+                    GeneraListaEvaluados();
+                    itemReporte = "Evaluacion";
+                    
+                }
+                else if (itemPerfil.IsSelected)
+                {                   
+                    PanelesVacios();
+                    GeneradorPanelHabilidadesGenerales();
+                    GeneradorPanelHabilidades();
+                    deshabilitaEtiquetasRanking();
+                    deshabilitaEtiquetasTrabajador();
+                    animadorRanking.detenerAnimacionVertical();
+                    animadorTrabajadores.detenerAnimacionHorizontal();
+                    animadorEvaluacion.detenerAnimacionHorizontal();
+                    itemReporte = "Perfil";
+                }
+                else if (itemRanking.IsSelected)
+                {
+                    GeneradorRankingPrueba();
+                    this.hostTrabajadores.Visibility = Visibility.Hidden;
+                    deshabilitaEtiquetasRanking();
+                    animadorTrabajadores.detenerAnimacionHorizontal();
+                    animadorEvaluacion.detenerAnimacionHorizontal();
+                    animadorRanking.comenzarAnimacionVertical();
+                    itemReporte = "Ranking";
+                }
             }
-            else if (itemPerfil.IsSelected)
-            {                
-                deshabilitaEtiquetasRanking();
-                deshabilitaEtiquetasTrabajador();
-                animadorRanking.detenerAnimacionVertical();
-                animadorTrabajadores.detenerAnimacionHorizontal();
-                animadorEvaluacion.detenerAnimacionHorizontal();
-                //DeshabilitaItemHabilidades();
-            }
-            else if (itemRanking.IsSelected)
-            {
-                GeneradorRankingPrueba();
-                this.hostTrabajadores.Visibility = Visibility.Hidden;
-                deshabilitaEtiquetasRanking();
-                animadorTrabajadores.detenerAnimacionHorizontal();
-                animadorEvaluacion.detenerAnimacionHorizontal();
-                animadorRanking.comenzarAnimacionVertical();
-            }
+            
         }
 
         private void VolverVentanaAdministrador(object sender, RoutedEventArgs e)
@@ -265,8 +302,7 @@ namespace InterfazGrafica
         public void IniciarDatosSeccion()
         {
             if (!nombreJefeSeccion.Content.Equals("Administrador"))
-            {
-                System.Windows.MessageBox.Show(idJefeSeccion);
+            {               
                 datosSeccion.RutJefeSeccion = idJefeSeccion;
                 seccion.Content = datosSeccion.NombreSeccionPorRutJefe();
                 idSeccion = datosSeccion.IdSeccionPorRutJefeSeccion();
@@ -315,10 +351,15 @@ namespace InterfazGrafica
             int indice = Convert.ToInt32(indiceEtiqueta[1]);
             //trabajadorSeleccionado = indice;
             int identificador = 0;
+            /*puntajes de seccion por habilidad*/
+            perfilSeccionActual = datosSeccion.PerfilSeccion();
+            Dictionary<string, Componente> habilidadesPerfil = perfilSeccionActual.Blandas;
+
             foreach (KeyValuePair<string, Trabajador> infoTrabajador in listaTrabajadores)
             {                
                 if (indice == identificador)
-                {                    
+                {
+                    trabajadorActual = infoTrabajador.Value;
                     this.nombreTrabajador.Content = infoTrabajador.Value.Nombre +" "+infoTrabajador.Value.ApellidoPaterno;                   
                     this.sexoTrabajador.Content = infoTrabajador.Value.Sexo;
                     if(infoTrabajador.Value.Sexo.Equals("Masculino"))
@@ -329,21 +370,42 @@ namespace InterfazGrafica
                     this.edadTrabajador.Content = CalcularEdad(infoTrabajador.Value.FechaNacimiento);
                     /*grafico*/
                     
+                    
                     foreach(KeyValuePair<string, Componente> habilidadBlanda in infoTrabajador.Value.Perfil.Blandas)
                     {
-                        HB.Add(habilidadBlanda.Value.Nombre);
-                        HBPuntajesTrabajador.Add(habilidadBlanda.Value.Puntaje);     
+                        foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                        {
+                            if (habilidadPerfil.Key.Equals(habilidadBlanda.Key))
+                            {
+                                HB.Add(habilidadBlanda.Value.Nombre);
+                                HBPuntajesTrabajador.Add(habilidadBlanda.Value.Puntaje);
+                                Console.WriteLine("KEY: " + habilidadBlanda.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                            }
+                        } 
                     }
+                    habilidadesPerfil = perfilSeccionActual.Duras;
                     foreach (KeyValuePair<string, Componente> habilidadDura in infoTrabajador.Value.Perfil.Duras)
                     {
-                        HD.Add(habilidadDura.Value.Nombre);
-                        HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);                       
+                        foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                        {
+                            if (habilidadPerfil.Key.Equals(habilidadDura.Key))
+                            {
+                                HD.Add(habilidadDura.Value.Nombre);
+                                HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);
+                            } 
+                        }                                                                    
                     }
-
+                    habilidadesPerfil = perfilSeccionActual.Fisicas;
                     foreach (KeyValuePair<string, Componente> caractFisica in infoTrabajador.Value.Perfil.Fisicas)
                     {
-                        CF.Add(caractFisica.Value.Nombre);
-                        CFPuntajesTrabajador.Add(caractFisica.Value.Puntaje);                        
+                        foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                        {
+                            if (habilidadPerfil.Key.Equals(caractFisica.Key))
+                            {
+                                CF.Add(caractFisica.Value.Nombre);
+                                CFPuntajesTrabajador.Add(caractFisica.Value.Puntaje);  
+                            }
+                        }                                              
                     }      
                     datosSeccion.IdSeccion = idSeccion;
                     trabajadorSeleccionado = infoTrabajador.Value.Rut;//para eliminar/editar
@@ -356,8 +418,7 @@ namespace InterfazGrafica
                     puntajesGeneralesTrabajador.Add(datosTrabajadores.PuntajeGeneralCF()); 
                     puntajesGeneralesTrabajador.Add(datosTrabajadores.PuntajeGeneralHB()); 
                     puntajesGeneralesTrabajador.Add(datosTrabajadores.PuntajeGeneralHD()); 
-                    /*puntajes de seccion por habilidad*/
-                    perfilSeccionActual = datosSeccion.PerfilSeccion();                  
+                                    
                 }
                 identificador++;
             }         
@@ -404,7 +465,7 @@ namespace InterfazGrafica
             if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConsultaEliminarTrabajador()))
             {
                 /*elimina los datos de la BD*/
-                datosTrabajadores.IdTrabajador = trabajadorSeleccionado; System.Windows.MessageBox.Show("id"+trabajadorSeleccionado);
+                datosTrabajadores.IdTrabajador = trabajadorSeleccionado; 
                 datosTrabajadores.EliminarTrabajador();
                 datosTrabajadores.IdSeccion = idSeccion;
                 listaTrabajadores = datosTrabajadores.TrabajadoresSeccion();
@@ -441,6 +502,14 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void detalleTrabajador(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PTJE GEN TRA: " + puntajesGeneralesTrabajador.Count);
+            Console.WriteLine("PTJE GEN SEC: " + puntajesGeneralesSeccion.Count);
+            Console.WriteLine("PTJE hb TRA: " + HBPuntajesTrabajador.Count);
+            Console.WriteLine("PTJE hb SEC: " + HBPuntajesSeccion.Count);
+            Console.WriteLine("PTJE hd TRA: " + HDPuntajesTrabajador.Count);
+            Console.WriteLine("PTJE hd SEC: " + HDPuntajesSeccion.Count);
+            Console.WriteLine("PTJE cf TRA: " + CFPuntajesTrabajador.Count);
+            Console.WriteLine("PTJE cf SEC: " + CFPuntajesSeccion.Count);
             VentanaDetalleHabilidades detalleHabilidades = new VentanaDetalleHabilidades();
             /*capacidad general*/
             detalleHabilidades.CapacidadTrabajdor = datosDesempeno.CapacidadGeneralTrabajador();
@@ -461,10 +530,12 @@ namespace InterfazGrafica
             detalleHabilidades.CaracteristicasFisicas = CF.ToArray();
             detalleHabilidades.PuntajesCfSeccion = CFPuntajesSeccion.ToArray();
             detalleHabilidades.PuntajesCfTrabajador = CFPuntajesTrabajador.ToArray();
-            detalleHabilidades.ShowDialog();            
+            detalleHabilidades.ShowDialog();
+            
+
         }
 
-        private void GenerarReporte(object sender, RoutedEventArgs e)
+        private void GenerarReporteTrabajador()
         {
             /*ruta del archivo*/
             SaveFileDialog explorador = new SaveFileDialog();
@@ -481,7 +552,13 @@ namespace InterfazGrafica
                 double[] trabajador = { 20, new Random().Next(60), new Random().Next(70) };//datos de prueba
                 double[] seccion = { new Random().Next(100), new Random().Next(200), 50 };//datos de prueba
                 string[] habilidades = { "CF", "HB", "HD" };//datos de prueba
-                GraficoRadar graficoGeneral = new GraficoRadar(habilidades, seccion, trabajador, this.GraficoTrabajadores);
+                GraficoRadar graficoGeneral = new GraficoRadar
+                    (
+                        habilidades, 
+                        puntajesGeneralesSeccion.ToArray(),
+                        puntajesGeneralesTrabajador.ToArray(), 
+                        this.GraficoTrabajadores
+                    );
                 graficoGeneral.TipoGrafico = "Area";
                 graficoGeneral.constructorGrafico();
                 graficoGeneral.Grafico.SaveImage(imagenGeneral, ChartImageFormat.Png);
@@ -509,6 +586,7 @@ namespace InterfazGrafica
                 reporte.ImagenGraficoHB = iTextSharp.text.Image.GetInstance(imagenHB.GetBuffer());
                 reporte.ImagenGraficoHD = iTextSharp.text.Image.GetInstance(imagenHD.GetBuffer());
                 reporte.ImagenGraficoCF = iTextSharp.text.Image.GetInstance(imagenCF.GetBuffer());
+                reporte.Trabajador = trabajadorActual;
                 reporte.GenerarReporte();
                 /*abre el documento luego de crearlo*/
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();
@@ -628,118 +706,145 @@ namespace InterfazGrafica
         /// Metodo que genera el panel de habilidades para la asignacion de importancia de manera manual.
         /// </summary>
         /// <param name="contenedorSeleccionado"></param>
-        public void GeneradorPanelHabilidades(Canvas contenedorSeleccionado)
+        public void GeneradorPanelHabilidades()
         {            
-            int indice = 0;            
+            int indice = 0;
             datosSeccion.IdSeccion = idSeccion;
-            Perfil perfilSeccion = datosSeccion.PerfilSeccion();
-            if (tipoHabilidad.Equals("hb"))
-            {
-                foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilSeccion.Blandas)
-                {
-                    PanelHabilidades panelHabilidades = new PanelHabilidades();
-                    panelHabilidades.HabilidadName = "I" + indice + "0";
-                    panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
-                    panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
-                    panelHabilidades.GradoImportanciaIdentificador = "I" + indice;
-                    panelHabilidades.GradoImportanciaEtiquetaIdentificador = "I" + indice + "2";
-                    panelHabilidades.Controlador = AsignacionValorHabilidad;
-                    contenedorSeleccionado.Children.Add(panelHabilidades.ConstructorPanel(indice));
-                    contenedorSeleccionado.Children.Add(panelHabilidades.Delimitador);
-                    indice++;
-                }
-            }
-            else if (tipoHabilidad.Equals("hd"))
-            {
-                foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilSeccion.Duras)
-                {
-                    PanelHabilidades panelHabilidades = new PanelHabilidades();
-                    panelHabilidades.HabilidadName = "I" + indice + "0";
-                    panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
-                    panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
-                    panelHabilidades.GradoImportanciaIdentificador = "I" + indice;
-                    panelHabilidades.GradoImportanciaEtiquetaIdentificador = "I" + indice + "2";
-                    panelHabilidades.Controlador = AsignacionValorHabilidad;
-                    contenedorSeleccionado.Children.Add(panelHabilidades.ConstructorPanel(indice));
-                    contenedorSeleccionado.Children.Add(panelHabilidades.Delimitador);
-                    indice++;
-                }
-            }
-            else if (tipoHabilidad.Equals("cf"))
-            {
-                foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilSeccion.Fisicas)
-                {
-                    PanelHabilidades panelHabilidades = new PanelHabilidades();
-                    panelHabilidades.HabilidadName = "I" + indice + "0";
-                    panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
-                    panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
-                    panelHabilidades.GradoImportanciaIdentificador = "I" + indice;
-                    panelHabilidades.GradoImportanciaEtiquetaIdentificador = "I" + indice + "2";
-                    panelHabilidades.Controlador = AsignacionValorHabilidad;
-                    contenedorSeleccionado.Children.Add(panelHabilidades.ConstructorPanel(indice));
-                    contenedorSeleccionado.Children.Add(panelHabilidades.Delimitador);
-                    indice++;
-                }
-            }
-            
-
-
+            //GeneradorPanelHabilidadesGenerales();
+            Perfil perfilSeccion = datosSeccion.PerfilSeccion();              
+            HabilidadesBlandas(perfilSeccion, indice);
+            HabilidadesDuras(perfilSeccion, indice);
+            CaracteristicasFisicas(perfilSeccion, indice);
         }
-        /// <summary>
-        /// Metodo que ajusta el tamaño del panel seleccionado (habilidades).
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void eventoTamanioCanvas(object sender, SizeChangedEventArgs e)
+
+        public void HabilidadesBlandas(Perfil perfilSeccion, int indice)
         {
-            try { this.panelHabilidadesSeleccionado.Height = 105 * diccionarioHabilidades.Count; }
-            catch { }
-            try { this.panelHabilidadesSeleccionado.Width = 678; }
-            catch { }
+            foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilSeccion.Blandas)
+            {                
+                if (!habilidadPuntaje.Value.Nombre.Equals("hb") && !habilidadPuntaje.Value.Nombre.Equals("Habilidades Blandas"))
+                {
+                    PanelHabilidades panelHabilidades = new PanelHabilidades();
+                    panelHabilidades.HabilidadName = habilidadPuntaje.Value.ID + "0";
+                    panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
+                    panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
+                    panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
+                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
+                    panelHabilidades.GradoImportanciaIdentificador = habilidadPuntaje.Value.ID;
+                    panelHabilidades.GradoImportanciaEtiquetaIdentificador = habilidadPuntaje.Value.ID + "2";
+                    panelHabilidades.Controlador = AsignacionValorHabilidad;
+                    this.contenedor_HB.Children.Add(panelHabilidades.ConstructorPanel(indice));
+                    this.contenedor_HB.Children.Add(panelHabilidades.Delimitador);
+                    indice++;
+                }
+            }
         }
+
+        public void HabilidadesDuras(Perfil perfilSeccion, int indice)
+        {
+            foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilSeccion.Duras)
+            {
+                if (!habilidadPuntaje.Value.Nombre.Equals("hd") && !habilidadPuntaje.Value.Nombre.Equals("Habilidades Duras"))
+                {
+                    PanelHabilidades panelHabilidades = new PanelHabilidades();
+                    panelHabilidades.HabilidadName = habilidadPuntaje.Value.ID + "0";
+                    panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
+                    panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
+                    panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
+                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
+                    panelHabilidades.GradoImportanciaIdentificador = habilidadPuntaje.Value.ID;//cambio
+                    panelHabilidades.GradoImportanciaEtiquetaIdentificador = habilidadPuntaje.Value.ID + "2";
+                    panelHabilidades.Controlador = AsignacionValorHabilidad;
+                    this.contenedor_HD.Children.Add(panelHabilidades.ConstructorPanel(indice));
+                    this.contenedor_HD.Children.Add(panelHabilidades.Delimitador);
+                    indice++;
+                }
+            }
+        }
+
+        private void CaracteristicasFisicas(Perfil perfilSeccion, int indice)
+        {
+            foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilSeccion.Fisicas)
+            {
+                if (!habilidadPuntaje.Value.Nombre.Equals("cf") && !habilidadPuntaje.Value.Nombre.Equals("Caracteristicas fisicas"))
+                {
+                    PanelHabilidades panelHabilidades = new PanelHabilidades();
+                    panelHabilidades.HabilidadName = habilidadPuntaje.Value.ID + "0";
+                    panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
+                    panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
+                    panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
+                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
+                    panelHabilidades.GradoImportanciaIdentificador = habilidadPuntaje.Value.ID;
+                    panelHabilidades.GradoImportanciaEtiquetaIdentificador = habilidadPuntaje.Value.ID + "2";
+                    panelHabilidades.Controlador = AsignacionValorHabilidad;
+                    this.contenedor_CF.Children.Add(panelHabilidades.ConstructorPanel(indice));
+                    this.contenedor_CF.Children.Add(panelHabilidades.Delimitador);
+                    indice++;
+                }
+            }
+        }
+
+        private void GeneradorPanelHabilidadesGenerales() 
+        {
+            datosSeccion.IdSeccion = idSeccion;
+            this.puntajeCF.Content = datosSeccion.PuntajeGeneralCF();
+            this.puntajeHB.Content = datosSeccion.PuntajeGeneralHB();
+            this.puntajeHD.Content = datosSeccion.PuntajeGeneralHD();
+            
+            this.grado_importancia_CF.Content = "" + datosSeccion.ImportanciaCF();
+            this.grado_importancia_HB.Content = "" + datosSeccion.ImportanciaHB();
+            this.grado_importancia_HD.Content = "" + datosSeccion.ImportanciaHD();
+            this.slider_CF.Value = datosSeccion.ImportanciaCF();
+            this.slider_HD.Value = datosSeccion.ImportanciaHD();
+            this.slider_HB.Value = datosSeccion.ImportanciaHB();
+            
+        }       
         /// <summary>
         /// Controlador que asigna el valor a la habilidad mediante slider.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AsignacionValorHabilidad(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {            
+        {
+            habilidadesPerfilActulizado = new List<Perfil>();
             var slider              = sender as Slider;
             double value            = slider.Value;
             string identificador    = slider.Name;
             System.Windows.Controls.Label grado_importancia_numerico = new System.Windows.Controls.Label();
             System.Windows.Controls.TextBlock habilidad = new System.Windows.Controls.TextBlock();
-            try { 
+            try 
+            { 
                 grado_importancia_numerico =    (System.Windows.Controls.Label)
-                                                LogicalTreeHelper.FindLogicalNode(
-                                                panelHabilidadesSeleccionado, 
-                                                identificador + "2");
+                                                LogicalTreeHelper.FindLogicalNode
+                                                (
+                                                    panelHabilidadesSeleccionado, 
+                                                    identificador + "2"
+                                                );
                 habilidad = (System.Windows.Controls.TextBlock)
-                                                LogicalTreeHelper.FindLogicalNode(
-                                                panelHabilidadesSeleccionado,
-                                                identificador + "0"); 
-                ActualizaEstadoDePanelHabilidades();    
-                /*actualizar el diccionario*/
-                
-                
-                }
-            catch { }
+                                                LogicalTreeHelper.FindLogicalNode
+                                                (
+                                                    panelHabilidadesSeleccionado,
+                                                    identificador + "0"
+                                                ); 
+                ActualizaEstadoDePanelHabilidades();   
+            }
+            catch {}
             if (grado_importancia_numerico != null)
             {
                 grado_importancia_numerico.Content = "" + value.ToString("0.0");
                 /*identificar diccionario y lo modifica*/
                 if (panelHabilidadesSeleccionado.Name.Equals("contenedor_HB"))
-                    diccionarioHB[habilidad.Text] = Convert.ToDouble(value.ToString("0.0"));
+                {
+                    diccionarioHB[identificador] = Convert.ToDouble(value.ToString("0.0"));                    
+                    //Console.WriteLine("EN EL DICCIONARIO " + identificador + " TAM: " + diccionarioHB.Count + " CONTENIDO: " + diccionarioHB.ContainsValue(Convert.ToDouble(value.ToString("0.0"))));
+                }                    
                 else if (panelHabilidadesSeleccionado.Name.Equals("contenedor_HD"))
-                    diccionarioHD[habilidad.Text] = Convert.ToDouble(value.ToString("0.0"));
+                {
+                    diccionarioHD[identificador] = Convert.ToDouble(value.ToString("0.0"));
+                }
                 else if (panelHabilidadesSeleccionado.Name.Equals("contenedor_CF"))
-                    diccionarioCF[habilidad.Text] = Convert.ToDouble(value.ToString("0.0"));
+                {
+                    diccionarioCF[identificador] = Convert.ToDouble(value.ToString("0.0"));
+                }
             }
         }
         /// <summary>
@@ -770,46 +875,27 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void eventoTabHabilidades(object sender, SelectionChangedEventArgs e)
         {
+            var a = sender as System.Windows.Controls.TabControl;
+            
             if (pestania_HB.IsSelected)
             {
                 tipoHabilidad = "hb";
-                panelHabilidadesSeleccionado = contenedor_HB;
-                if (panelDefaultHB)
-                {                    
-                    diccionarioHabilidades.Clear();
-                    diccionarioHabilidades = Diccionario(diccionarioHB);  
-                    contenedor_HB.Children.Clear();
-                    GeneradorPanelHabilidades(contenedor_HB);
-                    panelDefaultHB = false;
-                }
-                
+                panelHabilidadesSeleccionado = contenedor_HB;   
             }
             else if (pestania_HD.IsSelected)
             {
-                tipoHabilidad = "hd";
-                panelHabilidadesSeleccionado = contenedor_HD;
-                if (panelDefaultHD)
-                {
-                    diccionarioHabilidades.Clear();
-                    diccionarioHabilidades = Diccionario(diccionarioHD);
-                    contenedor_HD.Children.Clear();
-                    GeneradorPanelHabilidades(contenedor_HD);
-                    panelDefaultHD = false;
-                }                
+                tipoHabilidad = "hd"; 
+                panelHabilidadesSeleccionado = contenedor_HD;                            
             }
             else if (pestania_CF.IsSelected)
             {
                 tipoHabilidad = "cf";
-                panelHabilidadesSeleccionado = contenedor_CF;
-                if (panelDefaultCF)
-                {
-                    diccionarioHabilidades.Clear();
-                    diccionarioHabilidades = Diccionario(diccionarioCF);
-                    contenedor_CF.Children.Clear();
-                    GeneradorPanelHabilidades(contenedor_CF);
-                    panelDefaultCF = false;
-                }
-            }           
+                panelHabilidadesSeleccionado = contenedor_CF;               
+            }
+            else if (pestaniaGeneral.IsSelected)
+            {
+                tipoHabilidad = "general";
+            }
         }
         /// <summary>
         /// Controlador que acciona la ventana para habilitar o deshabilitar las habilidades disponibles.
@@ -818,21 +904,77 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void eventoIrAConfiguracion(object sender, RoutedEventArgs e)
         {
+            var configuracion = sender as System.Windows.Controls.Button;
+            int indice = 0;            
             asignacionHabilidades = new VentanaAsignacionHabilidades(tipoHabilidad,idSeccion);
-            asignacionHabilidades.IdSeccion = idSeccion;
-            //asignacionHabilidades.TipoHabilidad = tipoHabilidad;
-            asignacionHabilidades.ShowDialog();
-            PanelesVacios();
-            GeneradorPanelHabilidades(contenedor_CF);
-            GeneradorPanelHabilidades(contenedor_HB);
-            GeneradorPanelHabilidades(contenedor_HD);
+            asignacionHabilidades.IdSeccion = idSeccion;           
+            asignacionHabilidades.ShowDialog();            
+            Perfil perfil = datosSeccion.PerfilSeccion();
+            if (configuracion.Name.Equals("configHD"))
+            {                
+                contenedor_HD.Children.Clear();
+                HabilidadesDuras(perfil, indice);
+            }
+            else if (configuracion.Name.Equals("configHB"))
+            {
+                contenedor_HB.Children.Clear();
+                HabilidadesBlandas(perfil, indice);
+            }
+            else if (configuracion.Name.Equals("configCF"))
+            {
+                contenedor_CF.Children.Clear();
+                CaracteristicasFisicas(perfil, indice);
+            }           
         }
 
         private void ConfiguracionGeneral(object sender, RoutedEventArgs e)
         {
-
+            
             VentanaEleccionGradoImportancia tipoCalificacion = new VentanaEleccionGradoImportancia(this);
+            tipoCalificacion.IdSeccion = idSeccion;
+            if (!idJefeSeccion.Equals(""))
+                tipoCalificacion.IdJefeSeccion = idJefeSeccion;
+            else tipoCalificacion.IdJefeSeccion = rutAdministrador;
             tipoCalificacion.Show();
+        }
+        /// <summary>
+        /// Guarda los nuevos valores del perfil por el tipo de habilidad.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GuardarConfiguracion(object sender, RoutedEventArgs e)
+        {
+            if (tipoHabilidad.Equals("general"))
+            {
+                datosSeccion.ActualizacionImportanciasHabilidades("cf", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("hd", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("hb", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                cuadroMensajes.CambiosGuardados();
+            }
+            else if (tipoHabilidad.Equals("hb"))
+            {
+                foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioHB)
+                {
+                    datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);                   
+                }
+                cuadroMensajes.CambiosGuardados();
+            }
+            else if (tipoHabilidad.Equals("hd"))
+            {
+                foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioHD)
+                {                    
+                    datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);                    
+                }
+                cuadroMensajes.CambiosGuardados();
+            }
+            else if (tipoHabilidad.Equals("cf"))
+            {
+                foreach (KeyValuePair<string, double> habilidadPuntaje in diccionarioCF)
+                { 
+                    datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);                    
+                }
+                cuadroMensajes.CambiosGuardados();
+            }            
         }
 
         private void DeshabilitaItemHabilidades()
@@ -884,7 +1026,8 @@ namespace InterfazGrafica
             else
                 this.imagenRanking.Fill = new ImageBrush(new BitmapImage(new Uri(@"..\..\Iconos\User-Female.png", UriKind.Relative)));
             datosSeccion.IdTrabajador = trabajadorRanking[indice].Rut;
-            
+            /*actualizacion en ranking*/
+            rutTrabajadorRanking = trabajadorRanking[indice].Rut;
             seccionRanking.Text = datosSeccion.NombreSeccionPorRutTrabajador();
             /*grafico circular*/
             datosDesempeno.IdTrabajador = trabajadorRanking[indice].Rut;
@@ -996,15 +1139,16 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         async private void solicitaReubicacion(object sender, RoutedEventArgs e)
         {
+            int idSeccionNueva = datosTrabajadores.IdSeccionPorRutTrabajador(rutTrabajadorRanking);
             this.hostRanking.Visibility = Visibility.Hidden;
             if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConsultaSolicitudTrabajador()))
             {
                 datosSolicitudes.GeneraSolicitud(
-                    "", 
-                    idSeccion, 
-                    1,
-                    80.00,
-                    datosDesempeno.CapacidadGeneralTrabajador()
+                    rutTrabajadorRanking, 
+                    idSeccion,
+                    idSeccionNueva,
+                    datosDesempeno.CapacidadGeneralTrabajadorRanking(idSeccion, rutTrabajadorRanking),
+                    datosDesempeno.CapacidadGeneralTrabajadorRanking(idSeccionNueva, rutTrabajadorRanking)
                     );
                 cuadroMensajes.TrabajadorSolicitado();
             }
@@ -1073,8 +1217,10 @@ namespace InterfazGrafica
         {
             this.panelEvaluacion.Children.Clear();
             int identificador = 0;
+            List<string> evaluados = datosTrabajadores.TrabajadoresEvaluados();
             foreach (KeyValuePair<string, Trabajador> infoTrabajador in listaTrabajadores)
             {
+                rutEvaluados.Add(infoTrabajador.Value.Rut);
                 VisorEvaluacion trabajador = new VisorEvaluacion(seleccionPanelEvaluacion);
                 trabajador.Nombre = infoTrabajador.Value.Nombre;
                 trabajador.Apellido = infoTrabajador.Value.ApellidoPaterno;    
@@ -1083,12 +1229,11 @@ namespace InterfazGrafica
                     trabajador.DireccionImagen = @"..\..\Iconos\Business-Man.png";
                 else 
                     trabajador.DireccionImagen = @"..\..\Iconos\User-Female.png";
-
-                bool estadoEncuesta = false;//dato de prueba
-                if(estadoEncuesta)
+               
+                if(evaluados.Contains(infoTrabajador.Value.Rut))
                     trabajador.DireccionEstado = @"..\..\Iconos\encuestaRealizada.png";
                 else 
-                    trabajador.DireccionEstado = @"..\..\Iconos\encuestaNoRealizada.png";
+                    trabajador.DireccionEstado = @"..\..\Iconos\noEncuestado.png";
                 trabajador.IdentificadorPanel = "I" + identificador;
                 this.panelEvaluacion.Children.Add(trabajador.ConstructorInfo());
                 /*Botones tipo evaluadores*/
@@ -1098,17 +1243,17 @@ namespace InterfazGrafica
                 if (estadoEvaluadoPorTrabajadores)
                 {
                     encuestaTrabajador.Title = "Trabajadores (" + cantidadEvaluaciones + ")";
-                    encuestaTrabajador.Content = "CONTESTADA";
+                    //encuestaTrabajador.Content = "CONTESTADA";
                 }
                 else
                 {
-                    encuestaTrabajador.Title = "Trabajadores (0)";
-                    encuestaTrabajador.Content = "NO CONTESTADA";
+                    encuestaTrabajador.Title = "Trabajadores";
+                    //encuestaTrabajador.Content = "NO CONTESTADA";
                 }
                 if (estadoEvaluadoPorJefeSeccion)
-                    encuestaJefeSeccion.Content = "CONTESTADA";
+                    encuestaJefeSeccion.Content = "";//contestada
                 else
-                    encuestaJefeSeccion.Content = "NO CONTESTADA";
+                    encuestaJefeSeccion.Content = "";//no contestada
                 identificador++;
             }
         }
@@ -1125,6 +1270,7 @@ namespace InterfazGrafica
             string[] indiceEtiqueta = id.Split('I');
             int indice = Convert.ToInt32(indiceEtiqueta[1]);    
             int identificador = 0;
+            rutEvaluado = rutEvaluados[indice];
             foreach (KeyValuePair<string, Trabajador> infoTrabajador in listaTrabajadores)
             {
                 if(indice == identificador)
@@ -1200,7 +1346,9 @@ namespace InterfazGrafica
             else
             {
                 /*pasar el id del trabajador seleccionado*/
-                VentanaEvaluadores evaluadores = new VentanaEvaluadores();
+                VentanaEvaluadores evaluadores = new VentanaEvaluadores(rutEvaluado);
+                this.Hide();
+                evaluadores.NombreEvaluado = nombreEvaluado.Content as string;
                 evaluadores.ShowDialog();
             }
         }
@@ -1215,11 +1363,16 @@ namespace InterfazGrafica
                 cuadroMensajes.TrabajadorNoSeleccionado();
             else
             {
-                //int indice = IdentificaTrabajador(sender); IDENTIFICA  
+                //int indice = IdentificaTrabajador(sender); IDENTIFICA 
+                this.Hide();
                 VentanaEncuesta encuesta = new VentanaEncuesta(idSeccion);
                 //encuesta.IdSeccion = idSeccion;
                 //encuesta.Preguntas = datosTrabajador.Preguntas;
-                encuesta.NombreTrabajador = nombres[0];
+                encuesta.NombreTrabajador = nombreEvaluado.Content as string;
+                encuesta.IdTrabajador = rutEvaluado;
+                if (!idJefeSeccion.Equals(""))//jefeseccion
+                    encuesta.IdEvaluador = idJefeSeccion;
+                else encuesta.IdEvaluador = rutAdministrador;//administrador
                 encuesta.InicioEncuesta();
                 encuesta.ShowDialog();
             }
@@ -1422,6 +1575,12 @@ namespace InterfazGrafica
         {
             get { return idJefeSeccion; }
             set { idJefeSeccion = value; }
+        }
+
+        public string IdAdmin
+        {
+            get { return rutAdministrador; }
+            set { rutAdministrador = value; }
         }
         
     }

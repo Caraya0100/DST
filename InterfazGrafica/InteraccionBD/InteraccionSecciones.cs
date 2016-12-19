@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DST;
+using MySql.Data.MySqlClient;
 
 namespace InterfazGrafica.InteraccionBD
 {
@@ -16,6 +17,7 @@ namespace InterfazGrafica.InteraccionBD
         private string idTrabajador;
         private string nombreSeccion;
         private string rutJefeSeccion;
+        private string tipoMedicion;
 
         public InteraccionSecciones()
         {
@@ -33,7 +35,12 @@ namespace InterfazGrafica.InteraccionBD
 
         public void NuevaSeccion()
         {
-            datosSeccion.InsertarSeccion(nombreSeccion,rutJefeSeccion);
+            datosSeccion.InsertarSeccion(nombreSeccion,rutJefeSeccion,tipoMedicion);
+        }
+
+        public void ActualizarSeccion(int id)
+        {
+            datosSeccion.ModificarDatosSeccion(id,nombreSeccion,this.rutJefeSeccion,tipoMedicion);
         }
 
         public List<Seccion> TodasLasSecciones()
@@ -61,11 +68,36 @@ namespace InterfazGrafica.InteraccionBD
             return datosSeccion.ObtenerPuntajeHDSeccion(idSeccion);
         }
 
+        public double ImportanciaHD()
+        {
+            return datosSeccion.ObtenerImportanciaHDSeccion(idSeccion);
+        }
+
+        public double ImportanciaHB()
+        {
+            return datosSeccion.ObtenerImportanciaHBSeccion(idSeccion);
+        }
+
+        public double ImportanciaCF()
+        {
+            return datosSeccion.ObtenerImportanciaCFSeccion(idSeccion);
+        }
         public string NombreSeccionTrabajador(string idSeccion)
         {
             return datosSeccion.ObtenerNombreSeccion(idSeccion);
         }
 
+        public void ActualizacionImportanciasHabilidades(string idPregunta, double importancia)
+        {
+            string grado = ""+importancia;
+            datosSeccion.ModificarImportanciaPerfilSeccion(idSeccion,idPregunta,grado.Replace(",","."));
+        }
+
+        public void ActualizacionPuntajeHabilidad(int idSeccion, string nombreComponente, double nuevoPuntaje)
+        {
+            
+            datosSeccion.ModificarPuntajePerfilSeccion(idSeccion,nombreComponente,nuevoPuntaje);
+        }
         public string NombreSeccionPorRutJefe()
         {
             return datosUsuario.ObtenerNombreSeccionPorUsuario(rutJefeSeccion) ;
@@ -81,40 +113,53 @@ namespace InterfazGrafica.InteraccionBD
             return datosSeccion.ObtenerIdSeccion(rutJefeSeccion);
         }
 
-        public List<string> HabilidadesDuras()
+        public int IdSeccionPorNombreSeccion()
+        {
+            return datosSeccion.ObtenerIdSeccionPorNombre(nombreSeccion);
+        }
+
+        public List<Componente> HabilidadesDuras()
         {
             return datosSeccion.ObtenerComponentesHD();
         }
-        public List<string> CaracteristicasFisicas()
+        public List<Componente> CaracteristicasFisicas()
         {
             return datosSeccion.ObtenerComponentesCF();
         }
-        public List<string> HabilidadesBlandas()
+        public List<Componente> HabilidadesBlandas()
         {
             return datosSeccion.ObtenerComponentesHB();
         }
 
-        public void GuardarComponentesPerfil(int idSeccion, string pregunta)
+        public void GuardarComponentesPerfil(int idSeccion, string habilidad)
         {  
-                try
-                {
-                    datosSeccion.InsertarComponentePerfilSeccion
-                    (
-                        idSeccion,
-                        pregunta,
-                        0,
-                        0
-                    );
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine("ERROR INTERACCION:"+e);
-                }
+            try
+            {
+                datosSeccion.InsertarComponentePerfilSeccion
+                (
+                    idSeccion,
+                    habilidad,
+                    0,
+                    0                        
+                );
+                    
+            }
+            catch(Exception e)
+            {                    
+                Console.WriteLine("ERROR AL INSERTAR: "+e);
+            }
+            try
+            {
+                datosSeccion.HabilitarComponentePerfilSeccion(idSeccion, habilidad);
+            }
+            catch(Exception e){
+                Console.WriteLine("ERROR AL HACER UPDATE: " + e);
+            }
         }
 
         public void EliminarComponentesPerfil(int idSeccion, string pregunta)
         {
-            datosSeccion.EliminarComponentePerfilSeccion(pregunta,idSeccion);
+            datosSeccion.DeshabilitarComponentePerfilSeccion(idSeccion,pregunta);
         }
 
         public List<string> HabilidadesBlandasPerfil()
@@ -140,6 +185,8 @@ namespace InterfazGrafica.InteraccionBD
             return datosSeccion.ObtenerRutJefeSeccion(nombreSeccion);
         }*/
 
+       
+       
         public string NombreJefeSeccion()
         {
             string nombre = string.Empty;
@@ -177,6 +224,12 @@ namespace InterfazGrafica.InteraccionBD
         {
             get { return idTrabajador; }
             set { idTrabajador = value; }
+        }
+
+        public string TipoMedicion
+        {
+            get { return tipoMedicion; }
+            set { tipoMedicion = value; }
         }
 
     }
