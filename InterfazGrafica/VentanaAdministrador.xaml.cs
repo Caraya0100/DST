@@ -40,7 +40,9 @@ namespace InterfazGrafica
         private InteraccionBD.InteraccionSecciones datosSeccion;
         private InteraccionBD.InteraccionTrabajadores datosTrabajador;
         private InteraccionBD.InteraccionSolicitudes datosSolicitudes;
+        private InteraccionBD.InteraccionDesempeno  datosDesempeno;
         private string idTrabajador;
+        private string idAdministrador;
         /*Estructuras de datos*/
         List<Seccion> listaDeSecciones;
         List<Trabajador> listaDeTrabajadores;
@@ -82,6 +84,12 @@ namespace InterfazGrafica
             ObtenerSecciones();
             IniciarTablaDesempeno();
             IniciarPanelComponentes();
+
+            IniciarPanelReglas();
+
+            datosDesempeno = new InteraccionBD.InteraccionDesempeno();
+
+
             IniciarPanelReglasSecciones();
             IniciarPanelPreguntas("encuesta");
 
@@ -156,8 +164,7 @@ namespace InterfazGrafica
             {
                 VisorTrabajador infoTrabajador = new VisorTrabajador(seleccionPanelTrabajador);
                 infoTrabajador.Nombre = trabajador.Nombre;
-                infoTrabajador.Apellido = trabajador.ApellidoPaterno;
-                Console.WriteLine("SEXO: " + trabajador.Sexo);
+                infoTrabajador.Apellido = trabajador.ApellidoPaterno;                
                 /*comprobar el sexo*/
                 if (trabajador.Sexo.Equals("Masculino"))
                     infoTrabajador.DireccionImagen = @"..\..\Iconos\Business-Man.png";
@@ -189,6 +196,8 @@ namespace InterfazGrafica
                 this.imagenTrabajador.Fill = new ImageBrush(new BitmapImage(new Uri(@"..\..\Iconos\User-Female.png", UriKind.Relative)));
             datosSeccion.IdTrabajador = listaDeTrabajadores[indice].Rut;
             this.seccionTrabajador.Content = datosSeccion.NombreSeccionPorRutTrabajador();
+            /*actualizacion de trabajador a eliminar*/
+            datosTrabajador.IdTrabajador = listaDeTrabajadores[indice].Rut;
         }
 
         async private void EliminarTrabajador(object sender, RoutedEventArgs e)
@@ -202,7 +211,7 @@ namespace InterfazGrafica
                 eliminarTrabajador.IsEnabled = false;
                 editarInformacion.IsEnabled = false;
                 /**eliminar datos de BD*/
-
+                datosTrabajador.EliminarTrabajador();
             }
         }
 
@@ -291,6 +300,7 @@ namespace InterfazGrafica
             seccion.NombreJefeSeccion = "Administrador";
             seccion.ListaTrabajadores = listaDeSecciones[indice].Trabajadores;
             seccion.IdSeccion = listaDeSecciones[indice].IdSeccion;
+            seccion.IdAdmin = idAdministrador;
             this.Hide();
             seccion.Show();
         }
@@ -300,6 +310,7 @@ namespace InterfazGrafica
             int indice = IdentificadorBoton(sender);
             datosSeccion.NombreSeccion = listaDeSecciones[indice].Nombre; //indica seccion actual
             VentanaAgregarSeccion seccionNueva = new VentanaAgregarSeccion();
+            seccionNueva.Edicion = true;
             seccionNueva.Seccion = listaDeSecciones[indice].Nombre;
             int item = 0;
             foreach (string nombre in seccionNueva.NombreJefeSeccion)
@@ -316,6 +327,7 @@ namespace InterfazGrafica
         private void AgregarSeccion(object sender, RoutedEventArgs e)
         {
             VentanaAgregarSeccion seccionNueva = new VentanaAgregarSeccion();
+            seccionNueva.Edicion = false;
             seccionNueva.ShowDialog();
             listaDeSecciones = datosSeccion.TodasLasSecciones();
             GeneraListaSecciones();
@@ -460,9 +472,10 @@ namespace InterfazGrafica
                 VisorSolicitudes solicitud = new VisorSolicitudes();
                 solicitud.SeccionActual = datosSeccion.NombreSeccionPorId(datosSolicitud.IdSeccionActual);
                 solicitud.SeccionNueva = datosSeccion.NombreSeccionPorId(datosSolicitud.IdSeccionSolicitada);
-                solicitud.Trabajador = "un trabajador";//datos de prueba
-                solicitud.CapacidadActualSeccion = "90.0%";//datos de prueba
-                solicitud.CapacidadNuevaSeccion = "92.0%";//datos de prueba
+                solicitud.Trabajador = datosTrabajador.NombreTrabajadorPorRut(datosSolicitud.RutSolicitud);
+                solicitud.CapacidadActualSeccion = (datosDesempeno.CapacidadGeneralTrabajadorRanking(datosSolicitud.IdSeccionActual, datosSolicitud.RutSolicitud) * 100) + "%"; ;//datos de prueba
+                datosDesempeno.IdTrabajador = datosSolicitud.RutSolicitud;
+                solicitud.CapacidadNuevaSeccion = ""+(datosDesempeno.CapacidadGeneralTrabajadorRanking(datosSolicitud.IdSeccionSolicitada,datosSolicitud.RutSolicitud)*100)+"%";
                 solicitud.IdentificadorAceptar = "I" + identificador;
                 solicitud.IdentificadorRechazar = "I" + identificador;
                 solicitud.ControladorRechazar(RechazarSolicitud);
@@ -474,10 +487,17 @@ namespace InterfazGrafica
 
         async private void AceptarSolicitud(object sender, RoutedEventArgs e)
         {
+            var boton = sender as Button;
+            string[] etiqueta = boton.Name.Split('I');
+            int indice = Convert.ToInt32(etiqueta[1]);
             /*actualiza datos en el panel y BD*/
             if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConfirmarSolicitud()))
             {
+                Solicitud solicitud = listaDeSolicitudes[indice];
+                //datosDesempeno.ActualizacionSolicitud("ACEPTADA", solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.RutSolicitud);
                 cuadroMensajes.SolicitudConfirmada();
+                datosDesempeno.ReubicarTrabajador(solicitud.RutSolicitud, solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.FechaSolicitud.Replace(" 0:00:00",""));
+                listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
                 panelSolicitudes.Children.Clear();
                 GeneraListaSolicitudes();
             }
@@ -486,11 +506,17 @@ namespace InterfazGrafica
 
         async private void RechazarSolicitud(object sender, RoutedEventArgs e)
         {
+            var boton = sender as Button;
+            string[] etiqueta = boton.Name.Split('I');           
+            int indice = Convert.ToInt32(etiqueta[1]);
             /*actualiza datos en el panel y BD*/
             if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.RechazarSolicitud()))
             {
+                Solicitud solicitud = listaDeSolicitudes[indice];
+                datosDesempeno.ActualizacionSolicitud("RECHAZADA", solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.RutSolicitud);                
                 cuadroMensajes.SolicitudRechazada();
                 panelSolicitudes.Children.Clear();
+                listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
                 GeneraListaSolicitudes();
             }
         }
@@ -2254,8 +2280,11 @@ namespace InterfazGrafica
 
         private void IniciarPanelReglas()
         {
-            ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
-            LlenarTablaReglas(reglasActuales);
+            if (reglasSeccionActual != null)
+            {
+                ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
+                LlenarTablaReglas(reglasActuales);
+            }
         }
 
         /// <summary>
@@ -2615,6 +2644,17 @@ namespace InterfazGrafica
                     reglaActual.Operador
                 );
             txtRegla.Text = reglaActual.Texto;
+        }
+
+        public string IdAdministrador
+        {
+            get { return idAdministrador; }
+            set { idAdministrador = value; }
+        }
+
+        private void IniciarEvaluacion(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

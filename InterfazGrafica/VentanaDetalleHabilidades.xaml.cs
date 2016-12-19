@@ -64,7 +64,14 @@ namespace InterfazGrafica
             InformacionPerfil();
             if (tabGeneral.IsSelected)
             {
-                string[] habilidades = { "CF", "HB", "HD" };               
+                string[] habilidades = { "CF", "HB", "HD" };
+                if ( habilidades.Length != generalPuntajesSeccion.Length || habilidades.Length!= generalPuntajesTrabajador.Length  || generalPuntajesSeccion.Length != generalPuntajesTrabajador.Length)
+                    PuntajesGeneralesEnCero(habilidades);
+                Console.WriteLine("ptje g seccion: " + generalPuntajesSeccion.Length+ " trab " + generalPuntajesTrabajador.Length);
+                for (int i = 0; i < 3; i++)
+                {
+                    Console.WriteLine(generalPuntajesSeccion[i]+" - "+generalPuntajesTrabajador[i]+" - "+habilidades[i]);                    
+                }
                 this.grafico = new GraficoRadar(habilidades, generalPuntajesSeccion, generalPuntajesTrabajador, this.GraficoGeneral);
                 this.grafico.TipoGrafico = "Line";
                 this.grafico.constructorGrafico();
@@ -75,7 +82,9 @@ namespace InterfazGrafica
                 DataContext = this;
             }
             else if (tabHB.IsSelected)
-            {  
+            {
+                if (puntajesSeccionHB.Count != habilidadesBlandas.Length || hbTrabajadorPuntajes.Length!=HabilidadesBlandas.Length || puntajesSeccionHB.Count != hbTrabajadorPuntajes.Length)
+                    PuntajesHBEnCero();               
                 this.grafico = new GraficoRadar(habilidadesBlandas, puntajesSeccionHB.ToArray(), hbTrabajadorPuntajes, this.GraficoHB);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();
@@ -85,7 +94,9 @@ namespace InterfazGrafica
                 DataContext = this;
             }
             else if (tabHD.IsSelected)
-            {                
+            {
+                if (puntajesSeccionHD.Count != habilidadesDuras.Length || hdTrabajadorPuntajes.Length != HabilidadesDuras.Length || puntajesSeccionHD.Count != hdTrabajadorPuntajes.Length)
+                    PuntajesHDEnCero();               
                 this.grafico = new GraficoRadar(habilidadesDuras, puntajesSeccionHD.ToArray(), hdTrabajadorPuntajes, this.GraficoHD);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();
@@ -95,7 +106,9 @@ namespace InterfazGrafica
                 DataContext = this;
             }
             else if (tabCF.IsSelected)
-            {                
+            {
+                if (puntajesSeccionCF.Count != caracteristicasFisicas.Length || cfTrabajadorPuntajes.Length != caracteristicasFisicas.Length || puntajesSeccionCF.Count != cfTrabajadorPuntajes.Length)
+                    PuntajesCFEnCero();               
                 this.grafico = new GraficoRadar(caracteristicasFisicas, puntajesSeccionCF.ToArray(), cfTrabajadorPuntajes, this.GraficoCF);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();
@@ -220,6 +233,40 @@ namespace InterfazGrafica
            {               
                puntajesSeccionCF.Add(puntajesPerfil.Value.Puntaje);
            }
+       }
+
+       public void PuntajesHBEnCero()
+       {
+           hbTrabajadorPuntajes = new double[0];
+           puntajesSeccionHB.Clear();
+           habilidadesDuras = new string[0];
+
+       }
+       public void PuntajesHDEnCero()
+       {         
+           hdTrabajadorPuntajes = new double[0];
+           puntajesSeccionHD.Clear();
+           habilidadesDuras = new string[0];           
+       }
+
+       public void PuntajesCFEnCero()
+       {
+           cfTrabajadorPuntajes = new double[0];
+           puntajesSeccionCF.Clear();
+           caracteristicasFisicas = new string[0];           
+       }
+
+       public void PuntajesGeneralesEnCero(string [] habilidad)
+       {
+           habilidad = new string[0];
+           generalPuntajesTrabajador = new double[0];
+           generalPuntajesSeccion = new double[0];
+           Console.WriteLine("ENTRO GENERAL");
+          /* for (int i = 0; i < 3; i++)
+           {
+               generalPuntajesTrabajador[i] = 0.0;
+               generalPuntajesSeccion[i] = 0.0;
+           }*/
        }
     }
 }

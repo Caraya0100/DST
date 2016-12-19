@@ -28,8 +28,8 @@ namespace InterfazGrafica.InteraccionBD
                 DateTime.Today.ToString("yyyy-MM-dd"),
                 "EN_ESPERA",
                 rutJefe,
-                2,//seccionActual
-                2,//seccionNueva
+                seccionActual,//seccionActual
+                seccionNueva,//seccionNueva
                 capActual,
                 capNueva
                 );

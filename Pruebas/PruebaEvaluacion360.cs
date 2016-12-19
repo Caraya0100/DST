@@ -34,16 +34,16 @@ namespace DST
         {
             Pregunta pregunta = new Pregunta();
 
-            pregunta.Alternativas.Add("No_desarrollada", no.Valor);
+            /*pregunta.Alternativas.Add("No_desarrollada", no.Valor);
             pregunta.Alternativas.Add("Necesita_desarrollarse", d.Valor);
             pregunta.Alternativas.Add("Competente", c.Valor);
             pregunta.Alternativas.Add("Altamente_competente", b.Valor);
             pregunta.Alternativas.Add("Modelo_de_rol", a.Valor);
             pregunta.Alternativas.Add("No_puede_ser_evaluado", ne.Valor);
             pregunta.Descripcion = descripcion;
-            pregunta.Componentes = componentes;
+            pregunta.Componentes = componentes;*/
 
-            return pregunta;*/
+            /*return pregunta;*/
         }
     }
 }

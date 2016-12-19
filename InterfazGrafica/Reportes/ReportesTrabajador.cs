@@ -110,14 +110,14 @@ namespace InterfazGrafica.Reportes
             PdfPCell seccionEtiqueta = new PdfPCell(new Paragraph("Sección ", fuente.Cursiva(12)));
             PdfPCell capacidadSeccionEtiqueta = new PdfPCell(new Paragraph("Capacidad en la sección ", fuente.Cursiva(12)));
             /*contenido*/
-            PdfPCell nombreTrabajador = new PdfPCell(new Paragraph("Sebastian", fuente.Normal(11)));//dato de prueba
-            PdfPCell apellidoPaterno = new PdfPCell(new Paragraph("Santander", fuente.Normal(11)));//dato de prueba
-            PdfPCell apellidoMaterno = new PdfPCell(new Paragraph("Orellana", fuente.Normal(11)));//dato de prueba
-            PdfPCell fechaNacimiento = new PdfPCell(new Paragraph("10/12/2007", fuente.Normal(11)));//dato de prueba
+            PdfPCell nombreTrabajador = new PdfPCell(new Paragraph(trabajador.Nombre, fuente.Normal(11)));//dato de prueba
+            PdfPCell apellidoPaterno = new PdfPCell(new Paragraph(trabajador.ApellidoPaterno, fuente.Normal(11)));//dato de prueba
+            PdfPCell apellidoMaterno = new PdfPCell(new Paragraph(trabajador.ApellidoMaterno, fuente.Normal(11)));//dato de prueba
+            PdfPCell fechaNacimiento = new PdfPCell(new Paragraph(trabajador.FechaNacimiento, fuente.Normal(11)));//dato de prueba
             PdfPCell edad = new PdfPCell(new Paragraph("28", fuente.Normal(11)));//dato de prueba
-            PdfPCell sexo = new PdfPCell(new Paragraph("Masculino", fuente.Normal(11)));//dato de prueba
+            PdfPCell sexo = new PdfPCell(new Paragraph(trabajador.Sexo, fuente.Normal(11)));//dato de prueba
             PdfPCell seccion = new PdfPCell(new Paragraph("Atención al Cliente", fuente.Normal(11)));//dato de prueba
-            PdfPCell capacidad = new PdfPCell(new Paragraph("76.00%", fuente.Normal(11)));
+            PdfPCell capacidad = new PdfPCell(new Paragraph("XX", fuente.Normal(11)));
 
             /*alineaciones etiquetas*/
             nombreTrabajadorEtiqueta.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -183,9 +183,9 @@ namespace InterfazGrafica.Reportes
             habilidadEtiqueta.BackgroundColor = new BaseColor(171, 196, 237);
             capacidadEtiqueta.BackgroundColor = new BaseColor(171, 196, 237);
             /*Contenidos*/
-            PdfPCell habilidadesBlandas = new PdfPCell(new Paragraph("49.00%", fuente.Normal(11)));//dato de prueba
-            PdfPCell habilidadesDuras = new PdfPCell(new Paragraph("78.00%", fuente.Normal(11)));//dato de prueba
-            PdfPCell caracteristicasFisicas = new PdfPCell(new Paragraph("31.00%", fuente.Normal(11)));//dato de prueba
+            PdfPCell habilidadesBlandas = new PdfPCell(new Paragraph(""+trabajador.Perfil.HB.Puntaje, fuente.Normal(11)));//dato de prueba
+            PdfPCell habilidadesDuras = new PdfPCell(new Paragraph(""+trabajador.Perfil.HD.Puntaje, fuente.Normal(11)));//dato de prueba
+            PdfPCell caracteristicasFisicas = new PdfPCell(new Paragraph("" + trabajador.Perfil.CF.Puntaje, fuente.Normal(11)));//dato de prueba
             PdfPCell general = new PdfPCell(new Paragraph("55.00%", fuente.Negrita(12)));//dato de prueba
             /*Alineaciones*/
             habilidadEtiqueta.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -240,8 +240,8 @@ namespace InterfazGrafica.Reportes
             Paragraph titulo = new Paragraph("GRAFICO GENERAL", fuente.Subrayado(18));
             Paragraph espacio = new Paragraph("\n\n", fuente.Normal(11));
             Paragraph unEspacio = new Paragraph("\n", fuente.Normal(11));
-            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Azul.", fuente.Normal(10));
-            Paragraph habSeccion= new Paragraph("Hab. Sección: Naranjo", fuente.Normal(10));
+            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Naranjo", fuente.Normal(10));
+            Paragraph habSeccion= new Paragraph("Hab. Sección: Azul", fuente.Normal(10));
             titulo.Alignment = Element.ALIGN_CENTER;
             habTrabajador.Alignment = Element.ALIGN_RIGHT;
             habSeccion.Alignment = Element.ALIGN_RIGHT;
@@ -284,8 +284,8 @@ namespace InterfazGrafica.Reportes
             Paragraph titulo = new Paragraph("GRAFICO HABILIDADES BLANDAS", fuente.Subrayado(18));
             Paragraph espacio = new Paragraph("\n\n", fuente.Normal(11));
             Paragraph unEspacio = new Paragraph("\n", fuente.Normal(11));
-            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Azul.", fuente.Normal(10));
-            Paragraph habSeccion = new Paragraph("Hab. Sección: Naranjo", fuente.Normal(10));
+            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Naranjo", fuente.Normal(10));
+            Paragraph habSeccion = new Paragraph("Hab. Sección: Azul", fuente.Normal(10));
             titulo.Alignment = Element.ALIGN_CENTER;
             habTrabajador.Alignment = Element.ALIGN_RIGHT;
             habSeccion.Alignment = Element.ALIGN_RIGHT;
@@ -325,11 +325,11 @@ namespace InterfazGrafica.Reportes
             parrafoDescripcion.IndentationRight = 60f;
 
             //Console.WriteLine("AAA: "+buffer.GetBuffer());
-            Paragraph titulo = new Paragraph("GRAFICO HABILIDADES BLANDAS", fuente.Subrayado(18));
+            Paragraph titulo = new Paragraph("GRAFICO HABILIDADES DURAS", fuente.Subrayado(18));
             Paragraph espacio = new Paragraph("\n\n", fuente.Normal(11));
             Paragraph unEspacio = new Paragraph("\n", fuente.Normal(11));
-            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Azul.", fuente.Normal(10));
-            Paragraph habSeccion = new Paragraph("Hab. Sección: Naranjo", fuente.Normal(10));
+            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Naranjo", fuente.Normal(10));
+            Paragraph habSeccion = new Paragraph("Hab. Sección: Azul", fuente.Normal(10));
             titulo.Alignment = Element.ALIGN_CENTER;
             habTrabajador.Alignment = Element.ALIGN_RIGHT;
             habSeccion.Alignment = Element.ALIGN_RIGHT;
@@ -369,11 +369,11 @@ namespace InterfazGrafica.Reportes
             parrafoDescripcion.IndentationRight = 60f;
 
             //Console.WriteLine("AAA: "+buffer.GetBuffer());
-            Paragraph titulo = new Paragraph("GRAFICO HABILIDADES BLANDAS", fuente.Subrayado(18));
+            Paragraph titulo = new Paragraph("GRAFICO CARACTERISTICAS FISICAS", fuente.Subrayado(18));
             Paragraph espacio = new Paragraph("\n\n", fuente.Normal(11));
             Paragraph unEspacio = new Paragraph("\n", fuente.Normal(11));
-            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Azul.", fuente.Normal(10));
-            Paragraph habSeccion = new Paragraph("Hab. Sección: Naranjo", fuente.Normal(10));
+            Paragraph habTrabajador = new Paragraph("Hab. Trabajador: Naranjo", fuente.Normal(10));
+            Paragraph habSeccion = new Paragraph("Hab. Sección: Azul", fuente.Normal(10));
             titulo.Alignment = Element.ALIGN_CENTER;
             habTrabajador.Alignment = Element.ALIGN_RIGHT;
             habSeccion.Alignment = Element.ALIGN_RIGHT;
@@ -418,10 +418,20 @@ namespace InterfazGrafica.Reportes
             tablaHabilidadesTrabajador.AddCell(capacidadEtiqueta);
             
             /*agrega elementos*/
-            for (int i = 0; i < 10; i++ )
+            /*for (int i = 0; i < 10; i++ )
             {
                 PdfPCell habilidad = new PdfPCell(new Paragraph("ALGUNA HABILIDAD BLANDA", fuente.Normal(11)));
                 PdfPCell capacidad = new PdfPCell(new Paragraph("99.00%", fuente.Normal(11)));
+                capacidad.HorizontalAlignment = Element.ALIGN_CENTER;
+                habilidad.HorizontalAlignment = Element.ALIGN_CENTER;
+                tablaHabilidadesTrabajador.AddCell(habilidad);
+                tablaHabilidadesTrabajador.AddCell(capacidad);
+            }*/
+
+            foreach (KeyValuePair<string, Componente> habilidadBlanda in this.trabajador.Perfil.Blandas)
+            {
+                PdfPCell habilidad = new PdfPCell(new Paragraph(habilidadBlanda.Value.Nombre, fuente.Normal(11)));
+                PdfPCell capacidad = new PdfPCell(new Paragraph(habilidadBlanda.Value.Puntaje+"%", fuente.Normal(11)));
                 capacidad.HorizontalAlignment = Element.ALIGN_CENTER;
                 habilidad.HorizontalAlignment = Element.ALIGN_CENTER;
                 tablaHabilidadesTrabajador.AddCell(habilidad);
@@ -456,16 +466,17 @@ namespace InterfazGrafica.Reportes
             tablaHabilidadesTrabajador.AddCell(habilidadEtiqueta);
             tablaHabilidadesTrabajador.AddCell(capacidadEtiqueta);
 
-            /*agrega elementos*/
-            for (int i = 0; i < 10; i++)
+            /*agrega elementos*/            
+            foreach (KeyValuePair<string, Componente> habilidadDura in this.trabajador.Perfil.Duras)
             {
-                PdfPCell habilidad = new PdfPCell(new Paragraph("ALGUNA HABILIDAD DURA", fuente.Normal(11)));
-                PdfPCell capacidad = new PdfPCell(new Paragraph("99.00%", fuente.Normal(11)));
+                PdfPCell habilidad = new PdfPCell(new Paragraph(habilidadDura.Value.Nombre, fuente.Normal(11)));
+                PdfPCell capacidad = new PdfPCell(new Paragraph(habilidadDura.Value.Puntaje+"%", fuente.Normal(11)));
                 capacidad.HorizontalAlignment = Element.ALIGN_CENTER;
                 habilidad.HorizontalAlignment = Element.ALIGN_CENTER;
                 tablaHabilidadesTrabajador.AddCell(habilidad);
                 tablaHabilidadesTrabajador.AddCell(capacidad);
             }
+
             reporte.Add(tablaHabilidadesTrabajador);
         }
 
@@ -495,10 +506,10 @@ namespace InterfazGrafica.Reportes
             tablaHabilidadesTrabajador.AddCell(capacidadEtiqueta);
 
             /*agrega elementos*/
-            for (int i = 0; i < 10; i++)
+            foreach (KeyValuePair<string, Componente> habilidadFisica in this.trabajador.Perfil.Fisicas)
             {
-                PdfPCell habilidad = new PdfPCell(new Paragraph("ALGUNA CARACTERISTICA FISICA", fuente.Normal(11)));
-                PdfPCell capacidad = new PdfPCell(new Paragraph("99.00%", fuente.Normal(11)));
+                PdfPCell habilidad = new PdfPCell(new Paragraph(habilidadFisica.Value.Nombre, fuente.Normal(11)));
+                PdfPCell capacidad = new PdfPCell(new Paragraph(habilidadFisica.Value.Puntaje + "%", fuente.Normal(11)));
                 capacidad.HorizontalAlignment = Element.ALIGN_CENTER;
                 habilidad.HorizontalAlignment = Element.ALIGN_CENTER;
                 tablaHabilidadesTrabajador.AddCell(habilidad);

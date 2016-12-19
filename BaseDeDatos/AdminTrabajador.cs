@@ -222,6 +222,7 @@ namespace DST
             conn.Open();
 
             cmd.CommandText = "DELETE FROM trabajadores WHERE rut='" + rutTrabajador + "';";
+            Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -245,6 +246,79 @@ namespace DST
             conn.Close();
 
             return nuevoTrabajador;
+        }
+        /// <summary>
+        /// todos los compañeros que evaluaron a un trabajador.
+        /// </summary>
+        /// <param name="rut"></param>
+        /// <returns></returns>
+        public List<Trabajador> ObtenerTrabajadoresEncuestados(string rut)
+        {
+            List<Trabajador> encuestados = new List<Trabajador>();
+            conn.Open();
+            cmd.CommandText = "SELECT t1.rut, t1.nombre, t1.apellidoPaterno, t1.apellidoMaterno, t1.fechaNacimiento, t1.sexo" 
+            +" FROM trabajadores AS t1 INNER JOIN listatrabajadoresencuestados AS t2 ON t2.rutTrabajadorEvaluado='"+rut+"'" 
+            +" AND t1.rut = t2.rutTrabajadorEvaluador;";
+            consulta = cmd.ExecuteReader();
+            Console.WriteLine(cmd.CommandText.ToString()); 
+            while (consulta.Read())
+            {
+                Trabajador nuevoTrabajador = new Trabajador(consulta.GetString(0), consulta.GetString(1), consulta.GetString(2),
+                consulta.GetString(3), consulta.GetString(4), consulta.GetString(5),
+                ObtenerPerfilTrabajador(consulta.GetString(0)));
+                encuestados.Add(nuevoTrabajador);
+            }
+
+            conn.Close();
+            return encuestados;
+        }
+
+        public List<string> ObtenerTrabajadoresEvaluados()
+        {
+            List<string> encuestados = new List<string>();
+            conn.Open();
+            cmd.CommandText = "SELECT DISTINCT rutTrabajadorEvaluado FROM listatrabajadoresencuestados;";
+            consulta = cmd.ExecuteReader();
+            Console.WriteLine(cmd.CommandText.ToString());
+            while (consulta.Read())
+            {                
+                encuestados.Add(consulta.GetString(0));
+            }
+
+            conn.Close();
+            return encuestados;
+        }
+
+        public string ObtenerNombreTrabajador(string rut)
+        {
+            string nombre = string.Empty;
+            conn.Open();
+            cmd.CommandText = "SELECT nombre, apellidoPaterno FROM Trabajadores WHERE rut='"+rut+"';";
+            consulta = cmd.ExecuteReader();
+            Console.WriteLine(cmd.CommandText.ToString());
+            while (consulta.Read())
+            {
+                nombre = consulta.GetString(0) +" "+consulta.GetString(1);
+            }
+
+            conn.Close();
+            return nombre;
+        }
+
+        public int ObtenerIdSeccion(string rut)
+        {
+            int id = -1;
+            conn.Open();
+            cmd.CommandText = "SELECT id FROM secciones WHERE id = (SELECT idSeccion From trabajadores WHERE rut='"+rut+"');";
+            consulta = cmd.ExecuteReader();
+            Console.WriteLine(cmd.CommandText.ToString());
+            while (consulta.Read())
+            {
+                id = consulta.GetInt32(0);
+            }
+
+            conn.Close();
+            return id;
         }
     }
 }

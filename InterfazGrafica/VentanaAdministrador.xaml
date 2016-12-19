@@ -7,7 +7,6 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:InterfazGrafica"
         Title="DST" Height="635.527" Width="1071.184" ResizeMode="CanMinimize" IsWindowDraggable="True" Closing="CerrarSesion" Loaded="EventosIniciales">
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="18*"/>
@@ -22,7 +21,7 @@
         <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="519" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="1001" TabStripPlacement="Left" SelectionChanged="seleccionItem">
             <TabItem Name="itemDesempenio" Header="Desempeño" Width="194">
                 <Grid Background="#FFFBFBFB" Margin="-2,-5,0,0">
-                    <StackPanel x:Name="panelDResumen" HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="799" Visibility="Hidden">
+                    <StackPanel x:Name="panelDResumen" HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="799">
                         <Label x:Name="lblDesempenoSecciones" Content="Desempeño Secciones" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
                         <Label x:Name="lblInfoDesempenoSeccioens" Content="En este panel podras  ver el desempeño de las secciones de trabajo." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
                         <DataGrid x:Name="tablaDesempeno" AutoGenerateColumns="False" VerticalAlignment="Top" Height="333" Style="{StaticResource AzureDataGrid}" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="33,0,30,0" BorderBrush="Gray" BorderThickness="1">
@@ -33,7 +32,7 @@
                         </DataGrid>
                         <Button x:Name="btnDetallesSeccion" Content="Ver Detalles" Click="DetallesDesempenoSeccion" VerticalAlignment="Top" Margin="239,30,0,0" HorizontalAlignment="Left" Width="370"/>
                     </StackPanel>
-                    <StackPanel x:Name="panelDDetalles" HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="799">
+                    <StackPanel x:Name="panelDDetalles" HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="799" Visibility="Hidden">
                         <WrapPanel x:Name="wrapDSuperior" Height="35">
                             <Button x:Name="btnDIngreso" Content="Ingresar datos desempeño" Click="IrPanelIngresoDesempeno" VerticalAlignment="Top" Width="143" Margin="490,5,0,0" HorizontalAlignment="Right" Height="25" FontSize="9"/>
                             <Button x:Name="btnDReporte" Content="Generar reporte" Click="GenerarReporteDesempeno" VerticalAlignment="Top" Width="143" Margin="10,5,0,0" HorizontalAlignment="Right" Height="25" FontSize="9"/>
@@ -84,6 +83,7 @@
                                     <local:GraficoGauge360 x:Name="graficoDCapacitados" Width="779" Height="178" Margin="0,30,0,0" />
                                     <Label x:Name="lblDCapacitados" Content="Porcentaje de trabajadores capacitados" Width="778" Height="28" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,20,0,0"/>
                                 </WrapPanel>
+                                <Button x:Name="btnDGenerarReporte" Content="Generar reporte" Click="GenerarReporteDesempeno" VerticalAlignment="Top" Margin="239,20,0,0" HorizontalAlignment="Left" Width="370"/>
                             </WrapPanel>
                         </ScrollViewer>
                         <Button x:Name="btnDesempenoResumen" Content="Volver al Resumen" Click="ResumenDesempenoSecciones" VerticalAlignment="Top" Margin="239,10,0,0" HorizontalAlignment="Left" Width="370"/>
@@ -151,12 +151,17 @@
                         <Label Content="Sexo          :"/>
                         <Label Content="Sección     :"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="237" Margin="172,48,0,0" Grid.Row="1" VerticalAlignment="Top" Width="298">
-                        <Label Name="nombreTrabajador" Content="Trabajador"/>
-                        <Label Name="edadTrabajador" Content="90"/>
-                        <Label Name="sexoTrabajador" Content="Masculino"/>
-                        <Label Name="seccionTrabajador" Content="Atención a Clientes"/>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="237" Margin="172,48,0,0" Grid.Row="1" VerticalAlignment="Top" Width="245">
+                        <Label Name="nombreTrabajador" Content="Trabajador" Margin="0,0,38,0"/>
+                        <Label Name="edadTrabajador" Content="90" Margin="0,0,38,0"/>
+                        <Label Name="sexoTrabajador" Content="Masculino" Margin="0,0,51,0"/>
+                        <Label Name="seccionTrabajador" Content="Atención a Clientes" Margin="0,0,38,0"/>
                     </StackPanel>
+                    <Button x:Name="ejecutarEvaluacion"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Style="{DynamicResource MetroCircleButtonStyle}" Height="60" Margin="120,252,0,0" Grid.Row="1" Click="IniciarEvaluacion">
+                        <DockPanel>
+                            <Image Source="Iconos/evaluar.png" Height="50" Width="50"/>
+                        </DockPanel>
+                    </Button>
                 </Grid>
             </TabItem>
             <TabItem Name="itemSecciones" Header="Secciones">

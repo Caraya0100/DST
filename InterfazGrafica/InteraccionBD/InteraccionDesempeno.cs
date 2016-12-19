@@ -30,9 +30,14 @@ namespace InterfazGrafica.InteraccionBD
             return datosDesempeno.ObtenerRankingTrabajadoresSeccion(idSeccion);            
         }
 
+        public double CapacidadGeneralTrabajadorRanking(int idSeccion, string idTrabajador)
+        {
+            return datosDesempeno.ObtenerCapacidadGeneralRanking(idTrabajador,idSeccion)*0.01;
+        }
+
         public double CapacidadGeneralTrabajador()
         {
-            return datosDesempeno.ObtenerCapacidadGeneralRanking(idTrabajador)*0.01;
+            return datosDesempeno.ObtenerCapacidadGeneral(idTrabajador) * 0.01;
         }
 
         public double CapacidadGeneralHB()
@@ -48,6 +53,17 @@ namespace InterfazGrafica.InteraccionBD
         public double CapacidadGeneralCF()
         {
             return datosDesempeno.ObtenerCapacidadCFRanking(idTrabajador);
+        }
+
+        public void ActualizacionSolicitud(string estado,int idActual, int idNueva, string rut)
+        {
+            datosDesempeno.CambiarEstadoSolicitud(estado,idActual,idNueva,rut);
+        }
+
+        public void ReubicarTrabajador(string rut, int idAnterior, int idActual, string fecha)
+        {
+            datosDesempeno.InsertarReubicacion(rut,idAnterior, idActual, DateTime.Now.ToString("yyyy-MM-dd"));
+            datosDesempeno.ReubicarTrabajador(idActual, rut);
         }
 
         public int IdSeccion

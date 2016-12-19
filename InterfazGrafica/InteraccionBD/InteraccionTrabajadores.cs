@@ -87,9 +87,29 @@ namespace InterfazGrafica.InteraccionBD
             return datosTrabajador.ObtenerPerfilTrabajador(idTrabajador);
         }
 
+        public List<Trabajador> TrabajadoresEncuestados()
+        {
+            return datosTrabajador.ObtenerTrabajadoresEncuestados(idTrabajador);
+        }
+
+         public List<string> TrabajadoresEvaluados()
+        {
+            return datosTrabajador.ObtenerTrabajadoresEvaluados();
+        }
+
         public void EliminarTrabajador()
         {
             datosTrabajador.BorrarTrabajador(idTrabajador);
+        }
+
+        public string NombreTrabajadorPorRut(string rut)
+        {
+            return datosTrabajador.ObtenerNombreTrabajador(rut);
+        }
+
+        public int IdSeccionPorRutTrabajador(string rut)
+        {
+            return datosTrabajador.ObtenerIdSeccion(rut);
         }
 
         public int IdSeccion

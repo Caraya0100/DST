@@ -15,6 +15,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.Behaviours;
 using System.ComponentModel;
+using DST;
 
 namespace InterfazGrafica
 {
@@ -24,7 +25,7 @@ namespace InterfazGrafica
     public partial class VentanaAsignacionHabilidades : MetroWindow
     {         
         private List<string> listaHabilidades;
-        private List<string> listaDeTodasHabilidades;   
+        private List<Componente> listaDeTodasHabilidades;   
         private Dictionary<string, int> habilidadesSeleccionadas;
         private Dictionary<string, int> habilidadesApagadas;
         /*interaccion BD*/
@@ -51,7 +52,7 @@ namespace InterfazGrafica
         {
             cuadroMensajes = new Mensajes(this);
             datosSeccion = new InteraccionBD.InteraccionSecciones();
-            listaDeTodasHabilidades = new List<string>();
+            listaDeTodasHabilidades = new List<Componente>();
             habilidadesSeleccionadas = new Dictionary<string, int>();
             habilidadesApagadas = new Dictionary<string, int>();
             tipoHabilidad = string.Empty;
@@ -64,35 +65,33 @@ namespace InterfazGrafica
         private void GeneradorHabilidades()
         {
             /*todas las habilidades*/
-            List<string> todasLasHabilidades = new List<string>();
-            datosSeccion.IdSeccion = idSeccion;
-            
+            List<Componente> todasLasHabilidades = new List<Componente>();
+            datosSeccion.IdSeccion = idSeccion;            
 
             int identificador = 0;
             if(tipoHabilidad.Equals("hd"))
-            {
-                todasLasHabilidades.Clear();                
+            {                
+                todasLasHabilidades.Clear();
                 todasLasHabilidades = datosSeccion.HabilidadesDuras();//todas las hd
                 listaHabilidades = datosSeccion.HabilidadesDurasPerfil();//hd del perfil
-                foreach (string habilidad in todasLasHabilidades)
+                foreach (Componente habilidad in todasLasHabilidades)
                 {                    
                     VisorHabilidades habilidades = new VisorHabilidades( EncendidoApagado );               
-                    habilidades.DescripcionHabilidades = habilidad;                    
+                    habilidades.DescripcionHabilidades = habilidad.Nombre;                    
                     habilidades.Identificador = "I"+identificador;
                     habilidades.IdentificadorHabilidad = "I" + identificador;
-                    if (listaHabilidades.Contains(habilidad))
+                    Console.WriteLine("ESTADO1: " + habilidad.Estado);
+                    if (listaHabilidades.Contains(habilidad.Nombre))
                     {
                         listaDeTodasHabilidades.Add(habilidad);
                         habilidades.Encendido = true;
-                        habilidadesSeleccionadas.Add(habilidad, idSeccion);
-                        
+                        habilidadesSeleccionadas.Add(habilidad.Nombre, idSeccion);                        
                     }
                     else
                     {
                         listaDeTodasHabilidades.Add(habilidad);
                         habilidades.Encendido = false;
-                        habilidadesApagadas.Add(habilidad, idSeccion);
-                        
+                        habilidadesApagadas.Add(habilidad.Nombre, idSeccion);                       
                     } 
                     contenedorHabilidades.Children.Add(habilidades.ConstructorInfo());
                     identificador++;
@@ -104,24 +103,25 @@ namespace InterfazGrafica
                 todasLasHabilidades.Clear();                
                 todasLasHabilidades = datosSeccion.HabilidadesBlandas();
                 listaHabilidades = datosSeccion.HabilidadesBlandasPerfil();
-                foreach (string habilidad in todasLasHabilidades)
+                foreach (Componente habilidad in todasLasHabilidades)
                 {                   
                     VisorHabilidades habilidades = new VisorHabilidades(EncendidoApagado);
-                    habilidades.DescripcionHabilidades = habilidad;                   
+                    habilidades.DescripcionHabilidades = habilidad.Nombre;                   
                     habilidades.Identificador = "I" + identificador;
                     habilidades.IdentificadorHabilidad = "I" + identificador;
-                    if (listaHabilidades.Contains(habilidad))
+                    Console.WriteLine("ESTADO2: " + habilidad.Estado);
+                    if (listaHabilidades.Contains(habilidad.Nombre))
                     {
                         listaDeTodasHabilidades.Add(habilidad);
                         habilidades.Encendido = true;
-                        habilidadesSeleccionadas.Add(habilidad, idSeccion); 
+                        habilidadesSeleccionadas.Add(habilidad.Nombre, idSeccion);                        
                     }
 
                     else
                     {
                         listaDeTodasHabilidades.Add(habilidad);
                         habilidades.Encendido = false;
-                        habilidadesApagadas.Add(habilidad, idSeccion);
+                        habilidadesApagadas.Add(habilidad.Nombre, idSeccion);                       
                     }                        
                     contenedorHabilidades.Children.Add(habilidades.ConstructorInfo());
                     identificador++;
@@ -134,23 +134,24 @@ namespace InterfazGrafica
                 todasLasHabilidades.Clear();                
                 todasLasHabilidades = datosSeccion.CaracteristicasFisicas();
                 listaHabilidades = datosSeccion.CaracteristicasFisicasPerfil();
-                foreach (string habilidad in todasLasHabilidades)
+                foreach (Componente habilidad in todasLasHabilidades)
                 {                   
                     VisorHabilidades habilidades = new VisorHabilidades(EncendidoApagado);
-                    habilidades.DescripcionHabilidades = habilidad;                    
+                    habilidades.DescripcionHabilidades = habilidad.Nombre;                    
                     habilidades.Identificador = "I" + identificador;
                     habilidades.IdentificadorHabilidad = "I" + identificador;
-                    if (listaHabilidades.Contains(habilidad))
+                    Console.WriteLine("ESTADO3: "+habilidad.Estado);
+                    if (listaHabilidades.Contains(habilidad.Nombre))
                     {
                         listaDeTodasHabilidades.Add(habilidad);
                         habilidades.Encendido = true;
-                        habilidadesSeleccionadas.Add(habilidad, idSeccion);
+                        habilidadesSeleccionadas.Add(habilidad.Nombre, idSeccion);                        
                     }
                     else
                     {
                         listaDeTodasHabilidades.Add(habilidad);
                         habilidades.Encendido = false;
-                        habilidadesApagadas.Add(habilidad, idSeccion);
+                        habilidadesApagadas.Add(habilidad.Nombre, idSeccion);                        
                     } 
                     contenedorHabilidades.Children.Add(habilidades.ConstructorInfo());
                     identificador++;
@@ -177,13 +178,13 @@ namespace InterfazGrafica
            
            if (elementoSeleccionado.IsChecked == true)
             {
-                habilidadesSeleccionadas.Add(listaDeTodasHabilidades[indice], idSeccion);
-                habilidadesApagadas.Remove(listaDeTodasHabilidades[indice]);
+                habilidadesSeleccionadas.Add(listaDeTodasHabilidades[indice].Nombre, idSeccion);
+                habilidadesApagadas.Remove(listaDeTodasHabilidades[indice].Nombre);                
             }
            else
            {
-                habilidadesApagadas.Add(listaDeTodasHabilidades[indice], idSeccion);
-                habilidadesSeleccionadas.Remove(listaDeTodasHabilidades[indice]);
+                habilidadesApagadas.Add(listaDeTodasHabilidades[indice].Nombre, idSeccion);
+                habilidadesSeleccionadas.Remove(listaDeTodasHabilidades[indice].Nombre);               
            }
                
 
@@ -201,18 +202,28 @@ namespace InterfazGrafica
                 if (cambios)
                 {
                     if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.GuardarCambiosAsignacionHabilidades()))
-                    {                        
+                    {
                         foreach (KeyValuePair<string, int> preguntas in habilidadesSeleccionadas)
-                        {                            
-                            datosSeccion.GuardarComponentesPerfil(preguntas.Value, preguntas.Key);                            
+                        {
+                            foreach (Componente id in listaDeTodasHabilidades)
+                            {
+                                if (id.Nombre.Equals(preguntas.Key))
+                                    datosSeccion.GuardarComponentesPerfil(preguntas.Value, id.ID);
+                            }
+
                         }
                         foreach (KeyValuePair<string, int> preguntas in habilidadesApagadas)
-                        {                            
-                            datosSeccion.EliminarComponentesPerfil(preguntas.Value, preguntas.Key);                           
-                            confirmarCierre = true;
-                            this.Close();
+                        {
+                            foreach (Componente id in listaDeTodasHabilidades)
+                            {
+                                if (id.Nombre.Equals(preguntas.Key))
+                                    datosSeccion.EliminarComponentesPerfil(preguntas.Value, id.ID);
+                            }
                         }
+                        confirmarCierre = true;
+                        this.Close();
                     }
+                    else e.Cancel = false;
                 }
                 else e.Cancel = false; 
             }
