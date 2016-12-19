@@ -43,6 +43,7 @@ namespace InterfazGrafica
         private string passwordInvalida;
         private string eliminarUsuario;
         private string usuarioEliminado;
+        private string cambiosGuardados;
         private VentanaJefeSeccion ventanaPrincipal;
         private VentanaAgregarTrabajador ventanaTrabajador;
         private VentanaEncuesta ventanaEncuesta;
@@ -141,6 +142,7 @@ namespace InterfazGrafica
             this.passwordInvalida = string.Empty;
             this.eliminarUsuario = string.Empty;
             this.usuarioEliminado = string.Empty;
+            this.cambiosGuardados = string.Empty;
         }
 
 
@@ -177,6 +179,7 @@ namespace InterfazGrafica
             this.passwordInvalida = "Ingrese contraseña correctamente.";
             this.eliminarUsuario = "¿Está seguro que desea eliminar la cuenta de usuario?.";
             this.usuarioEliminado = "La cuenta del usuario ha sido eliminada exitosamente.";
+            this.cambiosGuardados = "Los cambios han sido guardados correctamente.";
         }
 
         async public Task<MessageDialogResult> ConsultaEliminarTrabajador()
@@ -377,6 +380,11 @@ namespace InterfazGrafica
         {
             MessageDialogResult resultado = await this.ventanaAdministrador.ShowMessageAsync(mensaje, subMensaje, MessageDialogStyle.AffirmativeAndNegative);
             return resultado;
+        }
+
+        async public void CambiosGuardados()
+        {
+            await this.ventanaPrincipal.ShowMessageAsync(nombreSoftware, cambiosGuardados);
         }
     }
 }

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-        Title="Trabajadores" Height="558.27" Width="363.157" ResizeMode="NoResize" IsWindowDraggable="False" BorderBrush="DarkGray">
+        Title="Trabajadores" Height="558.27" Width="363.157" ResizeMode="NoResize"  IsWindowDraggable="False" BorderBrush="DarkGray" Closing="CerrarVentana">
     <Grid Background="#FFFBFBFB" Margin="0,0,-6,-20">
         <Grid.RowDefinitions>
             <RowDefinition Height="19*"/>

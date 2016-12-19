@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatosAlternativa.cs" />
+    <Compile Include="DatosPregunta.cs" />
     <Compile Include="Encuesta360.cs" />
     <Compile Include="Evaluacion360.cs" />
     <Compile Include="Pregunta.cs" />

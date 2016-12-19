@@ -155,7 +155,7 @@ namespace DST
 
             /*
             AdminTrabajador consultasTrabajador = new AdminTrabajador();*/
-<<<<<<< HEAD
+//<<<<<<< HEAD
             /*AdminTrabajador consultasTrabajador = new AdminTrabajador();
 =======
             //AdminTrabajador consultasTrabajador = new AdminTrabajador();

@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.Behaviours;
+using DST;
 
 namespace InterfazGrafica
 {
@@ -24,6 +25,8 @@ namespace InterfazGrafica
     {
         private VentanaJefeSeccion ventanaJefe;
         private int idSeccion;
+        private string idJefeSeccion;
+        private Perfil perfilSeccion;
         public VentanaEleccionGradoImportancia(VentanaJefeSeccion ventana)
         {
             InitializeComponent();
@@ -42,7 +45,10 @@ namespace InterfazGrafica
         {           
             DeshabilitaEdicion();
             this.Close();
-            VentanaEncuesta encuesta = new VentanaEncuesta(idSeccion);
+            Console.WriteLine("ID DE LA SECCION :"+idSeccion);
+            VentanaEncuesta encuesta = new VentanaEncuesta(idSeccion,true);
+            encuesta.IdEvaluador = "17.626.128-5";
+            encuesta.InicioEncuesta();
             encuesta.ShowDialog();
             /*agregar las preguntas*/
         }
@@ -79,6 +85,18 @@ namespace InterfazGrafica
         {
             get { return idSeccion; }
             set { idSeccion = value; }
+        }
+
+        public string IdJefeSeccion
+        {
+            get { return idJefeSeccion; }
+            set { idJefeSeccion = value; }
+        }
+
+        public Perfil PerfilSeccion
+        {
+            get { return perfilSeccion; }
+            set { perfilSeccion = value; }
         }
     }
 }

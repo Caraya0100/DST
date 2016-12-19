@@ -95,7 +95,7 @@
                                     </lvc:CartesianChart>
                                 </WrapPanel>
                                 <WrapPanel x:Name="panelDatosMensuales" Height="2000" Visibility="Collapsed">
-                                    
+
                                 </WrapPanel>
                             </WrapPanel>
                         </ScrollViewer>
@@ -140,12 +140,17 @@
                         <Label Content="Sexo          :"/>
                         <Label Content="Sección     :"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="237" Margin="172,48,0,0" Grid.Row="1" VerticalAlignment="Top" Width="298">
-                        <Label Name="nombreTrabajador" Content="Trabajador"/>
-                        <Label Name="edadTrabajador" Content="90"/>
-                        <Label Name="sexoTrabajador" Content="Masculino"/>
-                        <Label Name="seccionTrabajador" Content="Atención a Clientes"/>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="237" Margin="172,48,0,0" Grid.Row="1" VerticalAlignment="Top" Width="245">
+                        <Label Name="nombreTrabajador" Content="Trabajador" Margin="0,0,38,0"/>
+                        <Label Name="edadTrabajador" Content="90" Margin="0,0,38,0"/>
+                        <Label Name="sexoTrabajador" Content="Masculino" Margin="0,0,51,0"/>
+                        <Label Name="seccionTrabajador" Content="Atención a Clientes" Margin="0,0,38,0"/>
                     </StackPanel>
+                    <Button x:Name="ejecutarEvaluacion"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Style="{DynamicResource MetroCircleButtonStyle}" Height="60" Margin="120,252,0,0" Grid.Row="1" Click="IniciarEvaluacion">
+                        <DockPanel>
+                            <Image Source="Iconos/evaluar.png" Height="50" Width="50"/>
+                        </DockPanel>
+                    </Button>
                 </Grid>
             </TabItem>
             <TabItem Name="itemSecciones" Header="Secciones">
