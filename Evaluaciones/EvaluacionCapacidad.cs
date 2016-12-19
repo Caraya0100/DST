@@ -43,17 +43,24 @@ namespace DST
             //Dictionary<string, Tuple<double, double>> datos = new Dictionary<string, Tuple<double, double>>();
             Dictionary<string, double> datos = new Dictionary<string, double>();
             List<VariableLinguistica> variables = new List<VariableLinguistica>();
+            AdminPerfil ap = new AdminPerfil();
+            double totalImportancia = 0;
 
-            // Evaluamos la compatibilidad de las HB, HD, Y CF.
+            // Obtenemos los componentes desde la bd para obtener sus importancias.
+            Componente HB = ap.ObtenerComponente("HB");
+            Componente HD = ap.ObtenerComponente("HD");
+            Componente CF = ap.ObtenerComponente("CF");
+            // calculamos el total de la importancia para la normalizacion.
+            totalImportancia = HB.Importancia + HD.Importancia + CF.Importancia;
+
+
+            // Evaluamos la igualdad de las HB, HD, Y CF.
             compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
-            //datos.Add("HB", new Tuple<double, double>(compatibilidadHB, HBS.Importancia));
-            datos.Add("HB", compatibilidadHB);
+            datos.Add("HB", compatibilidadHB/* * (HB.Importancia / totalImportancia) */);
             compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
-            //datos.Add("HD", new Tuple<double, double>(compatibilidadHD, HDS.Importancia));
-            datos.Add("HD", compatibilidadHD);
+            datos.Add("HD", compatibilidadHD/* * (HD.Importancia / totalImportancia)*/);
             compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
-            //datos.Add("CF", new Tuple<double, double>(compatibilidadCF, CFS.Importancia));
-            datos.Add("CF", compatibilidadCF);
+            datos.Add("CF", compatibilidadCF/* * (CF.Importancia / totalImportancia)*/);
 
             reglas = reglasM.Capacidad;
             variables.Add(variablesM.HB);

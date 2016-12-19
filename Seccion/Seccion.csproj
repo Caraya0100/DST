@@ -45,6 +45,10 @@
     <Compile Include="Seccion.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Encuesta\Encuesta.csproj">
+      <Project>{5893d1de-c96f-44a4-8fa4-53870d8048d7}</Project>
+      <Name>Encuesta</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Perfiles\Perfil.csproj">
       <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
       <Name>Perfil</Name>

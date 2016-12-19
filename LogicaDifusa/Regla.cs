@@ -64,7 +64,7 @@ namespace LogicaDifusa
             this.texto += " entonces ";
             if (consecuente != null)
             {
-                this.texto += " " + consecuente.Item1 + " es " + consecuente.Item2.Nombre;
+                this.texto += consecuente.Item1 + " es " + consecuente.Item2.Nombre;
                 AgregarConsecuente(consecuente.Item1, consecuente.Item2);
             }
 

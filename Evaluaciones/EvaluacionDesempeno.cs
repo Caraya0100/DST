@@ -28,5 +28,26 @@ namespace DST
 
             return new Tuple<double, double>(actualAnterior, actualPlan);
         }
+
+        /// <summary>
+        /// Ejecuta la evaluacion del desempeño a traves de las respuestas de 
+        /// los objetivos.
+        /// </summary>
+        /// <param name="respuestas"></param>
+        /// <returns></returns>
+        public static double EjecutarGqm(List<double> respuestas)
+        {
+            double desempeno = -1;
+            double sum = 0;
+
+            foreach (double respuesta in respuestas)
+            {
+                sum += respuesta;
+            }
+
+            desempeno = sum / respuestas.Count;
+
+            return desempeno;
+        }
     }
 }

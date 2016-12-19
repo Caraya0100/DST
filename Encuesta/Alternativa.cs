@@ -14,7 +14,15 @@ namespace DST
         private string nombre;
         private string descripcion;
         private double valor;
-        private string tipo; // "conducta" o "frecuencia". "normal" (no 360).
+        private string tipo; // "grado" o "frecuencia". "normal" (no 360).
+
+        public Alternativa()
+        {
+            this.nombre = "";
+            this.descripcion = "";
+            this.valor = 0;
+            this.tipo = "";
+        }
 
         /// <summary>
         /// Constructor, recib el nombre, descripcion, y el valor de la respuesta.
@@ -66,6 +74,11 @@ namespace DST
         {
             get { return tipo; }
             set { tipo = value; }
+        }
+
+        public override string ToString()
+        {
+            return nombre;
         }
     }
 }
