@@ -66,6 +66,11 @@ namespace InterfazGrafica.InteraccionBD
             datosDesempeno.ReubicarTrabajador(idActual, rut);
         }
 
+        public Dictionary<string, double> CalcularPuntajesGeneralesTrabajador(string rut)
+        {
+            return datosDesempeno.CalcularHabilidadesGenerales(rut);
+        }
+
         public int IdSeccion
         {
             get { return idSeccion; }
