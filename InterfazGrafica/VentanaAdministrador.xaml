@@ -41,7 +41,7 @@
                             <WrapPanel x:Name="WrapDDetalles" Height="1800">
                                 <Label x:Name="lblNombreSeccion" Content="Sección" Width="782" Height="43" FontSize="24" HorizontalContentAlignment="Center"/>
                                 <Label x:Name="lblInfoSeccion" Content="Desempeño del ultimo mes de la sección." Width="782" Height="44" HorizontalContentAlignment="Center"/>
-                                <Label x:Name="lblAvisoReubicacion" Content="El desempeño de los ultimos tres meses ha estado bajo lo esperado.&#xD;&#xA;Se recomienda realizar reubiaciones en la sección de trabajo." Width="552" Margin="120,0,0,0" Height="70" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFCD4141" Foreground="White" FontSize="14" Visibility="Collapsed"/>
+                                <Label x:Name="lblAvisoReubicacion" Content="El desempeño de los ultimos meses ha estado bajo lo esperado.&#xD;&#xA;Se recomienda realizar reubiaciones en la sección de trabajo." Width="552" Margin="120,0,0,0" Height="70" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFCD4141" Foreground="White" FontSize="14" Visibility="Collapsed"/>
                                 <Label x:Name="lblDUltimoMes" Content="Desempeño Ultimo Mes" Width="782" Height="43" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <WrapPanel x:Name="wrapGraficosVentas">
                                     <local:GraficoGauge360 x:Name="graficoDAnterior" Width="398" Height="148" />
@@ -83,7 +83,6 @@
                                     <local:GraficoGauge360 x:Name="graficoDCapacitados" Width="779" Height="178" Margin="0,30,0,0" />
                                     <Label x:Name="lblDCapacitados" Content="Porcentaje de trabajadores capacitados" Width="778" Height="28" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,20,0,0"/>
                                 </WrapPanel>
-                                <Button x:Name="btnDGenerarReporte" Content="Generar reporte" Click="GenerarReporteDesempeno" VerticalAlignment="Top" Margin="239,20,0,0" HorizontalAlignment="Left" Width="370"/>
                             </WrapPanel>
                         </ScrollViewer>
                         <Button x:Name="btnDesempenoResumen" Content="Volver al Resumen" Click="ResumenDesempenoSecciones" VerticalAlignment="Top" Margin="239,10,0,0" HorizontalAlignment="Left" Width="370"/>
@@ -92,10 +91,12 @@
                         <WrapPanel x:Name="wrapIngresoVentas" Height="520">
                             <Label x:Name="lblDIngresoVentas" Content="Desempeño Ultimo Mes" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
                             <Label x:Name="lblInfoDIngresoVentas" Content="Ingresa las ventas del ultimo mes para calcular el desempeño de la sección." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
-                            <Label x:Name="lblVentasActuales" Content="Ventas mes:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
-                            <TextBox x:Name="txtVentasActuales" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
-                            <Label x:Name="lblVentasPlan" Content="Ventas plan:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="75"/>
-                            <TextBox x:Name="txtVentasPlan" Width="655" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblVentasAnterior" Content="Ventas mes año anterior:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="145"/>
+                            <TextBox x:Name="txtVentasAnterior" Width="583" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblVentasActuales" Content="Ventas mes:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="145"/>
+                            <TextBox x:Name="txtVentasActuales" Width="583" Margin="15,0,0,20" HorizontalAlignment="Right"/>
+                            <Label x:Name="lblVentasPlan" Content="Ventas plan:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="146"/>
+                            <TextBox x:Name="txtVentasPlan" Width="581" Margin="15,0,0,20" HorizontalAlignment="Right"/>
                             <Button x:Name="btnAceptarIngresoVentas" Content="Aceptar" Click="AceptarIngresoVentas" VerticalAlignment="Top" Width="143" Margin="469,10,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="btnVolverPanelDDetallesVentas" Content="Volver" Click="VolverPanelDDetalles" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
                         </WrapPanel>
@@ -107,9 +108,9 @@
                             <Label x:Name="lblRepuestaObjetivo" Content="Respuesta:" Margin="35,20,0,0" HorizontalAlignment="Right" Width="724" Height="29" HorizontalContentAlignment="Left"/>
                             <ComboBox x:Name="boxRespuestaObjetivo" Width="733" Margin="35,0,0,0" SelectionChanged="SeleccionRepuestaObjetivo">
                             </ComboBox>
-                            <Button x:Name="btnAceptarRespuestasObjetivo" Content="Aceptar" Click="AceptarRespuestasObjetivo" VerticalAlignment="Top" Width="143" Margin="316,10,0,0" HorizontalAlignment="Right"/>
-                            <Button x:Name="btnModificarPreguntasObjetivo" Content="Modificar Preguntas" Click="IrPanelPreguntasGqm" VerticalAlignment="Top" Width="156" Margin="5,10,0,20" HorizontalAlignment="Right"/>
-                            <Button x:Name="btnVolverPanelDDetalles" Content="Volver" Click="VolverPanelDDetalles" VerticalAlignment="Top" Width="143" Margin="5,10,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAceptarRespuestasObjetivo" Content="Aceptar" Click="AceptarRespuestasObjetivo" VerticalAlignment="Top" Width="143" Margin="316,50,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnModificarPreguntasObjetivo" Content="Modificar Preguntas" Click="IrPanelPreguntasGqm" VerticalAlignment="Top" Width="156" Margin="5,50,0,20" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnVolverPanelDDetalles" Content="Volver" Click="VolverPanelDDetalles" VerticalAlignment="Top" Width="143" Margin="5,50,0,20" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                 </Grid>
@@ -305,14 +306,14 @@
                     <StackPanel Name="panelReglasSecciones" Orientation="Vertical" >
                         <Label x:Name="lblReglasSecciones" Content="Reglas Secciones" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>
                         <Label x:Name="lblInfoReglasSecciones" Content="Selecciona una seccion para ver sus reglas." Margin="15,5,0,20" HorizontalAlignment="Right" Width="756" Height="29" HorizontalContentAlignment="Center"/>
-                            <DataGrid x:Name="tablaReglasSecciones" AutoGenerateColumns="False" VerticalAlignment="Top" Height="333" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="33,0,30,0" BorderBrush="Gray" BorderThickness="1">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Sección" Binding="{Binding Nombre}"></DataGridTextColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                        <DataGrid x:Name="tablaReglasSecciones" AutoGenerateColumns="False" VerticalAlignment="Top" Height="333" RowHeight="50" MouseDoubleClick="TDSeleccionSeccion" IsReadOnly="True" Margin="33,0,30,0" BorderBrush="Gray" BorderThickness="1">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Sección" Binding="{Binding Nombre}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         <Button x:Name="btnIrReglasSeccion" Content="Ver reglas" Click="VerSeccionReglas" VerticalAlignment="Top" Margin="239,30,0,0" HorizontalAlignment="Left" Width="370"/>
 
-                        </StackPanel>
+                    </StackPanel>
                     <StackPanel x:Name="panelReglasSeccion" Visibility="Hidden">
                         <WrapPanel x:Name="wrapReglasSeccion" Height="815">
                             <Label x:Name="lblReglasSeccion" Content="Edición de Reglas" Width="795" Height="45" FontSize="24" HorizontalContentAlignment="Center"/>

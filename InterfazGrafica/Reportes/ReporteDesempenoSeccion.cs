@@ -124,9 +124,9 @@ namespace InterfazGrafica.Reportes
             reporte.Add(table);
             reporte.NewPage();
 
-            table = new PdfPTable(7);
+            table = new PdfPTable(6);
             cell = new PdfPCell(new Phrase("Datos Trabajadores"));
-            cell.Colspan = 7;
+            cell.Colspan = 6;
             cell.HorizontalAlignment = 1;
             table.AddCell(cell);
 
@@ -134,7 +134,7 @@ namespace InterfazGrafica.Reportes
             table.AddCell("Total");
             table.AddCell("No capacitados");
             table.AddCell("Capacitados");
-            table.AddCell("Capacitados (%)");
+            //table.AddCell("Capacitados (%)");
             table.AddCell("Desempeño mes/anterior(&)");
             table.AddCell("Desempeño mes/plan(%)");
 
@@ -166,20 +166,88 @@ namespace InterfazGrafica.Reportes
             int total = ad.ObtenerTotalEmpleadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
             int capacitados = ad.ObtenerEmpleadosCapacitadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
             int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
-            double porcentajeCapacitados = (capacitados / total) * 100;
+            //double porcentajeCapacitados = (capacitados / total) * 100;
 
             tabla.AddCell(mes.ToString());
             tabla.AddCell(total.ToString());
             tabla.AddCell(noCapacitados.ToString());
             tabla.AddCell(capacitados.ToString());
-            tabla.AddCell(porcentajeCapacitados.ToString());
+            //tabla.AddCell(porcentajeCapacitados.ToString());
             tabla.AddCell(desempeno.Item1.ToString());
             tabla.AddCell(desempeno.Item2.ToString());
         }
 
         private void TablaDesempenoGqm()
         {
+            AdminDesempeño ad = new AdminDesempeño();
+            List<int> meses = ad.ObtenerMesesAnio(seccion.IdSeccion, anio, seccion.Tipo);
 
+            reporte.NewPage();
+            string textoTitulo = "DESEMPEÑO " + anio + " SECCION: " + seccion.Nombre;
+            Paragraph titulo = new Paragraph(textoTitulo, fuente.Subrayado(20));
+            Paragraph espacio = new Paragraph("\n\n", fuente.Normal(11));
+            titulo.Alignment = Element.ALIGN_CENTER;
+
+            PdfPTable table = new PdfPTable(2);
+            PdfPCell cell = new PdfPCell(new Phrase("Ventas Sección"));
+            cell.Colspan = 2;
+            cell.HorizontalAlignment = 1; //0=Left, 1=Centre, 2=Right
+            table.AddCell(cell);
+
+            table.AddCell("Mes");
+            table.AddCell("Desempeno (%)");
+
+            foreach (int mes in meses)
+            {
+                AgregarDesempenoGqmMes(mes, table);
+            }
+
+            reporte.Add(table);
+            reporte.NewPage();
+
+            table = new PdfPTable(4);
+            cell = new PdfPCell(new Phrase("Datos Trabajadores"));
+            cell.Colspan = 4;
+            cell.HorizontalAlignment = 1;
+            table.AddCell(cell);
+
+            table.AddCell("Mes");
+            table.AddCell("Total");
+            table.AddCell("No capacitados");
+            table.AddCell("Capacitados");
+            //table.AddCell("Capacitados (%)");
+
+            foreach (int mes in meses)
+            {
+                AgregarTrabajadoresMesGqm(mes, table);
+            }
+
+            reporte.Add(table);
+        }
+
+        private void AgregarDesempenoGqmMes(int mes, PdfPTable tabla)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            double desempeno = ad.ObtenerDesempenoGqm(seccion.IdSeccion, mes, anio);
+
+            tabla.AddCell(mes.ToString());
+            tabla.AddCell(desempeno.ToString());
+        }
+
+        private void AgregarTrabajadoresMesGqm(int mes, PdfPTable tabla)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            int reubicaciones = ad.ObtenerReubicacionesMes(seccion.IdSeccion, mes, anio);
+            int total = ad.ObtenerTotalEmpleadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
+            int capacitados = ad.ObtenerEmpleadosCapacitadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
+            int noCapacitados = ad.ObtenerEmpleadosNoCapacitadosMes(seccion.IdSeccion, mes, anio, seccion.Tipo);
+            double porcentajeCapacitados = (capacitados / total) * 100;
+
+            tabla.AddCell(mes.ToString());
+            tabla.AddCell(total.ToString());
+            tabla.AddCell(noCapacitados.ToString());
+            tabla.AddCell(capacitados.ToString());
+            //tabla.AddCell(porcentajeCapacitados.ToString());
         }
 
         public string RutaFichero

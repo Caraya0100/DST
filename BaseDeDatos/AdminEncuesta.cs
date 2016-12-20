@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using DST;
+using System.Diagnostics;
 
 namespace DST
 {
@@ -505,7 +506,7 @@ namespace DST
             return pregunta;
         }
 
-        public Alternativa ObtenerRespuestaSeccion(int idPregunta, int idSeccion, string alternativa)
+        public Alternativa ObtenerRespuestaSeccion(int idSeccion, int idPregunta, string alternativa)
         {
             Alternativa al = null;
             BaseDeDatos bd = new BaseDeDatos();
@@ -516,6 +517,7 @@ namespace DST
 
             if (bd.Consulta.Read())
             {
+                Debug.WriteLine("_PASOOO");
                 al = ObtenerAlternativa(bd.Consulta.GetString("alternativa"));
             }
 
@@ -634,7 +636,7 @@ namespace DST
 
             bd.Open();
 
-            bd.Insertar("UPDATE respuestasSeccion SET alternativa='" + alternativa + "' WHERE idSeccion='" + idSeccion + "' AND idPregunta='" + idPregunta + "';");
+            bd.Insertar("UPDATE respuestasSeccion SET alternativa='" + alternativa + "' WHERE idSeccion=" + idSeccion + " AND idPregunta=" + idPregunta + ";");
 
             bd.Close();
         }
