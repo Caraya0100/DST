@@ -26,6 +26,7 @@ namespace InterfazGrafica
     {
         private InteraccionBD.InteraccionEncuesta datosEncuesta;
         private InteraccionBD.InteraccionSecciones datosSeccion;
+        private InteraccionBD.InteraccionTrabajadores datosTrabajador;
         private List<Estructuras.PreguntasYRespuestas> preguntasRespuestas;
         private List<string> preguntas;
         private List<int> respuestas;
@@ -35,12 +36,15 @@ namespace InterfazGrafica
         private string idEvaluador;
         private int idSeccion;
         private int indice;
+        private bool retroceso;
+        private int numeroPregunta;
         private int indiceFrecuencias;
         private bool frecuenciaSeleccionada;
         private bool respuestasSeleccionada;
         private Mensajes cuadroMensajes;
         private bool encuestaLista = false;
         private bool encuestaSeccion;
+        private bool encuestaJefeSeccion =false;
         private Perfil perfilseccion;
         private string idJefe;
         /*variables*/
@@ -66,6 +70,17 @@ namespace InterfazGrafica
             cuadroMensajes = new Mensajes(this);
 
         }
+
+        public VentanaEncuesta(bool jefeSeccion, int idseccion)
+        {
+            this.idSeccion = idseccion;
+            this.encuestaJefeSeccion = jefeSeccion;
+            InitializeComponent();
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            inicializacionVariables();
+            cuadroMensajes = new Mensajes(this);
+
+        }
         /// <summary>
         /// Metodo que inicializa todas las variables.
         /// </summary>
@@ -73,8 +88,10 @@ namespace InterfazGrafica
         {
             datosEncuesta = new InteraccionBD.InteraccionEncuesta();
             datosSeccion = new InteraccionBD.InteraccionSecciones();
+            datosTrabajador = new InteraccionBD.InteraccionTrabajadores();
             preguntasRespuestas = new List<Estructuras.PreguntasYRespuestas>();
             this.indice = 0;
+            this.numeroPregunta = 0;
             this.indiceFrecuencias = 0;
             this.preguntas = new List<string>();
             this.respuestas = new List<int>();
@@ -85,6 +102,7 @@ namespace InterfazGrafica
             this.botonIzquierdo.IsEnabled = true;//false
             this.frecuenciaSeleccionada = true;//false
             this.respuestasSeleccionada = true;//false
+            this.retroceso = false;
             //ListaPreguntas();
             if(!encuestaSeccion)
             {
@@ -92,7 +110,7 @@ namespace InterfazGrafica
                 Console.WriteLine("FALSO");
             }
                
-            else 
+            else if(encuestaSeccion)
             {
                 Console.WriteLine("VERDADERO");
                 listaPreguntas = datosEncuesta.PreguntasDelPerfil(idSeccion);
@@ -107,14 +125,16 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void MovimientoIzquierda(object sender, EventArgs e)
         {
+            retroceso = true;
+            numeroPregunta--;
             DesbloqueaFrecuencias();
             if (indice > 0)
             {
                 indice--;
                 indiceFrecuencias--;
-                textoPregunta.Text = (indice+1)+". "+listaPreguntas[indice].Pregunta;
-                habilidad.Text = listaPreguntas[indice].Habilidad;
-                tipoHabilidad.Content = TipoHabilidad(listaPreguntas[indice].TipoHabilidad);
+                textoPregunta.Text = (numeroPregunta+1)+". "+listaPreguntas[indice].Pregunta;
+                //habilidad.Text = listaPreguntas[indice].Habilidad;
+                //tipoHabilidad.Content = TipoHabilidad(listaPreguntas[indice].TipoHabilidad);
                 HabilitarPanelRespuestas(listaPreguntas[indice].TipoPregunta);
                 /*alternativas*/
                 //int retroceso = respuestas[indice];
@@ -150,7 +170,8 @@ namespace InterfazGrafica
             DesbloqueaFrecuencias();
             datosSeccion.IdSeccion = idSeccion;
             perfilseccion = datosSeccion.PerfilSeccion();
-                        
+
+            Console.WriteLine("ESTADO INDICE: "+indice+" LIST: "+listaPreguntas.Count+" RESP: "+respuestas.Count);
             if (listaPreguntas.Count == respuestas.Count+1)
             {
                 if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.EncuestaFinalizadaGuardarYSalir()))
@@ -159,24 +180,9 @@ namespace InterfazGrafica
                     /*Ejecutar el almacenamiento de datos*/
                     //AsignarRespuestas();
                     foreach (Encuesta.DatosPregunta pregunta in listaPreguntas)
-                    {
-                        /*Console.WriteLine("hab: "+pregunta.Habilidad);
-                        Console.WriteLine("habti: " + pregunta.TipoHabilidad);
-                        Console.WriteLine("prtip: " + pregunta.TipoPregunta);
-                        Console.WriteLine("pr: " + pregunta.Pregunta);
-                        Console.WriteLine("res: "+pregunta.Respuesta360);
-                        Console.WriteLine("id: " + pregunta.Id);*/
+                    {                        
                         if (pregunta.TipoPregunta.Equals("360"))
                         {
-
-                           
-
-
-                            /*Console.WriteLine("TIPO 360"); Console.WriteLine("__________________");
-                            Console.WriteLine("PREGUNTA: " + pregunta.Pregunta);
-                            Console.WriteLine("RESPUESTA: " + pregunta.Respuesta360);
-                            Console.WriteLine("FRECUENCIA: " + pregunta.Frecuencia);
-                            Console.WriteLine("ID: " + pregunta.Id);*/
                             double valorAlternativa=0;
                             double valorFrecuencia=0;
                             double resultadoRespuesta=0;
@@ -185,19 +191,13 @@ namespace InterfazGrafica
                             if (valorAlternativa != -1)
                                 resultadoRespuesta = (valorAlternativa * valorFrecuencia) / 100;
                             else resultadoRespuesta = valorAlternativa;
-                            Console.WriteLine("VALOR: "+resultadoRespuesta+" VALOR REPARADO: "+Convert.ToDouble(resultadoRespuesta.ToString("0.0")));
+                            
                             if (encuestaSeccion)
                             {
-                                Console.WriteLine("RESPUESTA PARA ENCUESTA");
-                                //datosEncuesta.AsignarRespuesta360(pregunta.Id, "14.389.967-5", "10.785.114-3", pregunta.Respuesta360, pregunta.Frecuencia, resultadoRespuesta);
                                 datosEncuesta.AgregarRespuestaSeccion(idSeccion,resultadoRespuesta,pregunta.Id,pregunta.idHabilidad,pregunta.TipoHabilidad);
-                                Console.WriteLine("RESPUETA: "+pregunta.Respuesta360+" - FRECUENCIA: "+pregunta.Frecuencia);
-
-                                
                             }
                             else
-                            {
-                                Console.WriteLine("RESPUESTA PARA TRABAJADOR");
+                            {                               
                                 datosEncuesta.AsignarRespuesta360
                                 (
                                     pregunta.Id,
@@ -208,20 +208,18 @@ namespace InterfazGrafica
                                     resultadoRespuesta
                                 );  
                             }
-                                                      
-                            Console.WriteLine("ALTERNATIVA: "+pregunta.Respuesta360+" - VALOR: "+valorAlternativa);
-                            Console.WriteLine("FRECUENCIA: " + pregunta.Frecuencia + " - VALOR: " + valorFrecuencia);
-                           /* foreach (Encuesta.DatosAlternativa alternativa in datosEncuesta.Alternativas(pregunta.Id, "frecuencia"))
-                            {
-                                if (alternativa.Alternativa.Equals(pregunta.Frecuencia))
-                                {
-                                    Console.WriteLine("ALTERNATIVA: "+pregunta.Frecuencia+" VALOR:"+alternativa.Valor);
-                                    
-                                }
-                            }*/
+                        }
+                        else if (pregunta.TipoPregunta.Equals("normal"))
+                        {
+                            datosEncuesta.AgregarRespuestaNormal(idSeccion, idTrabajador, idEvaluador, pregunta.RespuestaNormal);
+                        }
+                        else if (pregunta.TipoPregunta.Equals("datos") && encuestaJefeSeccion)
+                        {
+                            datosTrabajador.ActualizarPuntajesTrabajador(idTrabajador, pregunta.idHabilidad, Convert.ToDouble(pregunta.RespuestaIngresoDatos));
+                            
                         }
                     }
-                    if (encuestaSeccion)/*actualiza los valores*/
+                    if (encuestaSeccion)/*actualiza los valores de la encuesta para evaluar seccion*/
                     {
                         foreach (KeyValuePair<string, Componente> habilidadPuntaje in perfilseccion.Blandas)
                         {
@@ -240,15 +238,18 @@ namespace InterfazGrafica
 
                             double puntaje = datosEncuesta.Puntaje(habilidadPuntaje.Value.ID);
                             datosSeccion.ActualizacionPuntajeHabilidad(idSeccion, habilidadPuntaje.Value.ID, puntaje);
-                        }
-                        
-                       /* VentanaJefeSeccion jefe = new VentanaJefeSeccion();
-                        jefe.IdSeccion = idSeccion;
-                        jefe.IdAdmin = "Administrador";
-                        jefe.Show();*/
+                        }   
                     }
                     else
+                    {
                         datosEncuesta.ActualizarEstadoEncuestados(idTrabajador, idEvaluador);
+                        /*actualiza los puntajes del trabajador por todas las encuestas*/
+                        foreach (KeyValuePair<string, double> habilidades in datosEncuesta.PuntajesGeneralesPorHabilidad(idTrabajador))
+                        {
+                            datosTrabajador.ActualizarPuntajesTrabajador(idTrabajador, habilidades.Key, habilidades.Value);
+                        }
+                    }
+
                     encuestaLista = true;
                     this.Close();
                     VentanaLogin login = new VentanaLogin();
@@ -259,15 +260,33 @@ namespace InterfazGrafica
             }
             else if (indice <= (listaPreguntas.Count - 1))
             {
+                numeroPregunta++;
                 indice++;
                 indiceFrecuencias++;
-                textoPregunta.Text = (indice+1)+". "+listaPreguntas[indice].Pregunta;
-                habilidad.Text = listaPreguntas[indice].Habilidad;
-                tipoHabilidad.Content = TipoHabilidad(listaPreguntas[indice].TipoHabilidad);
-                HabilitarPanelRespuestas(listaPreguntas[indice].TipoPregunta);
+                if (!encuestaJefeSeccion && !listaPreguntas[indice].TipoPregunta.Equals("datos"))
+                {
+                    Console.WriteLine("no es DATO "+indice+" largo: "+listaPreguntas.Count);
+                    textoPregunta.Text = (numeroPregunta + 1) + ". " + listaPreguntas[indice].Pregunta;
+                    //habilidad.Text = listaPreguntas[indice].Habilidad;
+                    //tipoHabilidad.Content = TipoHabilidad(listaPreguntas[indice].TipoHabilidad);
+                    HabilitarPanelRespuestas(listaPreguntas[indice].TipoPregunta);
+                    
+                }
+                else
+                {
+                    respuestas.Add(indice);
+                    indice++;
+                    indiceFrecuencias++;
+                    Console.WriteLine("si es DATO "+indice+" largo: "+listaPreguntas.Count);
+                    textoPregunta.Text = (numeroPregunta) + ". " + listaPreguntas[indice].Pregunta;
+                    //habilidad.Text = listaPreguntas[indice].Habilidad;
+                    //tipoHabilidad.Content = TipoHabilidad(listaPreguntas[indice].TipoHabilidad);
+                    HabilitarPanelRespuestas(listaPreguntas[indice].TipoPregunta);
+                   
+                }
+                
 
-                Console.WriteLine("INDICE: "+indice+" RESPUEST: "+respuestas.Count);
-                if (indice < respuestas.Count - 1)//cuidado
+                if (indice < respuestas.Count - 1 && retroceso)//cuidado
                 {
                     GeneraPanelAlternativa(indice);
                     AlternativaYaSeleccionada(indice);
@@ -285,8 +304,7 @@ namespace InterfazGrafica
             else
             {
                 
-            }
-            Console.WriteLine("la cantidad PREGUNTAS:"+listaPreguntas.Count+" CANTIDAD RESPUESTAS: "+respuestas.Count);
+            }            
         }
         /// <summary>
         /// Metodo que desabilita la alternativa seleccionada.
@@ -329,48 +347,7 @@ namespace InterfazGrafica
             alternativaOcasional.IsEnabled = true;
             alternativaMitadTiempo.IsEnabled = true;
         }
-        /// <summary>
-        /// Metodo que setea una alternativa seleccionada, ya almacenada, al retroceder
-        /// en la lista de preguntas.
-        /// </summary>
-        /// <param name="alternativa"></param>
-       /* private void AlternativaYaSeleccionada(int alternativa)
-        {
-            if (alternativa == 5)
-                alternativaMR.IsChecked = true;
-            else if (alternativa == 4)
-                alternativaAC.IsChecked = true;
-            else if (alternativa == 3)
-                alternativaC.IsChecked = true;
-            else if (alternativa == 2)
-                alternativaND.IsChecked = true;
-            else if (alternativa == 1)
-                alternativaNDS.IsChecked = true;
-            else if (alternativa == 0)
-                alternativaNO.IsChecked = true;            
-        }*/
-        /// <summary>
-        /// Metodo que setea una alternativa seleccionada, ya almacenada, al retroceder
-        /// en la lista de frecuencias.
-        /// </summary>
-        /// <param name="alternativa"></param>
-       /* private void FrecuenciaYaSeleccionada(int alternativa)
-        {
-            if (alternativa == 3)
-                alternativaSiempre.IsChecked = true;
-            else if (alternativa == 2)
-                alternativaFrecuente.IsChecked = true;
-            else if (alternativa == 1)
-                alternativaMitadTiempo.IsChecked = true;
-            else if (alternativa == 0)
-                alternativaOcasional.IsChecked = true;
-            else if (alternativa == -1)
-                DeshabilitaFrecuencias();
-            
-        }*/
-        
-
-
+       
         private void SeleccionAlternativa(object sender, EventArgs e)
         {
             RadioButton seleccion = sender as RadioButton;
@@ -448,11 +425,14 @@ namespace InterfazGrafica
 
         public void InicioEncuesta()
         {
-            textoPregunta.Text = (indice+1)+". "+listaPreguntas[0].Pregunta;
-            tipoHabilidad.Content = TipoHabilidad(listaPreguntas[0].TipoHabilidad);
-            habilidad.Text = listaPreguntas[0].Habilidad;
-            HabilitarPanelRespuestas(listaPreguntas[0].TipoPregunta);
-            GeneraPanelAlternativa(0);
+            if (!encuestaJefeSeccion)
+            {
+                textoPregunta.Text = (indice + 1) + ". " + listaPreguntas[0].Pregunta;
+                //tipoHabilidad.Content = TipoHabilidad(listaPreguntas[0].TipoHabilidad);
+                //habilidad.Text = listaPreguntas[0].Habilidad;
+                HabilitarPanelRespuestas(listaPreguntas[0].TipoPregunta);
+                GeneraPanelAlternativa(0);
+            }
             
         }
 
@@ -464,13 +444,23 @@ namespace InterfazGrafica
         /***********************************************************************
          *                              METODOS 
          * *********************************************************************/
+        /// <summary>
+        /// Distingue entre tipo de pregunta 360, normal, ingreso de datos
+        /// </summary>
+        /// <param name="index"></param>
         private void GeneraPanelAlternativa(int index)
-        {
-            Console.WriteLine("TIPO PREGUNTA: " + listaPreguntas[index].TipoPregunta);
+        {           
             if (listaPreguntas[index].TipoPregunta.Equals("360"))
             {
                 this.panelAlternativas360.Children.Clear();
                 this.panelFrecuencias.Children.Clear();
+                HabilitarPanelRespuestas("360");
+                Label grado = new Label(); grado.Content = "              GRADO"; //grado.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+                grado.Height = 40; grado.FontWeight = FontWeights.Bold;
+                Label frecuencia = new Label(); frecuencia.Content = "FRECUENCIA"; //frecuencia.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+                frecuencia.Height = 40; frecuencia.FontWeight = FontWeights.Bold;
+                this.panelAlternativas360.Children.Add(grado);
+                this.panelFrecuencias.Children.Add(frecuencia);
                 foreach (Encuesta.DatosAlternativa alternativa in datosEncuesta.Alternativas(listaPreguntas[index].Id, "grado"))
                 {
                     AgregarAlternativa360(alternativa.Alternativa);
@@ -479,6 +469,19 @@ namespace InterfazGrafica
                 {
                     AgregarFrecuencia360(alternativa.Alternativa);
                 }
+            }
+            else if (listaPreguntas[index].TipoPregunta.Equals("normal"))
+            {
+                HabilitarPanelRespuestas("normal");
+                this.panelNormal.Children.Clear();                
+                foreach (Encuesta.DatosAlternativa alternativa in datosEncuesta.Alternativas(listaPreguntas[index].Id, "grado"))
+                {
+                    AgregarAlternativa360(alternativa.Alternativa);
+                }
+            }
+            else if (listaPreguntas[index].TipoPregunta.Equals("datos"))
+            {
+                HabilitarPanelRespuestas("datos");
             }
         }
 
@@ -535,13 +538,13 @@ namespace InterfazGrafica
                 this.panelNormal.Visibility = System.Windows.Visibility.Hidden;
             }
 
-            else if (tipoPregunta.Equals("Normal"))
+            else if (tipoPregunta.Equals("normal"))
             {
                 this.panel360.Visibility = System.Windows.Visibility.Hidden;
                 this.panelDatos.Visibility = System.Windows.Visibility.Hidden;
                 this.panelNormal.Visibility = System.Windows.Visibility.Visible;
             }
-            else if (tipoPregunta.Equals("Ingreso_Datos"))
+            else if (tipoPregunta.Equals("datos"))
             {
                 this.panel360.Visibility = System.Windows.Visibility.Hidden;
                 this.panelDatos.Visibility = System.Windows.Visibility.Visible;
@@ -552,7 +555,7 @@ namespace InterfazGrafica
         private void AgregarAlternativa360(string nombre)
         {            
             RadioButton alternativa = new RadioButton();
-            alternativa.Content = nombre+"XX";
+            alternativa.Content = nombre;
             alternativa.Name = nombre.Replace(" ","_");
             alternativa.Click += SeleccionAlternativa;
             alternativa.Width = 370;
@@ -566,231 +569,29 @@ namespace InterfazGrafica
         private void AgregarFrecuencia360(string nombre)
         {
             RadioButton alternativa = new RadioButton();
-            alternativa.Content = nombre + "XX";
+            alternativa.Content = nombre;
             alternativa.Name = nombre.Replace(" ", "_");
             alternativa.Click += SeleccionFrecuencias;
             //alternativa.Width = 370;
             alternativa.Height = 30;
             alternativa.FontSize = 16;
             this.panelFrecuencias.Children.Add(alternativa);
-           
-            
         }
 
-        /*****************************************************************
-         * DESECHADAS
-         * ******************************************************************/
-        private void SeleccionFrecuencia(object sender, RoutedEventArgs e)
-        {
-            frecuenciaSeleccionada = true;
-            if (alternativaSiempre.IsChecked == true)
-            {
-                if (indiceFrecuencias < frecuencias.Count)
-                {
-                    frecuencias.RemoveAt(indiceFrecuencias);
-                    frecuencias.Insert(indiceFrecuencias, 3);
-                }
-                else
-                    frecuencias.Add(3);
-            }
-            else if (alternativaFrecuente.IsChecked == true)
-            {
-                if (indiceFrecuencias < frecuencias.Count)
-                {
-                    frecuencias.RemoveAt(indiceFrecuencias);
-                    frecuencias.Insert(indiceFrecuencias, 2);
-                }
-                else
-                    frecuencias.Add(2);
-            }
-            else if (alternativaMitadTiempo.IsChecked == true)
-            {
-                if (indiceFrecuencias < frecuencias.Count)
-                {
-                    frecuencias.RemoveAt(indiceFrecuencias);
-                    frecuencias.Insert(indiceFrecuencias, 1);
-                }
-                else
-                    frecuencias.Add(1);
-            }
-            else if (alternativaOcasional.IsChecked == true)
-            {
-                if (indiceFrecuencias < frecuencias.Count)
-                {
-                    frecuencias.RemoveAt(indiceFrecuencias);
-                    frecuencias.Insert(indiceFrecuencias, 0);
-                }
-                else
-                    frecuencias.Add(0);
-            }
-            /*comprueba que respuesta y frecuencias esten seleccionadas antes de avanzar*/
-            if (respuestasSeleccionada && frecuenciaSeleccionada)
-                botonDerecho.IsEnabled = true;
-        }
-
-        /// <summary>
-        /// Controlador que se acciona al seleccionar alguna alternativa
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SeleccionRespuesta(object sender, RoutedEventArgs e)
-        {
-            respuestasSeleccionada = true;
-            if (alternativaMR.IsChecked == true)
-            {
-                if (indice < respuestas.Count)
-                {
-                    respuestas.RemoveAt(indice);
-                    respuestas.Insert(indice, 5);
-                }
-                else
-                    respuestas.Add(5);
-                // botonDerecho.IsEnabled = true;
-            }
-            else if (alternativaAC.IsChecked == true)
-            {
-                if (indice < respuestas.Count)
-                {
-                    respuestas.RemoveAt(indice);
-                    respuestas.Insert(indice, 4);
-                }
-                else
-                    respuestas.Add(4);
-                //botonDerecho.IsEnabled = true;
-            }
-            else if (alternativaC.IsChecked == true)
-            {
-                if (indice < respuestas.Count)
-                {
-                    respuestas.RemoveAt(indice);
-                    respuestas.Insert(indice, 3);
-                }
-                else
-                    respuestas.Add(3);
-                //botonDerecho.IsEnabled = true;
-            }
-            else if (alternativaND.IsChecked == true)
-            {
-                if (indice < respuestas.Count)
-                {
-                    respuestas.RemoveAt(indice);
-                    respuestas.Insert(indice, 2);
-                }
-                else
-                    respuestas.Add(2);
-                //botonDerecho.IsEnabled = true;
-            }
-            else if (alternativaNDS.IsChecked == true)
-            {
-                if (indice < respuestas.Count)
-                {
-                    respuestas.RemoveAt(indice);
-                    respuestas.Insert(indice, 1);
-                }
-                else
-                    respuestas.Add(1);
-                //botonDerecho.IsEnabled = true;
-            }
-            else if (alternativaNO.IsChecked == true)
-            {
-                frecuenciaSeleccionada = true;
-                BloqueaFrecuencias();
-                /*agregar valor ORIGINAL*/
-                if (indice < respuestas.Count)
-                {
-                    respuestas.RemoveAt(indice);
-                    respuestas.Insert(indice, 0);
-                    frecuencias.Add(-1);
-                }
-                else
-                {
-                    respuestas.Add(0);
-                    frecuencias.Add(-1);
-                }
-
-
-            }
-            if (respuestasSeleccionada && frecuenciaSeleccionada)
-                botonDerecho.IsEnabled = true;
-        }
-
-        private void AsignarRespuestas()
-        {
-            Console.WriteLine("LARGO respuestas: " + respuestas.Count);
-            int indice = 0;
-            foreach (int respuesta in respuestas)
-            {
-                Estructuras.PreguntasYRespuestas pr = new Estructuras.PreguntasYRespuestas();
-                pr.AlternativaRespuesta = "" + respuesta;
-                pr.Pregunta = preguntas[indice];
-                pr.Frecuencia = "" + frecuencias[indice];
-                preguntasRespuestas.Add(pr);
-                indice++;
-            }
-            Console.WriteLine("LARGO respuestas2: " + respuestas.Count + " - " + preguntasRespuestas.Count);
-            foreach (Estructuras.PreguntasYRespuestas a in preguntasRespuestas)
-            {
-                Console.WriteLine("PREGUNTA: " + a.AlternativaRespuesta + " FRECUENCIA: " + a.Frecuencia + " largo: " + preguntasRespuestas.Count);
-            }
-            Console.WriteLine("LARGO PR: " + preguntasRespuestas.Count);
-        }
-
-       
         
-
-      /*  async private void MovimientoDerecha(object sender, EventArgs e)
-        {
-            botonDerecho.IsEnabled = false;
-            frecuenciaSeleccionada = false;
-            respuestasSeleccionada = false;
-            botonIzquierdo.IsEnabled = true;
-            DesbloqueaFrecuencias();
-            if (indice <= (listaPreguntas.Count - 2))
-            {
-                indice++;
-                indiceFrecuencias++;
-                textoPregunta.Text = (indice + 1) + ". " + listaPreguntas[indice].Pregunta;
-                habilidad.Text = listaPreguntas[indice].Habilidad;
-                tipoHabilidad.Content = TipoHabilidad(listaPreguntas[indice].TipoHabilidad);
-                HabilitarPanelRespuestas(listaPreguntas[indice].TipoPregunta);
-                GeneraPanelAlternativa(indice);
-
-                if (indice <= respuestas.Count - 2)
-                {   
-                    int avance = respuestas[indice];
-                    AlternativaYaSeleccionada(avance);
-                    
-                    int avanceFrecuencias = frecuencias[indice];
-                    FrecuenciaYaSeleccionada(avanceFrecuencias);
-                }
-                else
-                    DeshabilitaAlternativas();
-            }
-            else
-            {
-                if (listaPreguntas.Count == respuestas.Count)
-                {
-                    if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.EncuestaFinalizadaGuardarYSalir()))
-                    {
-                        await cuadroMensajes.EncuestaGuardadaExitosamente();
-                       
-                        AsignarRespuestas();
-                        this.Close();
-                    }
-                }
-            }
-        }*/
-
-        public bool EvaluacionSeccion
-        {
-            get { return encuestaSeccion; }
-            set { encuestaSeccion = value; }
+        private void IngresoDeDatos(object sender, TextChangedEventArgs e)
+        {            
+            botonDerecho.IsEnabled = true;
+            Encuesta.DatosPregunta pregunta = listaPreguntas[indice];
+            pregunta.RespuestaIngresoDatos = respuestaDato.Text;
+            listaPreguntas.RemoveAt(indice);
+            listaPreguntas.Insert(indice, pregunta);
         }
 
-        public Perfil PerfilSeccion
+        public bool EncuestaJefeSeccion
         {
-            get { return perfilseccion; }
-            set { perfilseccion = value; }
+            get { return encuestaJefeSeccion; }
+            set { encuestaJefeSeccion = value; }
         }
     }
 }

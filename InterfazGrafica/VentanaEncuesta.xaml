@@ -25,18 +25,11 @@
             <RowDefinition Height="61*"/>
         </Grid.RowDefinitions>
         <Label Content="Nombre De Evaluado" HorizontalAlignment="Left" Margin="151,27,0,0" VerticalAlignment="Top" Width="207" Height="46" Grid.Column="1" FontSize="20" VerticalContentAlignment="Center"/>
-        <Label Content="Tipo De Habilidad" Grid.Column="1" HorizontalAlignment="Left" Margin="151,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="207" Height="46" FontSize="20" VerticalContentAlignment="Center"/>
-        <Label Content="Habilidad" Grid.Column="1" HorizontalAlignment="Left" Margin="151,10,0,0" Grid.Row="2" VerticalAlignment="Top" Height="46" Width="207" FontSize="20" VerticalContentAlignment="Center"/>
         <Label Content=":" Grid.Column="1" HorizontalAlignment="Left" Margin="363,27,0,0" VerticalAlignment="Top" Height="46" Width="24" FontSize="20" VerticalContentAlignment="Center"/>
-        <Label Content=":" Grid.Column="1" HorizontalAlignment="Left" Margin="363,10,0,0" VerticalAlignment="Top" Height="46" Width="24" FontSize="20" VerticalContentAlignment="Center" Grid.Row="1"/>
-        <Label Content=":" Grid.Column="1" HorizontalAlignment="Left" Margin="363,5,0,0" VerticalAlignment="Top" Height="46" Width="24" FontSize="20" VerticalContentAlignment="Center" Grid.Row="2"/>
         <Label Name="nombreTrabajador" Content="José Martínez Álvarez" Grid.Column="2" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Height="46" Width="433" VerticalContentAlignment="Center" FontSize="20"/>
-        <Label Name="tipoHabilidad" Content="Habilidad Blanda" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="46" Width="433" VerticalContentAlignment="Center" FontSize="20" Grid.Row="1"/>
-        <ScrollViewer Grid.Column="2" Margin="10,5,22,7" Grid.Row="2" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <TextBlock Name="habilidad" Text="Proactividad" TextWrapping="Wrap"  Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"  Width="480" TextAlignment="Left" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2" Height="25"/>
-        </ScrollViewer>
+        <ScrollViewer Grid.Column="2" Margin="10,5,22,7" Grid.Row="2" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
         <Separator Grid.Column="1" HorizontalAlignment="Left" Height="10" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="855" Grid.ColumnSpan="2"/>
-        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Grid.Column="1" Margin="10,0,12,10" Grid.Row="4" Grid.ColumnSpan="2">
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Grid.Column="1" Margin="22,5,0,48" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <TextBlock Name="textoPregunta"  Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="4" TextWrapping="Wrap" Text="¿Alguna Pregunta relacionada con alguna habilidad?" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="812" FontSize="20" TextAlignment="Center"/>
         </ScrollViewer>
         <Button Name="botonDerecho"  HorizontalAlignment="Left" Margin="391,0,0,0" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Grid.Row="7" Grid.Column="2" Click="MovimientoDerecha" Grid.RowSpan="2">
@@ -49,30 +42,29 @@
                 <Image Source="Iconos/flecha_izquierda.png" Height="24" Width="34"/>
             </DockPanel>
         </Button>
-        <StackPanel Name="panel360" Orientation="Horizontal" Visibility="Visible" Grid.Column="1" HorizontalAlignment="Left" Height="275" Margin="94,10,0,0" Grid.Row="5" Grid.RowSpan="6" VerticalAlignment="Top" Width="678" Grid.ColumnSpan="2">
+        <StackPanel Name="panel360" Orientation="Horizontal" Visibility="Visible" Grid.Column="1" HorizontalAlignment="Left" Height="275" Margin="93,10,0,0" Grid.Row="4" Grid.RowSpan="6" VerticalAlignment="Top" Width="678" Grid.ColumnSpan="2">
             <StackPanel Width="100"></StackPanel>
             <StackPanel Name="panelAlternativas360">
-                <RadioButton Name="alternativaMR" Content="Modelo de rol" Height="30" Width="370" FontSize="16" Checked="SeleccionRespuesta"/>
-                <RadioButton Name="alternativaAC" Content="Altamente competente"  Height="30" Width="370" FontSize="16" Checked="SeleccionRespuesta"/>
-                <RadioButton Name="alternativaC" Content="Competente" Height="30" Width="370" FontSize="16" Checked="SeleccionRespuesta"/>
-                <RadioButton Name="alternativaND" Content="Necesita desarrollarse" Height="30" Width="370" FontSize="16" Checked="SeleccionRespuesta"/>
-                <RadioButton Name="alternativaNDS" Content="Necesita desarrollarse significativamente" Height="30" Width="370" FontSize="16" Checked="SeleccionRespuesta"/>
-                <RadioButton Name="alternativaNO" Content="No puede ser evaluada"  Height="30" Width="370" FontSize="16" Checked="SeleccionRespuesta"/>
+                <RadioButton Name="alternativaMR" Content="Modelo de rol" Height="30" Width="370" FontSize="16"/>
+                <RadioButton Name="alternativaAC" Content="Altamente competente"  Height="30" Width="370" FontSize="16" />
+                <RadioButton Name="alternativaC" Content="Competente" Height="30" Width="370" FontSize="16"/>
+                <RadioButton Name="alternativaND" Content="Necesita desarrollarse" Height="30" Width="370" FontSize="16" />
+                <RadioButton Name="alternativaNDS" Content="Necesita desarrollarse significativamente" Height="30" Width="370" FontSize="16"/>
+                <RadioButton Name="alternativaNO" Content="No puede ser evaluada"  Height="30" Width="370" FontSize="16" />
             </StackPanel>
             <StackPanel Name="panelFrecuencias">
-                <RadioButton Name="alternativaSiempre" Checked="SeleccionFrecuencia" Content="Siempre" FontSize="16" Height="40"/>
-                <RadioButton Name="alternativaFrecuente" Checked="SeleccionFrecuencia" Content="Frecuente" FontSize="16" Height="40"/>
-                <RadioButton Name="alternativaMitadTiempo" Checked="SeleccionFrecuencia" Content="Mitad del Tiempo" FontSize="16" Height="40"/>
-                <RadioButton Name="alternativaOcasional" Checked="SeleccionFrecuencia" Content="Ocasional" FontSize="16" Height="40"/>
+                <RadioButton Name="alternativaSiempre" Content="Siempre" FontSize="16" Height="40"/>
+                <RadioButton Name="alternativaFrecuente"  Content="Frecuente" FontSize="16" Height="40"/>
+                <RadioButton Name="alternativaMitadTiempo"  Content="Mitad del Tiempo" FontSize="16" Height="40"/>
+                <RadioButton Name="alternativaOcasional" Content="Ocasional" FontSize="16" Height="40"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Name="panelNormal" Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Left" Height="263" Margin="166,10,0,0" Grid.Row="5" Grid.RowSpan="6" VerticalAlignment="Top" Width="534" Grid.ColumnSpan="2">
+        <StackPanel Name="panelNormal" Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Left" Height="263" Margin="166,10,0,0" Grid.Row="4" Grid.RowSpan="6" VerticalAlignment="Top" Width="534" Grid.ColumnSpan="2">
         </StackPanel>
-        <StackPanel Name="panelDatos" Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Left" Height="263" Margin="133,10,0,0" Grid.Row="5" Grid.RowSpan="6" VerticalAlignment="Top" Width="567" Grid.ColumnSpan="2">
+        <StackPanel Name="panelDatos" Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Left" Height="263" Margin="133,10,0,0" Grid.Row="4" Grid.RowSpan="6" VerticalAlignment="Top" Width="567" Grid.ColumnSpan="2">
             <StackPanel Height="70"></StackPanel>
             <Label Content="Ingrese Dato" HorizontalContentAlignment="Center"></Label>
-            <TextBox Name="respuestaDato" Height="40" Width="60"></TextBox>
+            <TextBox Name="respuestaDato" Height="40" Width="60" TextChanged="IngresoDeDatos"></TextBox>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>
-

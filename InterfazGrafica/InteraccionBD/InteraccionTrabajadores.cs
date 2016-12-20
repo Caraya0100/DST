@@ -123,5 +123,10 @@ namespace InterfazGrafica.InteraccionBD
             get { return idTrabajador; }
             set { idTrabajador= value; }
         }
+
+        public void ActualizarPuntajesTrabajador(string rut, string idComponente, double puntaje)
+        {
+            datosTrabajador.ModificarPuntajePerfilTrabajador(rut,idComponente, puntaje);
+        }
     }
 }
