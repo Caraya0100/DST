@@ -66,6 +66,7 @@ namespace DST
 
             cmd.CommandText = "INSERT INTO componentesPerfilTrabajadores (rut,id,puntaje) "
                 + " VALUES('" + rut + "','" + nombre + "'," + puntaje.ToString() + ");";
+            Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -79,15 +80,18 @@ namespace DST
         /// <param name="nuevoPuntaje"></param>
         public void ModificarPuntajePerfilTrabajador(string rutTrabajador, string nombreComponente, double nuevoPuntaje)
         {
-            string ptje = "" + nuevoPuntaje.ToString("0.0");
+            string ptje = "" + nuevoPuntaje.ToString("0.0");      
+
             conn.Open();
 
-            cmd.CommandText = "UPDATE componentesPerfilTrabajadores SET puntaje =" + ptje.Replace(",",".")+ "WHERE "
-                + "id='" + nombreComponente + "' AND rut='" + rutTrabajador + "';";
+            cmd.CommandText = "INSERT INTO componentesPerfilTrabajadores (rut,id,puntaje) "
+                + " VALUES('" + rutTrabajador + "','" + nombreComponente + "'," + ptje.Replace(",",".") + ") "
+                +"ON DUPLICATE KEY UPDATE puntaje="+ptje.Replace(",",".")+";";
             Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
-            conn.Close();
+            conn.Close();         
+            
         }
 
         /// <summary>
