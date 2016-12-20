@@ -391,8 +391,9 @@
                                     <DataGridTextColumn Header="Descripción" Binding="{Binding Descripcion}"></DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <Button x:Name="agregarComponente" Content="Agregar Componente" Click="IrPanelComponente" VerticalAlignment="Top" Width="159" Margin="430,0,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="agregarComponente" Content="Agregar Componente" Click="IrPanelComponente" VerticalAlignment="Top" Width="159" Margin="272,0,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="editarComponente" Content="Editar Componente" Click="IrPanelComponente" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="eliminarComponente" Content="Eliminar Componente" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                     <StackPanel x:Name="panelComponente" Visibility="Hidden">
@@ -415,8 +416,8 @@
                                 <ComboBoxItem Content="Habilidad dura"/>
                                 <ComboBoxItem Content="Caracteristica fisica"/>
                             </ComboBox>
-                            <Label x:Name="lblValoresComponente" Content="Valores:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74"/>
-                            <ComboBox x:Name="boxValoresComponente" Width="668" SelectedValuePath="Content" Margin="15,0,0,0" SelectionChanged="SeleccionValoresComponente">
+                            <Label x:Name="lblValoresComponente" Content="Valores:" Margin="15,0,0,0" HorizontalAlignment="Right" Width="74" Visibility="Hidden"/>
+                            <ComboBox x:Name="boxValoresComponente" Width="668" SelectedValuePath="Content" Margin="15,0,0,0" SelectionChanged="SeleccionValoresComponente" Visibility="Hidden">
                                 <ComboBoxItem Content="Muy baja, Baja, Promedio, Alta, Muy alta"/>
                             </ComboBox>
                             <Button x:Name="btnAceptarComponente" Content="Aceptar" Click="AceptarComponente" VerticalAlignment="Top" Width="238" Margin="25,30,0,0" HorizontalAlignment="Right"/>
@@ -438,8 +439,7 @@
                             </ComboBox>
                             <Label x:Name="lblInfoValoresFP" Content="Valores" Margin="15,0,0,0" Width="766" BorderThickness="0,20,0,0" HorizontalContentAlignment="Center" FontSize="16"/>
                             <Label x:Name="lblInfoValores" Content="Izquierda: 0.0 - Centro: 0.0 - Derecha: 0.0" Margin="15,0,0,0" Width="766" HorizontalContentAlignment="Center"/>
-                            <lvc:CartesianChart x:Name="graficoFP" Series="{Binding Series}" LegendLocation="Right" Width="782" Height="220"/>
-                            <Button x:Name="btnAceptar" Content="Aceptar" Click="AceptarOpcionesAvanzadas" VerticalAlignment="Top" Width="131" Margin="30,30,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnAceptar" Content="Aceptar" Click="AceptarOpcionesAvanzadas" VerticalAlignment="Top" Width="131" Margin="219,30,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="btnEditarFP" Content="Editar función" Click="IrPanelFP" VerticalAlignment="Top" Width="155" Margin="20,30,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="btnOpcionComponente" Content="Volver opciones componente" Click="VolverPanelComponente" Width="238" Margin="15,30,0,0" Height="30"/>
                         </WrapPanel>

@@ -2429,6 +2429,7 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void VolverPanelComponentes(object sender, RoutedEventArgs e)
         {
+            IniciarPanelComponentes();
             panelOpcionesAvanzadas.Visibility = Visibility.Hidden;
             panelComponente.Visibility = Visibility.Hidden;
             panelComponentes.Visibility = Visibility.Visible;
@@ -2521,6 +2522,7 @@ namespace InterfazGrafica
             AdminReglas ar = new AdminReglas();
             Regla regla = (Regla)tablaReglas.SelectedItem;
             ar.EliminarRegla(Convert.ToInt32(regla.ID));
+            IniciarPanelReglas();
         }
 
         /// <summary>
