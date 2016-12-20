@@ -80,9 +80,9 @@ namespace InterfazGrafica
                         datosSeccion.TipoMedicion = tipo;
                         datosSeccion.NuevaSeccion();
                         int id = datosSeccion.IdSeccionPorNombreSeccion();
-                        datosSeccion.GuardarComponentesPerfil(id, "hb");
-                        datosSeccion.GuardarComponentesPerfil(id, "hd");
-                        datosSeccion.GuardarComponentesPerfil(id, "cf");
+                        datosSeccion.GuardarComponentesPerfil(id, "HB");
+                        datosSeccion.GuardarComponentesPerfil(id, "HD");
+                        datosSeccion.GuardarComponentesPerfil(id, "CF");
                         CamposVacios();
                         cuadroMensajes.NuevaSeccionAgregada();
                         //this.Close();

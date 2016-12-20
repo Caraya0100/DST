@@ -499,6 +499,12 @@ namespace InterfazGrafica
                 datosDesempeno.ReubicarTrabajador(solicitud.RutSolicitud, solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.FechaSolicitud.Replace(" 0:00:00",""));
                 listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
                 panelSolicitudes.Children.Clear();
+                /*actualizacion de los otros paneles*/
+                listaDeSecciones = datosSeccion.TodasLasSecciones();
+                listaDeTrabajadores = datosTrabajador.TrabajadoresEmpresa();
+                listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
+                GeneraListaTrabajadores();
+                //GeneraListaSecciones();
                 GeneraListaSolicitudes();
             }
 
@@ -1271,7 +1277,7 @@ namespace InterfazGrafica
                 boxTipoPregunta.Items.Add("Normal");
                 boxTipoPregunta.Items.Add("Ingreso de datos");
 
-                if (pregunta.Tipo.ToLower() == "nornal")
+                if (pregunta.Tipo.ToLower() == "normal")
                         boxTipoPregunta.SelectedValue = "Normal";
                 else if (pregunta.Tipo.ToLower() == "datos")
                     boxTipoPregunta.SelectedValue = "Ingreso de datos";

@@ -74,13 +74,6 @@ namespace DST
                 Console.WriteLine("ERROR EN BD:" + e);
             }
 
-
-            cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia) "
-                + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString() + ","
-                + importancia.ToString() + ");";
-            cmd.ExecuteNonQuery();
-
-
             conn.Close();
         }
 
