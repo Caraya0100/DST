@@ -2829,6 +2829,7 @@ namespace InterfazGrafica
 
         private void IniciarEvaluacion(object sender, RoutedEventArgs e)
         {
+            AdminPerfil ap = new AdminPerfil();
             AdminMatching am = new AdminMatching();
             Trabajador trabajador = listaDeTrabajadores[trabajadorSeleccionado];
             EvaluacionTrabajador et = new EvaluacionTrabajador(trabajador);
@@ -2839,17 +2840,21 @@ namespace InterfazGrafica
             {
                 Perfil perfilEvaluado = EvaluacionPerfil.Ejecutar(seccion.Value.Perfil, seccion.Value.IdSeccion);
 
+                perfilEvaluado.HB.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "HB").Importancia;
+                perfilEvaluado.HD.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "HD").Importancia;
+                perfilEvaluado.CF.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "CF").Importancia;
+
                 Debug.WriteLine("Seccion : " + seccion.Value.Nombre);
-                Debug.WriteLine("HB: " + perfilEvaluado.HB.Puntaje);
-                Debug.WriteLine("HD: " + perfilEvaluado.HD.Puntaje);
-                Debug.WriteLine("CF: " + perfilEvaluado.CF.Puntaje);
+                Debug.WriteLine("HB: " + perfilEvaluado.HB.Puntaje + " " + perfilEvaluado.HB.Importancia);
+                Debug.WriteLine("HD: " + perfilEvaluado.HD.Puntaje + " " + perfilEvaluado.HD.Importancia);
+                Debug.WriteLine("CF: " + perfilEvaluado.CF.Puntaje + " " + perfilEvaluado.CF.Importancia);
 
                 // En caso de no existir en la bd insertamos las generales (HB, HD, CF)
                 am.InsertarComponentes();
                 // Insertamos tambien en caso de que no existan en la sección.
-                am.InsertarComponente(seccion.Value.IdSeccion, "HB", perfilEvaluado.HB.Puntaje, 100);
-                am.InsertarComponente(seccion.Value.IdSeccion, "HD", perfilEvaluado.HD.Puntaje, 100);
-                am.InsertarComponente(seccion.Value.IdSeccion, "CF", perfilEvaluado.CF.Puntaje, 100);
+                am.InsertarComponente(seccion.Value.IdSeccion, "HB", perfilEvaluado.HB.Puntaje, perfilEvaluado.HB.Importancia);
+                am.InsertarComponente(seccion.Value.IdSeccion, "HD", perfilEvaluado.HD.Puntaje, perfilEvaluado.HD.Importancia);
+                am.InsertarComponente(seccion.Value.IdSeccion, "CF", perfilEvaluado.CF.Puntaje, perfilEvaluado.CF.Importancia);
 
 
                 et.EvaluarCapacidad(perfilEvaluado, seccion.Value.IdSeccion);
