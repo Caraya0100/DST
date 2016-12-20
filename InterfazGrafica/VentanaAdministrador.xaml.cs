@@ -2877,5 +2877,40 @@ namespace InterfazGrafica
                 Debug.WriteLine("Capacidad: " + et.Capacidad);
             }
         }
+
+        private void IniciarEvaluaciones(object sender, RoutedEventArgs e)
+        {
+            AdminTrabajador at = new AdminTrabajador();
+            AdminPerfil ap = new AdminPerfil();
+            AdminMatching am = new AdminMatching();
+
+            List<Trabajador> trabajadores = at.ObtenerTrabajadoresEmpresa();
+
+            foreach (Trabajador trabajador in trabajadores)
+            {
+                EvaluacionTrabajador et = new EvaluacionTrabajador(trabajador);
+                foreach (KeyValuePair<string, Seccion> seccion in secciones)
+                {
+                    Perfil perfilEvaluado = EvaluacionPerfil.Ejecutar(seccion.Value.Perfil, seccion.Value.IdSeccion);
+
+                    perfilEvaluado.HB.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "HB").Importancia;
+                    perfilEvaluado.HD.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "HD").Importancia;
+                    perfilEvaluado.CF.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "CF").Importancia;
+
+                    // En caso de no existir en la bd insertamos las generales (HB, HD, CF)
+                    am.InsertarComponentes();
+                    // Insertamos tambien en caso de que no existan en la sección.
+                    am.InsertarComponente(seccion.Value.IdSeccion, "HB", perfilEvaluado.HB.Puntaje, perfilEvaluado.HB.Importancia);
+                    am.InsertarComponente(seccion.Value.IdSeccion, "HD", perfilEvaluado.HD.Puntaje, perfilEvaluado.HD.Importancia);
+                    am.InsertarComponente(seccion.Value.IdSeccion, "CF", perfilEvaluado.CF.Puntaje, perfilEvaluado.CF.Importancia);
+
+
+                    et.EvaluarCapacidad(perfilEvaluado, seccion.Value.IdSeccion);
+
+                    // Guardamos o actualizamos la capacidad del trabajador.
+                    am.InsertarCapacidad(trabajador.Rut, seccion.Value.IdSeccion, et.IgualdadHB, et.IgualdadHD, et.IgualdadCF, et.Capacidad);
+                }
+            }
+        }
     }
 }

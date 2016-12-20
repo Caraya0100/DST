@@ -158,11 +158,14 @@
                         <Label Name="sexoTrabajador" Content="Masculino" Margin="0,0,51,0"/>
                         <Label Name="seccionTrabajador" Content="Atención a Clientes" Margin="0,0,38,0"/>
                     </StackPanel>
-                    <Button x:Name="ejecutarEvaluacion"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Style="{DynamicResource MetroCircleButtonStyle}" Height="60" Margin="120,252,0,0" Grid.Row="1" Click="IniciarEvaluacion">
+                    <Button x:Name="ejecutarEvaluacion"  Content="Evaluar trabajador" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="29" Margin="51,252,0,0" Grid.Row="1" Click="IniciarEvaluacion" />
+                    <Button x:Name="ejecutarEvaluaciones"  Content="Evaluar trabajadores" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="29" Margin="51,286,0,0" Grid.Row="1" Click="IniciarEvaluaciones" />
+
+                    <!--<Button x:Name="ejecutarEvaluacion"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Style="{DynamicResource MetroCircleButtonStyle}" Height="60" Margin="120,252,0,0" Grid.Row="1" Click="IniciarEvaluacion">
                         <DockPanel>
                             <Image Source="Iconos/evaluar.png" Height="50" Width="50"/>
                         </DockPanel>
-                    </Button>
+                    </Button>-->
                 </Grid>
             </TabItem>
             <TabItem Name="itemSecciones" Header="Secciones">
