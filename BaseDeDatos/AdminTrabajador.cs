@@ -79,10 +79,12 @@ namespace DST
         /// <param name="nuevoPuntaje"></param>
         public void ModificarPuntajePerfilTrabajador(string rutTrabajador, string nombreComponente, double nuevoPuntaje)
         {
+            string ptje = "" + nuevoPuntaje.ToString("0.0");
             conn.Open();
 
-            cmd.CommandText = "UPDATE componentesPerfilTrabajadores SET puntaje =" + nuevoPuntaje.ToString() + "WHERE "
-                + "nombre='" + nombreComponente + "AND rut='" + rutTrabajador + "';";
+            cmd.CommandText = "UPDATE componentesPerfilTrabajadores SET puntaje =" + ptje.Replace(",",".")+ "WHERE "
+                + "id='" + nombreComponente + "' AND rut='" + rutTrabajador + "';";
+            Console.WriteLine(cmd.CommandText.ToString());
             cmd.ExecuteNonQuery();
 
             conn.Close();

@@ -728,7 +728,7 @@ namespace InterfazGrafica
                     panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
                     panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
                     panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
+                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje.ToString("0.0");
                     panelHabilidades.GradoImportanciaIdentificador = habilidadPuntaje.Value.ID;
                     panelHabilidades.GradoImportanciaEtiquetaIdentificador = habilidadPuntaje.Value.ID + "2";
                     panelHabilidades.Controlador = AsignacionValorHabilidad;
@@ -750,7 +750,7 @@ namespace InterfazGrafica
                     panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
                     panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
                     panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
+                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje.ToString("0.0");
                     panelHabilidades.GradoImportanciaIdentificador = habilidadPuntaje.Value.ID;//cambio
                     panelHabilidades.GradoImportanciaEtiquetaIdentificador = habilidadPuntaje.Value.ID + "2";
                     panelHabilidades.Controlador = AsignacionValorHabilidad;
@@ -772,7 +772,7 @@ namespace InterfazGrafica
                     panelHabilidades.Habilidad = habilidadPuntaje.Value.Nombre;
                     panelHabilidades.GradoImportancia = habilidadPuntaje.Value.Importancia;
                     panelHabilidades.GradoImportanciaEtiqueta = "" + habilidadPuntaje.Value.Importancia;
-                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje;
+                    panelHabilidades.Puntaje = "" + habilidadPuntaje.Value.Puntaje.ToString("0.0");
                     panelHabilidades.GradoImportanciaIdentificador = habilidadPuntaje.Value.ID;
                     panelHabilidades.GradoImportanciaEtiquetaIdentificador = habilidadPuntaje.Value.ID + "2";
                     panelHabilidades.Controlador = AsignacionValorHabilidad;
@@ -1365,7 +1365,7 @@ namespace InterfazGrafica
             {
                 //int indice = IdentificaTrabajador(sender); IDENTIFICA 
                 this.Hide();
-                VentanaEncuesta encuesta = new VentanaEncuesta(idSeccion);
+                VentanaEncuesta encuesta = new VentanaEncuesta(true,idSeccion);
                 //encuesta.IdSeccion = idSeccion;
                 //encuesta.Preguntas = datosTrabajador.Preguntas;
                 encuesta.NombreTrabajador = nombreEvaluado.Content as string;

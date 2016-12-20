@@ -142,7 +142,7 @@ namespace DST
             cmd.CommandText = "SELECT t6.nombre,t6.tipo,t5.pregunta,t6.id,t5.tipo,t6.idPregunta FROM preguntas as t5 INNER JOIN (SELECT DISTINCT t3.idPregunta,t4.tipo,t4.nombre, t4.id FROM " 
             +"componentespreguntas as t3 INNER JOIN(SELECT DISTINCT t1.id, t2.tipo,t2.nombre FROM componentesperfilsecciones as t1 "
             +"INNER JOIN componentesperfil as t2 WHERE t1.id = t2.id and t1.idSeccion = "+idSeccion+" AND t1.estado =true) as t4 "
-            +"WHERE t3.idComponente = t4.id) as t6 WHERE t6.idPregunta = t5.id;";
+            +"WHERE t3.idComponente = t4.id) as t6 WHERE t6.idPregunta = t5.id AND t5.tipo not like 'datos';";
             consulta = cmd.ExecuteReader();
             Console.WriteLine(cmd.CommandText.ToString());
             while (consulta.Read())
@@ -155,11 +155,11 @@ namespace DST
                 pregunta.TipoPregunta = consulta.GetString(4);
                 pregunta.Id = consulta.GetInt16(5);
                 listaPreguntas.Add(pregunta);
-                Console.WriteLine("PERFIL: " + pregunta.Habilidad);
+                /*Console.WriteLine("PERFIL: " + pregunta.Habilidad);
                 Console.WriteLine("PERFIL: " + pregunta.TipoHabilidad);
                 Console.WriteLine("PERFIL: " + pregunta.Pregunta);
                 Console.WriteLine("PERFIL: " + pregunta.TipoPregunta);
-                Console.WriteLine("PERFIL: " + pregunta.Id);
+                Console.WriteLine("PERFIL: " + pregunta.Id);*/
 
             }
             conn.Close();
@@ -173,7 +173,7 @@ namespace DST
             List<Encuesta.DatosAlternativa> listaAlternativas = new List<Encuesta.DatosAlternativa>();
             conn.Open();          
             cmd.CommandText = "SELECT t1.idPregunta, t2.alternativa, t2.valor, t2.tipo FROM alternativaspreguntas AS t1 INNER JOIN "
-            +"alternativas as t2 WHERE t1.alternativa = t2.alternativa AND T2.tipo = '"+tipo+"' AND idPregunta ="+idPregunta+";";
+            + "alternativas as t2 WHERE t1.alternativa = t2.alternativa AND T2.tipo = '" + tipo + "' AND idPregunta =" + idPregunta + " ORDER BY t2.valor DESC;";
             consulta = cmd.ExecuteReader();
             Console.WriteLine("XXX: "+cmd.CommandText.ToString());
             while (consulta.Read())
@@ -194,7 +194,7 @@ namespace DST
             List<Encuesta.DatosAlternativa> listaFrecuencia = new List<Encuesta.DatosAlternativa>(); 
             conn.Open();
             cmd.CommandText = "SELECT t1.idPregunta, t2.alternativa, t2.valor, t2.tipo FROM alternativaspreguntas AS t1 INNER JOIN "
-            + "alternativas as t2 WHERE t1.alternativa = t2.alternativa AND T2.tipo = 'frecuencia' AND idPregunta =" + idPregunta + ";";
+            + "alternativas as t2 WHERE t1.alternativa = t2.alternativa AND T2.tipo = 'frecuencia' AND idPregunta =" + idPregunta + " ORDER BY t2.valor DESC;";
             consulta = cmd.ExecuteReader();
             //Console.WriteLine(cmd.CommandText.ToString());
             while (consulta.Read())
@@ -722,6 +722,36 @@ namespace DST
                 EliminarComponentePregunta(pregunta.ID, componente);
             }
         }
+
+        public void AgregarRespuestaNormal(int idPregunta, string rutTrabajador, string rutEvaluador, string alternativa)
+        {
+            //string ptje = "" + puntaje;
+            conn.Open();
+
+            cmd.CommandText = "INSERT INTO respuestas(idPregunta, rutTrabajadorAsociado, rutRespuesta, alternativaRespuesta)"
+                + " Values ("+idPregunta+", '"+rutTrabajador+"', '"+rutEvaluador+"', '"+alternativa+"');";
+            Console.WriteLine(cmd.CommandText.ToString());
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public Dictionary<string, double> ObtenerPuntajesTrabajador(string rut)
+        {
+            Dictionary<string, double> habilidades = new Dictionary<string, double>();
+            conn.Open();
+
+            cmd.CommandText = "SELECT t4.idComponente, AVG(t3.resultadoRespuesta) FROM componentespreguntas as t4 INNER JOIN "
+                +"(SELECT * FROM preguntas as t2 INNER JOIN (SELECT idPregunta,resultadoRespuesta FROM respuestas360 "
+                +"WHERE rutTrabajadorAsociado ='"+rut+"') as t1 ON t2.id = t1.idPregunta) as t3 ON t3.idpregunta=t4.idPregunta "
+                +"GROUP by t4.idComponente";
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                habilidades.Add(consulta.GetString(0), consulta.GetDouble(1));
+            }
+            conn.Close();
+            return(habilidades);
+        } 
 
     }
 }

@@ -499,6 +499,12 @@ namespace InterfazGrafica
                 datosDesempeno.ReubicarTrabajador(solicitud.RutSolicitud, solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.FechaSolicitud.Replace(" 0:00:00",""));
                 listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
                 panelSolicitudes.Children.Clear();
+                /*actualizacion de los otros paneles*/
+                listaDeSecciones = datosSeccion.TodasLasSecciones();
+                listaDeTrabajadores = datosTrabajador.TrabajadoresEmpresa();
+                listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
+                GeneraListaTrabajadores();
+                //GeneraListaSecciones();
                 GeneraListaSolicitudes();
             }
 

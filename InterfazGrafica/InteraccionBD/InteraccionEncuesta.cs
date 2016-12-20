@@ -91,5 +91,15 @@ namespace InterfazGrafica.InteraccionBD
             get { return pregunta; }
             set { pregunta = value; }
         }
+
+        public void AgregarRespuestaNormal(int idSeccion, string rutTrabajador, string rutEvaluador, string respuesta)
+        {
+            datosEncuesta.AgregarRespuestaNormal(idSeccion, rutTrabajador, rutEvaluador, respuesta);
+        }
+
+        public Dictionary<string, double> PuntajesGeneralesPorHabilidad(string rut)
+        {
+            return datosEncuesta.ObtenerPuntajesTrabajador(rut);
+        }
     }
 }
