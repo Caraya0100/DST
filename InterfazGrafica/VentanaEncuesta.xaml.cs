@@ -27,7 +27,8 @@ namespace InterfazGrafica
         private InteraccionBD.InteraccionEncuesta datosEncuesta;
         private InteraccionBD.InteraccionSecciones datosSeccion;
         private InteraccionBD.InteraccionTrabajadores datosTrabajador;
-        private List<Estructuras.PreguntasYRespuestas> preguntasRespuestas;
+        private InteraccionBD.InteraccionDesempeno datosDesempeno;
+        private List<Estructuras.PreguntasYRespuestas> preguntasRespuestas;       
         private List<string> preguntas;
         private List<int> respuestas;
         private List<int> frecuencias;
@@ -89,6 +90,7 @@ namespace InterfazGrafica
             datosEncuesta = new InteraccionBD.InteraccionEncuesta();
             datosSeccion = new InteraccionBD.InteraccionSecciones();
             datosTrabajador = new InteraccionBD.InteraccionTrabajadores();
+            datosDesempeno = new InteraccionBD.InteraccionDesempeno();
             preguntasRespuestas = new List<Estructuras.PreguntasYRespuestas>();
             this.indice = 0;
             this.numeroPregunta = 0;
@@ -114,8 +116,7 @@ namespace InterfazGrafica
             {
                 Console.WriteLine("VERDADERO");
                 listaPreguntas = datosEncuesta.PreguntasDelPerfil(idSeccion);
-            }
-            
+            }    
         }
         /// <summary>
         /// Controlador que ejecuta el despliegue de la pregunta anterior en la lista de preguntas,
@@ -245,6 +246,11 @@ namespace InterfazGrafica
                         datosEncuesta.ActualizarEstadoEncuestados(idTrabajador, idEvaluador);
                         /*actualiza los puntajes del trabajador por todas las encuestas*/
                         foreach (KeyValuePair<string, double> habilidades in datosEncuesta.PuntajesGeneralesPorHabilidad(idTrabajador))
+                        {
+                            datosTrabajador.ActualizarPuntajesTrabajador(idTrabajador, habilidades.Key, habilidades.Value);
+                        }
+                        /*actualiza los puntajes generales del trabajador*/
+                        foreach (KeyValuePair<string, double> habilidades in datosDesempeno.CalcularPuntajesGeneralesTrabajador(idTrabajador))
                         {
                             datosTrabajador.ActualizarPuntajesTrabajador(idTrabajador, habilidades.Key, habilidades.Value);
                         }

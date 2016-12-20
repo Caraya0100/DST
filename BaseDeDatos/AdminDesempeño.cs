@@ -1098,5 +1098,24 @@ namespace DST
             bd.Close();
 
         }
+
+        public Dictionary<string, double> CalcularHabilidadesGenerales(string rut)
+        {
+            Dictionary<string, double> puntajes = new Dictionary<string, double>();
+
+            conn.Open();
+            cmd.CommandText = "SELECT t2.tipo, AVG(t1.puntaje) FROM componentesperfiltrabajadores as t1 INNER JOIN "
+                +"componentesperfil as t2 WHERE t1.id = t2.id and t1.rut = '"+rut+"' group by tipo;";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajes.Add(consulta.GetString(0), consulta.GetDouble(1));
+            }
+
+            conn.Close();
+
+            return puntajes;
+        }
     }
 }
