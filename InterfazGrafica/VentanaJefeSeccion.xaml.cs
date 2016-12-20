@@ -194,9 +194,9 @@ namespace InterfazGrafica
                         datosSeccion.ActualizacionImportanciasHabilidades(habilidadPuntaje.Key, habilidadPuntaje.Value);
                     }
                     
-                    datosSeccion.ActualizacionImportanciasHabilidades("cf", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                    datosSeccion.ActualizacionImportanciasHabilidades("hd", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                    datosSeccion.ActualizacionImportanciasHabilidades("hb", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));                
+                    datosSeccion.ActualizacionImportanciasHabilidades("CF", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                    datosSeccion.ActualizacionImportanciasHabilidades("HD", Convert.ToDouble(this.slider_HD.Value.ToString("0.0")));
+                    datosSeccion.ActualizacionImportanciasHabilidades("HB", Convert.ToDouble(this.slider_HB.Value.ToString("0.0")));                
                     /*cierra la aplicacion*/
                     App.Current.Shutdown();
                     
@@ -946,9 +946,9 @@ namespace InterfazGrafica
         {
             if (tipoHabilidad.Equals("general"))
             {
-                datosSeccion.ActualizacionImportanciasHabilidades("cf", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                datosSeccion.ActualizacionImportanciasHabilidades("hd", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                datosSeccion.ActualizacionImportanciasHabilidades("hb", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("CF", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("HD", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("HB", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
                 cuadroMensajes.CambiosGuardados();
             }
             else if (tipoHabilidad.Equals("hb"))
