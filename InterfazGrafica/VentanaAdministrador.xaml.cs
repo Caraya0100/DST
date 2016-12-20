@@ -865,6 +865,8 @@ namespace InterfazGrafica
         private void IniciarPanelIngresoObjetivos()
         {
             respuestasSeccionActual = new Dictionary<string, string>();
+
+            listObjetivos.Items.Clear();
             foreach (KeyValuePair<string, Pregunta> pregunta in desempenoSeccionActual.Preguntas)
             {
                 listObjetivos.Items.Add(pregunta.Value);
@@ -2898,7 +2900,7 @@ namespace InterfazGrafica
                     perfilEvaluado.CF.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "CF").Importancia;
 
                     // En caso de no existir en la bd insertamos las generales (HB, HD, CF)
-                    am.InsertarComponentes();
+                    //am.InsertarComponentes();
                     // Insertamos tambien en caso de que no existan en la sección.
                     am.InsertarComponente(seccion.Value.IdSeccion, "HB", perfilEvaluado.HB.Puntaje, perfilEvaluado.HB.Importancia);
                     am.InsertarComponente(seccion.Value.IdSeccion, "HD", perfilEvaluado.HD.Puntaje, perfilEvaluado.HD.Importancia);
