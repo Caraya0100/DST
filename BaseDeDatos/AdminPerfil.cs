@@ -153,5 +153,35 @@ namespace DST
 
             bd.Close();
         }
+
+        public Componente ObtenerComponentePerfilSeccion(int idSeccion, string idComponente)
+        {
+            Componente componente = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT id FROM componentesPerfilSecciones WHERE idSeccion=" + idSeccion + " AND id='" + idComponente + "';");
+
+            if (bd.Consulta.Read())
+            {
+                componente = ObtenerComponente(bd.Consulta.GetString("id"));
+            }
+
+            bd.Close();
+
+            return componente;
+        }
+
+        public void ActualizarComponentePerfilSeccion(int idSeccion, string idComponente, double puntaje, double importancia)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE componentesPerfilSecciones SET puntaje=" + puntaje.ToString("0.0").Replace(",", ".") + ", importancia=" + importancia.ToString("0.0").Replace(",", ".") + " WHERE idSeccion=" + idSeccion + " AND id='" + idComponente + "';");
+
+            bd.Close();
+        }
     }
 }

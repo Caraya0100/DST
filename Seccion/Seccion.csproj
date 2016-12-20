@@ -49,9 +49,17 @@
       <Project>{5893d1de-c96f-44a4-8fa4-53870d8048d7}</Project>
       <Name>Encuesta</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LogicaDifusa\LogicaDifusa.csproj">
+      <Project>{aaa06e03-91af-4217-9c19-ebe4a6afb1ce}</Project>
+      <Name>LogicaDifusa</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Perfiles\Perfil.csproj">
       <Project>{3a7ae906-3d0c-41ff-9421-92d442035f5d}</Project>
       <Name>Perfil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReglasMatching\Matching.csproj">
+      <Project>{8ccfddd9-4371-4b8f-922b-476d609b782f}</Project>
+      <Name>Matching</Name>
     </ProjectReference>
     <ProjectReference Include="..\Trabajador\Trabajador.csproj">
       <Project>{27d521ff-8797-4c4e-bacf-cedeb7b853dc}</Project>

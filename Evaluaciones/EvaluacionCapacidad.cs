@@ -47,20 +47,23 @@ namespace DST
             double totalImportancia = 0;
 
             // Obtenemos los componentes desde la bd para obtener sus importancias.
-            Componente HB = ap.ObtenerComponente("HB");
+            /*Componente HB = ap.ObtenerComponente("HB");
             Componente HD = ap.ObtenerComponente("HD");
-            Componente CF = ap.ObtenerComponente("CF");
+            Componente CF = ap.ObtenerComponente("CF");*/
             // calculamos el total de la importancia para la normalizacion.
-            totalImportancia = HB.Importancia + HD.Importancia + CF.Importancia;
+            //totalImportancia = HB.Importancia + HD.Importancia + CF.Importancia;
 
 
             // Evaluamos la igualdad de las HB, HD, Y CF.
             compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
-            datos.Add("HB", compatibilidadHB/* * (HB.Importancia / totalImportancia) */);
+            datos.Add("HB", (compatibilidadHB * HBS.Importancia) / 100);
+            //datos.Add("HB", compatibilidadHB * (HB.Importancia / totalImportancia));
             compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
-            datos.Add("HD", compatibilidadHD/* * (HD.Importancia / totalImportancia)*/);
+            datos.Add("HD", (compatibilidadHD * HDS.Importancia) / 100);
+            //datos.Add("HD", compatibilidadHD/* * (HD.Importancia / totalImportancia);
             compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
-            datos.Add("CF", compatibilidadCF/* * (CF.Importancia / totalImportancia)*/);
+            datos.Add("CF", (compatibilidadCF * CFS.Importancia) / 100);
+            //datos.Add("CF", compatibilidadCF * (CF.Importancia / totalImportancia));
 
             reglas = reglasM.Capacidad;
             variables.Add(variablesM.HB);
