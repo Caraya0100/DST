@@ -56,11 +56,14 @@ namespace DST
 
             // Evaluamos la igualdad de las HB, HD, Y CF.
             compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
-            datos.Add("HB", compatibilidadHB/* * (HB.Importancia / totalImportancia) */);
+            datos.Add("HB", (compatibilidadHB * HB.Importancia) / 100);
+            //datos.Add("HB", compatibilidadHB * (HB.Importancia / totalImportancia));
             compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
-            datos.Add("HD", compatibilidadHD/* * (HD.Importancia / totalImportancia)*/);
+            datos.Add("HD", (compatibilidadHD * HD.Importancia) / 100);
+            //datos.Add("HD", compatibilidadHD/* * (HD.Importancia / totalImportancia);
             compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
-            datos.Add("CF", compatibilidadCF/* * (CF.Importancia / totalImportancia)*/);
+            datos.Add("CF", (compatibilidadCF * CF.Importancia) / 100);
+            //datos.Add("CF", compatibilidadCF * (CF.Importancia / totalImportancia));
 
             reglas = reglasM.Capacidad;
             variables.Add(variablesM.HB);

@@ -58,7 +58,7 @@ namespace DST
             conn.Open();
 
             cmd.CommandText = "INSERT INTO desempeño (idSeccion,fecha,ventasAñoActual,ventasAñoAnterior,ventasPlan,"
-                + "reubicaciones,totalEmpleados,empleadosConAdvertencia) VALUES(" + idSeccion + ",'" + fecha + "',"
+                + "reubicaciones,totalEmpleados,empleadosCapacitados, empleadosNoCapacitados) VALUES(" + idSeccion + ",'" + fecha + "',"
                 + ventasAñoActual.ToString() + "," + ventasAñoAnterior.ToString() + "," + ventasPlan.ToString()
                 + "," + reubicaciones.ToString() + "," + totalEmpleados.ToString() + "," + empleadosCapacitados
                 + ", " + empleadosNoCapacitados + ");";
@@ -152,17 +152,17 @@ namespace DST
 
         public double ObtenerVentasAnioAnterior(int idSeccion, int mes, int anio)
         {
-            double ventas = 0;
+            double ventas = -1;
 
             BaseDeDatos bd = new BaseDeDatos();
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT ventasAñoAnterior FROM ventasAñoAnterior WHERE idSeccion=" + idSeccion + " AND mes=" + mes + " AND anio=" + anio + ";");
+            bd.ConsultaMySql("SELECT ventasAñoAnterior FROM ventasAñoAnterior WHERE idSeccion=" + idSeccion + " AND mes=" + mes + " AND año=" + anio + ";");
 
             while (bd.Consulta.Read())
             {
-                ventas = bd.Consulta.GetDouble("ventasAñoAnterior");
+                ventas = bd.Consulta.GetDouble(0);
             }
 
             bd.Close();
@@ -264,7 +264,7 @@ namespace DST
 
         public double ObtenerDesempenoGqm(int idSeccion, int mes, int anio)
         {
-            double desempeno = 0;
+            double desempeno = -1;
             //string fecha = anio + "-" + mes + "-01";
             BaseDeDatos bd = new BaseDeDatos();
 
@@ -302,6 +302,25 @@ namespace DST
             bd.Close();
 
             return desempenos;
+        }
+
+        public int ObtenerReubicacionMes(int idSeccion, int mes)
+        {
+            int reubicaciones = -1;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT COUNT(*) FROM reubicaciones WHERE idSeccionNueva=" + idSeccion + " AND date_format(fecha,'%m')=" + mes + ";");
+
+            if (bd.Consulta.Read())
+            {
+                reubicaciones = bd.Consulta.GetInt32(0);
+            }
+
+            bd.Close();
+
+            return reubicaciones;
         }
 
         public Dictionary<string, int> ObtenerReubicacionesAnuales(int idSeccion, int inicioAnioFiscal, int anio, string tipoSeccion)
@@ -647,6 +666,54 @@ namespace DST
         }
 
         /// <summary>
+        /// Obtiene la fecha más actual.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="fecha"></param>
+        /// <returns></returns>
+        public string ObtenerUltimaFecha(int idSeccion)
+        {
+            string fecha = "";
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+            bd.ConsultaMySql("SELECT max(fecha) FROM desempeño WHERE idSeccion=" + idSeccion + ";");
+
+            while (bd.Consulta.Read())
+            {
+                fecha = bd.Consulta.GetDateTime(0).ToString();
+            }
+
+            bd.Close();
+
+            return fecha;
+        }
+
+        /// <summary>
+        /// Obtiene la fecha más actual.
+        /// </summary>
+        /// <param name="idSeccion"></param>
+        /// <param name="fecha"></param>
+        /// <returns></returns>
+        public string ObtenerUltimaFechaGqm(int idSeccion)
+        {
+            string fecha = "";
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+            bd.ConsultaMySql("SELECT max(fecha) FROM desempeñoGQM WHERE idSeccion=" + idSeccion + ";");
+
+            while (bd.Consulta.Read())
+            {
+                fecha = bd.Consulta.GetDateTime(0).ToString();
+            }
+
+            bd.Close();
+
+            return fecha;
+        }
+
+        /// <summary>
         /// Obtiene las ventas de un mes de una seccion.
         /// </summary>
         /// <param name="idSeccion"></param>
@@ -706,7 +773,7 @@ namespace DST
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO ventasPlan(idSeccion,mes,año,ventasAñoAnterior) VALUES("
+            cmd.CommandText = "INSERT INTO ventasPlan(idSeccion,mes,año,ventasPlan) VALUES("
                 + idSeccion.ToString() + ",'" + mes + "','" + año + "'," + ventasPlan.ToString() + ");";
             cmd.ExecuteNonQuery();
 
@@ -1004,7 +1071,7 @@ namespace DST
             int anioFinal = anio;
             int finalAnioFiscal = inicioAnioFiscal;
 
-            for (int i = 1; i < 11; i++)
+            for (int i = 1; i < 12; i++)
             {
                 if (finalAnioFiscal == 12)
                 {
@@ -1020,13 +1087,13 @@ namespace DST
             return new Tuple<int, int>(finalAnioFiscal, anioFinal);
         }
 
-        public void InsertarPregunta(string fecha, double desempeno, int reubicaciones, int totalEmpleados, int empleadosCapacitados, int empleadosNoCapacitados)
+        public void InsertarDesempenoGqmMes(int idSeccion, string fecha, double desempeno, int reubicaciones, int totalEmpleados, int empleadosCapacitados, int empleadosNoCapacitados)
         {
             BaseDeDatos bd = new BaseDeDatos();
 
             bd.Open();
 
-            bd.Insertar("INSERT INTO desempeñoGQM(fecha, desempeno, reubicaciones, totalEmpleados, empleadosCapacitados, empleadosNoCapacitados) VALUES('" + fecha + "', " + desempeno + ", " + reubicaciones + ", " + totalEmpleados + ", " + empleadosCapacitados + ", " + empleadosNoCapacitados + ");");
+            bd.Insertar("INSERT INTO desempeñoGQM(idSeccion, fecha, desempeño, reubicaciones, totalEmpleados, empleadosCapacitados, empleadosNoCapacitados) VALUES(" + idSeccion + ", '" + fecha + "', " + desempeno + ", " + reubicaciones + ", " + totalEmpleados + ", " + empleadosCapacitados + ", " + empleadosNoCapacitados + ");");
 
             bd.Close();
 

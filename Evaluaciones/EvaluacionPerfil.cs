@@ -64,9 +64,10 @@ namespace DST
             {
                 double puntaje = componente.Value.Puntaje;
                 double importancia = componente.Value.Importancia;
-                double puntajeNormalizado = puntaje * (importancia / totalImportancia);
+                //double puntajeNormalizado = puntaje * (importancia / totalImportancia);
+                double puntajeNormalizado = (puntaje * importancia) / 100;
 
-                datos.Add(componente.Key, puntaje/*Normalizado*/);
+                datos.Add(componente.Key, puntajeNormalizado);
             }
 
             return datos;

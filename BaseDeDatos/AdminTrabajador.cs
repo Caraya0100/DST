@@ -320,5 +320,25 @@ namespace DST
             conn.Close();
             return id;
         }
+
+        public double ObtenerCapacidad(string rut, int idSeccion)
+        {
+            // el valor de las fp por defecto es -1, por eso el -500.
+            double capacidad = -500; 
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador='" + rut + "' AND idSeccionEvaluacion=" + idSeccion + ";");
+
+            if (bd.Consulta.Read())
+            {
+                capacidad = bd.Consulta.GetDouble("capacidadTrabajador");
+            }
+
+            bd.Close();
+
+            return capacidad;
+        }
     }
 }

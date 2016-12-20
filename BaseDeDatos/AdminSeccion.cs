@@ -63,9 +63,11 @@ namespace DST
 
             try
             {
+                
+
                 cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia,estado) "
-                    + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString() + ","
-                    + importancia.ToString() + ", true);";
+                    + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString("0.0").Replace(",", ".") + ","
+                    + importancia.ToString("0.0").Replace(",", ".") + ", true);";
                 Console.WriteLine(cmd.CommandText.ToString());
                 cmd.ExecuteNonQuery();
             }
@@ -75,10 +77,10 @@ namespace DST
             }
 
 
-            cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia) "
+            /*cmd.CommandText = "INSERT INTO componentesPerfilSecciones (idSeccion,id,puntaje,importancia) "
                 + " VALUES(" + idSeccion.ToString() + ",'" + nombre + "'," + puntaje.ToString() + ","
                 + importancia.ToString() + ");";
-            cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();*/
 
 
             conn.Close();
@@ -240,12 +242,15 @@ namespace DST
             while (bd.Consulta.Read())
             {
                 int idSeccion = bd.Consulta.GetInt16(0);
-                string fecha = ad.ObtenerUltimaFecha();
+                string fecha = "";
                 string tipo = bd.Consulta.GetString("tipoSeccion");
                 Tuple<double, double, double> ventas = null;
 
                 if (tipo.ToLower() == "ventas")
+                {
+                    fecha = ad.ObtenerUltimaFecha(idSeccion);
                     ventas = ad.ObtenerVentas(idSeccion, fecha);
+                }
 
                 if (ventas == null) ventas = new Tuple<double, double, double>(-1,-1,-1);
 
@@ -264,6 +269,7 @@ namespace DST
                     );
                 } else if (tipo.ToLower() == "gqm")
                 {
+                    fecha = ad.ObtenerUltimaFechaGqm(idSeccion);
                     fecha = new AdminFecha().FechaConFormato(fecha);
                     string mes = fecha.Split('-')[1];
                     string anio = fecha.Split('-')[0];
