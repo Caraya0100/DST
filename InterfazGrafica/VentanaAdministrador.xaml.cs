@@ -114,8 +114,21 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void seleccionItem(object sender, SelectionChangedEventArgs e)
         {
-            if (itemDesempenio.IsSelected)
+            /* Si no estamos en el panel de preguntas, cargamos las preguntas que 
+               no son de desempeño (gqm). */
+            if (tipoActualPreguntas == "gqm" && itemEvaluacion != null && !itemEvaluacion.IsSelected)
             {
+                IniciarPanelPreguntas("encuesta");
+            }
+
+            if (itemDesempenio != null && itemDesempenio.IsSelected)
+            {
+                if (tipoActualPreguntas == "gqm")
+                {
+                    ObtenerSecciones();
+                    IniciarTablaDesempeno();
+                }
+                
                 animadorTrabajadores.detenerAnimacionHorizontal();
             }
             else if (itemTrabajadores != null && itemTrabajadores.IsSelected)
@@ -664,6 +677,7 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarTablaDesempeno()
         {
+            tablaDesempeno.Items.Clear();
             foreach (KeyValuePair<string, Seccion> seccion in secciones)
             {
                 tablaDesempeno.Items.Add(seccion.Value);
@@ -860,7 +874,10 @@ namespace InterfazGrafica
             double total = ad.ObtenerTotalEmpleadosMes(idSeccion, mes, anio, tipoSeccion);
             double capacitados = ad.ObtenerEmpleadosCapacitadosMes(idSeccion, mes, anio, tipoSeccion);
 
-            capacitados = Math.Round((capacitados / total) * 100, 0);
+            if (total > 0)
+                capacitados = Math.Round((capacitados / total) * 100, 0);
+            else
+                capacitados = 0;
 
             graficoDCapacitados.Value =  capacitados / 100;
         }
@@ -979,22 +996,28 @@ namespace InterfazGrafica
                 if (tipoSeccion == "ventas")
                 {
                     IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
+                    // Habilitamos el ingreso de datos si no se han ingresado antes.
+                    double ventasAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
+
+                    if (ventasAnterior == -1)
+                        btnDIngreso.IsEnabled = true;
+                    else
+                        btnDIngreso.IsEnabled = false;
                 }
                 else if (tipoSeccion == "gqm")
                 {
                     IniciarGraficoObjetivo(desempenoSeccionActual.DesempenoGqm / 100);
+
+                    bool desempenoMes = ad.ExisteDesempenoGqm(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
+
+                    if (!desempenoMes)
+                        btnDIngreso.IsEnabled = true;
+                    else
+                        btnDIngreso.IsEnabled = false;
                 }
 
                 //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
                 IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
-
-                // Habilitamos el ingreso de datos si no se han ingresado antes.
-                double ventasAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
-
-                if (ventasAnterior == -1)
-                    btnDIngreso.IsEnabled = true;
-                else
-                    btnDIngreso.IsEnabled = false;
 
                 // Se muestra o esconde el aviso para realizar reubicaciones.
                 MostrarAvisoReubicacion();
@@ -1020,8 +1043,8 @@ namespace InterfazGrafica
             {
                 boxWrapMes.Items.Add(mes.ToString());
             }
-            boxWrapMes.SelectedValue = "Anual";
 
+            boxWrapMes.SelectedValue = "Anual";
             IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, Convert.ToInt32(anio));
         }
 
@@ -1102,6 +1125,11 @@ namespace InterfazGrafica
 
         private void IrPanelPreguntasGqm(object sender, RoutedEventArgs e)
         {
+            ObtenerSecciones();
+            IniciarTablaDesempeno();
+            panelDIngreso.Visibility = Visibility.Hidden;
+            panelDResumen.Visibility = Visibility.Visible;
+
             IniciarPanelPreguntas("gqm");
             itemEvaluacion.IsSelected = true;
         }
@@ -1369,7 +1397,7 @@ namespace InterfazGrafica
         Dictionary<string, Pregunta> preguntas;
         Pregunta preguntaActual;
         Alternativa alternativaActual;
-        string tipoActualPreguntas;
+        string tipoActualPreguntas = "";
 
         public void ObtenerPreguntas()
         {
@@ -1423,6 +1451,8 @@ namespace InterfazGrafica
                 wrapFrecuencias.IsEnabled = false;
             } else
             {
+                LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
+                LlenarListaAlternativas(preguntaActual.Frecuencias, listFrecuencias);
                 wrapAlternativas.IsEnabled = true;
                 wrapFrecuencias.IsEnabled = true;
             }
@@ -1469,6 +1499,11 @@ namespace InterfazGrafica
             foreach (string componente in pregunta.Componentes)
             {
                 lista.SelectedItems.Add(componente);
+                /*foreach (var item in listComponentes.Items)
+                {
+                    if ((string)item == componente)
+                            lista.SelectedItems.Add(componente);
+                }*/
             }
         }
 
@@ -1505,16 +1540,36 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void AgregarPregunta(object sender, RoutedEventArgs e)
         {
-            preguntaActual = new Pregunta();
+            preguntaActual = (Pregunta)tablaPreguntas.SelectedItem;
 
-            if (tipoActualPreguntas == "gqm")
-                preguntaActual.Tipo = "gqm";
-            else if (tipoActualPreguntas == "encuesta")
-                preguntaActual.Tipo = "360";
+            if (preguntaActual != null && tipoActualPreguntas == "gqm")
+            {
+                AdminSeccion asec = new AdminSeccion();
+                AdminEncuesta ae = new AdminEncuesta();
+                ae.InsertarPreguntaSeccion(desempenoSeccionActual.IdSeccion, preguntaActual.ID, preguntaActual.Tipo);
+                Seccion seccion = asec.ObtenerSeccion(desempenoSeccionActual.IdSeccion);
+                if (seccion != null)
+                    desempenoSeccionActual = seccion;
 
-            IniciarPanelPregunta(preguntaActual);
-            panelPreguntas.Visibility = Visibility.Hidden;
-            panelPregunta.Visibility = Visibility.Visible;
+                ObtenerSecciones();
+                IniciarTablaDesempeno();
+
+                IniciarPanelIngresoObjetivos();
+                itemDesempenio.IsSelected = true;
+            }
+            else
+            {
+                preguntaActual = new Pregunta();
+
+                if (tipoActualPreguntas == "gqm")
+                    preguntaActual.Tipo = "gqm";
+                else if (tipoActualPreguntas == "encuesta")
+                    preguntaActual.Tipo = "360";
+
+                IniciarPanelPregunta(preguntaActual);
+                panelPreguntas.Visibility = Visibility.Hidden;
+                panelPregunta.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -1525,14 +1580,25 @@ namespace InterfazGrafica
         private void EditarPregunta(object sender, RoutedEventArgs e)
         {
             preguntaActual = (Pregunta)tablaPreguntas.SelectedItem;
-            IniciarPanelPregunta(preguntaActual);
-            panelPreguntas.Visibility = Visibility.Hidden;
-            panelPregunta.Visibility = Visibility.Visible;
+
+            if (preguntaActual != null)
+            {
+                IniciarPanelPregunta(preguntaActual);
+                panelPreguntas.Visibility = Visibility.Hidden;
+                panelPregunta.Visibility = Visibility.Visible;
+            }
         }
 
         private void EliminarPregunta(object sender, RoutedEventArgs e)
         {
-            
+            preguntaActual = (Pregunta)tablaPreguntas.SelectedItem;
+
+            if (preguntaActual != null)
+            {
+                AdminEncuesta ae = new AdminEncuesta();
+                ae.EliminarPregunta(preguntaActual.ID);
+                IniciarPanelPreguntas(tipoActualPreguntas);
+            }
         }
 
         private void AceptarPregunta(object sender, RoutedEventArgs e)
@@ -1550,55 +1616,55 @@ namespace InterfazGrafica
             if (preguntaActual.ID == -1)
             {
                 // Insertamos la nueva pregunta.
-                ae.InsertarPreguntaSeccion(desempenoSeccionActual.IdSeccion, preguntaActual.ToString(), preguntaActual.Tipo);
+                ae.InsertarPregunta(preguntaActual.ToString(), preguntaActual.Tipo);
             } else
             {
-                // Primero borramos todas las componentes y alternativas de la pregunta.
-                ae.EliminarAlternativasPregunta(preguntaActual.ID);
-                ae.EliminarComponentesPregunta(preguntaActual.ID);
-
                 // Actualizamos la pregunta.
-                if (preguntaActual.Tipo.ToString() != "gqm")
+                // Insertamos y actualizamos las alternativas
+                if (preguntaActual.Tipo != "datos")
                 {
-                    List<string> nuevosComponentes = new List<string>();
-
-                    foreach (var componente in listComponentes.SelectedItems)
+                    foreach (var item in listAlternativas.Items)
                     {
-                        nuevosComponentes.Add((string)componente);
-                    }
+                        string alternativaLista = (string)item;
+                        Alternativa alternativa = ae.ObtenerAlternativaPregunta(preguntaActual.ID, alternativaLista);
 
-                    preguntaActual.Componentes = nuevosComponentes;
-                }
-
-                if (preguntaActual.Tipo.ToString() != "datos")
-                {
-                    Dictionary<string, Alternativa> nuevasAlternativas = new Dictionary<string, Alternativa>();
-                    Dictionary<string, Alternativa> nuevasFrecuencias = new Dictionary<string, Alternativa>();
-
-                    foreach (var alternativa in listAlternativas.SelectedItems)
-                    {
-                        nuevasAlternativas.Add(
-                            (string)alternativa,
-                            ae.ObtenerAlternativa((string)alternativa)
-                        );
-                    }
-                    // Solo las preguntas 360 tienen frecuencias.
-                    if (preguntaActual.Tipo.ToString() == "360")
-                    {
-                        foreach (var frecuencia in listFrecuencias.Items)
+                        // Si la alternativa no esta en la pregunta, la agregamos.
+                        if (alternativa == null)
                         {
-                            nuevasFrecuencias.Add(
-                                (string)frecuencia,
-                                ae.ObtenerAlternativa((string)frecuencia)
-                            );
+                            ae.InsertarAlternativaPregunta(preguntaActual.ID, alternativaLista);
                         }
                     }
+                    // Agregamos las frecuencias para la 360.
+                    if (preguntaActual.Tipo == "360")
+                    {
+                        foreach (var itemFrecuencia in listFrecuencias.Items)
+                        {
+                            string frecuenciaLista = (string)itemFrecuencia;
+                            Alternativa frecuencia = ae.ObtenerAlternativaPregunta(preguntaActual.ID, frecuenciaLista);
 
-                    preguntaActual.Alternativas = nuevasAlternativas;
-                    preguntaActual.Frecuencias = nuevasFrecuencias;
+                            // Si la alternativa no esta en la pregunta, la agregamos.
+                            if (frecuencia == null)
+                            {
+                                ae.InsertarAlternativaPregunta(preguntaActual.ID, frecuenciaLista);
+                            }
+                        }
+                    }
                 }
 
-                ae.ActualizarPregunta(preguntaActual);
+                if (preguntaActual.Tipo == "360")
+                {
+                    foreach (var itemComponente in listComponentes.SelectedItems)
+                    {
+                        string componenteLista = (string)itemComponente;
+                        string componente = ae.ObtenerComponentePregunta(preguntaActual.ID, componenteLista);
+
+                        if (componente == "")
+                        {
+                            ae.InsertarComponentePregunta(preguntaActual.ID, componenteLista);
+                        }
+                    }
+                }
+                ae.ActualizarPregunta(preguntaActual.ID, preguntaActual.Descripcion, preguntaActual.Tipo);
             }
             
             IniciarPanelPreguntas(tipoActualPreguntas);
@@ -1621,7 +1687,17 @@ namespace InterfazGrafica
             if (alternativaActual == null)
             {
                 alternativaActual = new Alternativa();
-                alternativaActual.Tipo = preguntaActual.Tipo;
+
+                if (preguntaActual.Tipo == "360")
+                {
+                    if (nombreBoton == "btnConfigurarAlternativas")
+                        alternativaActual.Tipo = "grado";
+                    else if (nombreBoton == "btnConfigurarFrecuencias")
+                        alternativaActual.Tipo = "frecuencia";
+                } else if (preguntaActual.Tipo == "gqm")
+                {
+                    alternativaActual.Tipo = "gqm";
+                }
             }
 
             LlenarBoxAlternativa(alternativaActual.Tipo);
@@ -1637,16 +1713,32 @@ namespace InterfazGrafica
 
         private void RemoverAlternativa(object sender, RoutedEventArgs e)
         {
-            preguntaActual.Alternativas.Remove((string)listAlternativas.SelectedValue);
-            listAlternativas.Items.Remove(listAlternativas.SelectedItem);
-            LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
+            string alternativa = (string)listAlternativas.SelectedValue;
+
+            if (alternativa != null)
+            {
+                AdminEncuesta ae = new AdminEncuesta();
+
+                ae.EliminarAlternativaPregunta(preguntaActual.ID, alternativa);
+                preguntaActual.Alternativas.Remove(alternativa);
+                listAlternativas.Items.Remove(listAlternativas.SelectedItem);
+                LlenarListaAlternativas(preguntaActual.Alternativas, listAlternativas);
+            }
         }
 
         private void RemoverFrecuencia(object sender, RoutedEventArgs e)
         {
-            preguntaActual.Frecuencias.Remove((string)listFrecuencias.SelectedValue);
-            listFrecuencias.Items.Remove(listFrecuencias.SelectedItem);
-            LlenarListaAlternativas(preguntaActual.Frecuencias, listFrecuencias);
+            string frecuencia = (string)listFrecuencias.SelectedValue;
+
+            if (frecuencia != null)
+            {
+                AdminEncuesta ae = new AdminEncuesta();
+
+                ae.EliminarAlternativaPregunta(preguntaActual.ID, frecuencia);
+                preguntaActual.Frecuencias.Remove(frecuencia);
+                listFrecuencias.Items.Remove(listFrecuencias.SelectedItem);
+                LlenarListaAlternativas(preguntaActual.Frecuencias, listFrecuencias);
+            }
         }
 
         /// <summary>
@@ -1666,7 +1758,6 @@ namespace InterfazGrafica
             alternativaActual.Nombre = txtNombreAlternativa.Text;
             alternativaActual.Descripcion = txtDescAlternativa.Text;
             alternativaActual.Valor = Convert.ToDouble(txtValorAlternativa.Text);
-            alternativaActual.Tipo = preguntaActual.Tipo;
 
             if (actualizar)
             {
@@ -1677,19 +1768,6 @@ namespace InterfazGrafica
                     alternativaActual.Valor,
                     alternativaActual.Tipo
                 );
-                // Actualizamos los datos de la pregunta.
-                preguntaActual = ae.ObtenerPregunta(preguntaActual.ID);
-                // Si la variable actualizada no esta en la pregunta, la agregamos.
-                if (alternativaActual.Tipo.ToLower() == "frecuencia" && !preguntaActual.Frecuencias.ContainsKey(alternativaActual.Nombre))
-                {
-                    preguntaActual.Frecuencias.Add(alternativaActual.Nombre, alternativaActual);
-                    ae.InsertarAlternativaPregunta(preguntaActual.ID, alternativaActual.Nombre);
-                }
-                else if (!preguntaActual.Alternativas.ContainsKey(alternativaActual.Nombre))
-                {
-                    preguntaActual.Alternativas.Add(alternativaActual.Nombre, alternativaActual);
-                    ae.InsertarAlternativaPregunta(preguntaActual.ID, alternativaActual.Nombre);
-                }
             } else
             {
                 ae.InsertarAlternativa(
@@ -1698,12 +1776,22 @@ namespace InterfazGrafica
                     alternativaActual.Valor,
                     alternativaActual.Tipo
                 );
-                ae.InsertarAlternativaPregunta(
-                    preguntaActual.ID, 
-                    alternativaActual.Nombre
-                );
-                // Actualizamos los datos de la pregunta.
-                preguntaActual = ae.ObtenerPregunta(preguntaActual.ID);
+            }
+
+            // Actualizamos los datos de la pregunta.
+            if (alternativaActual.Tipo == "grado" || alternativaActual.Tipo == "gqm")
+            {
+                if (!preguntaActual.Alternativas.ContainsKey(alternativaActual.Nombre))
+                {
+                    preguntaActual.Alternativas.Add(alternativaActual.Nombre, alternativaActual);
+                }
+            }
+            else if (alternativaActual.Tipo == "frecuencia")
+            {
+                if (!preguntaActual.Frecuencias.ContainsKey(alternativaActual.Nombre))
+                {
+                    preguntaActual.Frecuencias.Add(alternativaActual.Nombre, alternativaActual);
+                }
             }
 
             IniciarPanelPregunta(preguntaActual);
@@ -1717,7 +1805,11 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void EliminarAlternativa(object sender, RoutedEventArgs e)
         {
+            AdminEncuesta ae = new AdminEncuesta();
 
+            ae.EliminarAlternativa(alternativaActual.Nombre);
+            IniciarPanelPregunta(preguntaActual);
+            VolverPanelPregunta(null, null);
         }
 
         /// <summary>
@@ -1738,6 +1830,7 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void VolverPanelPreguntas(object sender, RoutedEventArgs e)
         {
+            IniciarPanelPreguntas(tipoActualPreguntas);
             panelPregunta.Visibility = Visibility.Hidden;
             panelPreguntas.Visibility = Visibility.Visible;
         }
@@ -1946,6 +2039,7 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarNuevoComponente()
         {
+            boxTipoComponente.IsEnabled = true;
             btnOpcionesAvanzadas.IsEnabled = false;
             componenteActual = new Componente("", "", "", "");
             variableActual = new VariableLinguistica("defecto", 0, 100);
@@ -1984,16 +2078,27 @@ namespace InterfazGrafica
         /// </summary>
         private void IniciarComponente()
         {
+            boxTipoComponente.IsEnabled = false;
             btnOpcionesAvanzadas.IsEnabled = true;
             AdminLD adminLD = new AdminLD();
             componenteActual = (Componente)tablaComponentes.SelectedItem;
-            variableActual = adminLD.ObtenerVariable(componenteActual.ID);
+
+            if (componenteActual != null)
+            {
+                variableActual = adminLD.ObtenerVariable(componenteActual.ID);
+                IniciarComponente(variableActual);
+            }
+        }
+
+        private void IniciarComponente(VariableLinguistica variable)
+        {
+            lblErrorComponente.Visibility = Visibility.Collapsed;
             lblComponente.Content = "Componente";
             txtIdComponente.Text = componenteActual.ID;
             txtNombreComponente.Text = componenteActual.Nombre;
             txtDescripcionComponente.Text = componenteActual.Descripcion;
-            txtLimiteInferior.Text = "" + variableActual.Min;
-            txtLimiteSuperior.Text = "" + variableActual.Max;
+            txtLimiteInferior.Text = "" + variable.Min;
+            txtLimiteSuperior.Text = "" + variable.Max;
 
             if (componenteActual.Tipo == PerfilConstantes.HB)
                 boxTipoComponente.SelectedValue = "Habilidad blanda";
@@ -2003,17 +2108,17 @@ namespace InterfazGrafica
                 boxTipoComponente.SelectedValue = "Caracteristica fisica";
 
             boxFP.Items.Clear();
-            foreach (KeyValuePair<string, ValorLinguistico> valor in variableActual.Valores)
+            foreach (KeyValuePair<string, ValorLinguistico> valor in variable.Valores)
             {
                 boxFP.Items.Add(valor.Key);
             }
             boxFP.Items.Add("+ Agregar nueva función");
             string funcion = (string)boxFP.Items[0];
-            Type tipoFuncion = variableActual.Valores[funcion].Fp.GetType();
+            Type tipoFuncion = variable.Valores[funcion].Fp.GetType();
 
             if (tipoFuncion.Equals(typeof(FuncionTrapezoidal)))
             {
-                FuncionTrapezoidal fp = (FuncionTrapezoidal)variableActual.Valores[funcion].Fp;
+                FuncionTrapezoidal fp = (FuncionTrapezoidal)variable.Valores[funcion].Fp;
                 boxTipoFP.SelectedValue = "Trapezoidal";
                 txtValorIzquierdaAbajo.Text = "" + fp.ValorIzqAbajo;
                 txtValorIzquierdaArriba.Text = "" + fp.ValorIzqArriba;
@@ -2024,7 +2129,7 @@ namespace InterfazGrafica
             }
             else if (tipoFuncion.Equals(typeof(FuncionTriangular)))
             {
-                FuncionTriangular fp = (FuncionTriangular)variableActual.Valores[funcion].Fp;
+                FuncionTriangular fp = (FuncionTriangular)variable.Valores[funcion].Fp;
                 boxTipoFP.SelectedValue = "Triangular";
                 txtValorIzquierda.Text = "" + fp.ValorIzq;
                 txtValorCentro.Text = "" + fp.ValorCentro;
@@ -2042,6 +2147,19 @@ namespace InterfazGrafica
         private void EditarComponente(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void EliminarComponente(object sender, RoutedEventArgs e)
+        {
+            Componente componente = (Componente)tablaComponentes.SelectedItem;
+
+            if (componente != null)
+            {
+                AdminPerfil ap = new AdminPerfil();
+
+                ap.EliminarComponente(componente.ID);
+                IniciarPanelComponentes();
+            }
         }
 
         /// <summary>
@@ -2241,6 +2359,8 @@ namespace InterfazGrafica
                 }
             }
 
+            variableActual = ald.ObtenerVariable(variableActual.Nombre);
+            IniciarComponente(variableActual);
             panelFP.Visibility = Visibility.Hidden;
             panelOpcionesAvanzadas.Visibility = Visibility.Visible;
         }
@@ -2422,6 +2542,8 @@ namespace InterfazGrafica
 
             al.EliminarValor(variableActual.Nombre, valorActual.Nombre, tipoFuncion);
 
+            variableActual = al.ObtenerVariable(variableActual.Nombre);
+            IniciarComponente(variableActual);
             VolverOpcionesAvanzadas(null,null);
         }
 
@@ -2475,6 +2597,7 @@ namespace InterfazGrafica
             {
                 ObtenerReglasSeccion(reglasSeccionActual.IdSeccion.ToString(), PerfilConstantes.HB);
                 LlenarTablaReglas(reglasActuales);
+                boxTipoReglas.SelectedValue = "Habilidades blandas";
             }
         }
 
@@ -2534,10 +2657,15 @@ namespace InterfazGrafica
 
         private void EliminarRegla(object sender, RoutedEventArgs e)
         {
-            AdminReglas ar = new AdminReglas();
             Regla regla = (Regla)tablaReglas.SelectedItem;
-            ar.EliminarRegla(Convert.ToInt32(regla.ID));
-            IniciarPanelReglas();
+
+            if (regla != null)
+            {
+                AdminReglas ar = new AdminReglas();
+
+                ar.EliminarRegla(Convert.ToInt32(regla.ID));
+                IniciarPanelReglas();
+            }
         }
 
         /// <summary>
@@ -2690,33 +2818,38 @@ namespace InterfazGrafica
             } else if ((string)((Button)sender).Content == "Modificar")
             {
                 reglaActual = (Regla)tablaReglas.SelectedItem;
-                txtRegla.Text = reglaActual.Texto;
+
+                if (reglaActual != null)
+                    txtRegla.Text = reglaActual.Texto;
             }
 
-            boxAntecedente.Items.Clear();
-            foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
+            if (reglaActual != null)
             {
-                boxAntecedente.Items.Add(valor.Key);
+                boxAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, ValorLinguistico> valor in reglaActual.Antecedente)
+                {
+                    boxAntecedente.Items.Add(valor.Key);
+                }
+                // Llenamos el comboBox del consecuente.
+                boxValoresConsecuente.Items.Clear();
+                txtConsecuente.Text = consecuente.Nombre;
+                foreach (KeyValuePair<string, ValorLinguistico> valor in consecuente.Valores)
+                {
+                    boxValoresConsecuente.Items.Add(valor.Key);
+                }
+                // Seleccionamos el valor del consecuente.
+                string[] r = reglaActual.Texto.Split(' ');
+                boxValoresConsecuente.SelectedValue = r[r.Length - 1];
+                // Llenamos el comboBox con los componentes de la seccion.
+                boxNoAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, Componente> componente in componentes)
+                {
+                    boxNoAntecedente.Items.Add(componente.Value.ID);
+                }
+                // Hacemos visible el panel de la regla.
+                panelReglasSeccion.Visibility = Visibility.Hidden;
+                panelRegla.Visibility = Visibility.Visible;
             }
-            // Llenamos el comboBox del consecuente.
-            boxValoresConsecuente.Items.Clear();
-            txtConsecuente.Text = consecuente.Nombre;
-            foreach (KeyValuePair<string, ValorLinguistico> valor in consecuente.Valores)
-            {
-                boxValoresConsecuente.Items.Add(valor.Key);
-            }
-            // Seleccionamos el valor del consecuente.
-            string[] r = reglaActual.Texto.Split(' ');
-            boxValoresConsecuente.SelectedValue = r[r.Length - 1];
-            // Llenamos el comboBox con los componentes de la seccion.
-            boxNoAntecedente.Items.Clear();
-            foreach (KeyValuePair<string, Componente> componente in componentes)
-            {
-                boxNoAntecedente.Items.Add(componente.Value.ID);
-            }
-            // Hacemos visible el panel de la regla.
-            panelReglasSeccion.Visibility = Visibility.Hidden;
-            panelRegla.Visibility = Visibility.Visible;
         }
 
         private void AceptarRegla(object sender, RoutedEventArgs e)
@@ -2752,24 +2885,33 @@ namespace InterfazGrafica
             AdminLD adminLD = new AdminLD();
             string nombreVariable = (string)boxAntecedente.SelectedValue;
             string nombreValor = (string)boxValoresAntecedente.SelectedValue;
-            ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
-            reglaActual.Antecedente[nombreVariable] = valor;
-            ActualizarTxtRegla(reglaActual);
+
+            if (nombreVariable != null && nombreValor != null)
+            {
+                ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
+                reglaActual.Antecedente[nombreVariable] = valor;
+                ActualizarTxtRegla(reglaActual);
+            }
         }
 
         private void EliminarValorAntecedente(object sender, RoutedEventArgs e)
         {
             AdminReglas ar = new AdminReglas();
             string nombreVariable = (string)boxAntecedente.SelectedValue;
-            // Eliminamos la variable de la base de datos.
-            ar.EliminarVariable(Convert.ToInt32(reglaActual.ID), nombreVariable);
-            // Removemos la variable del antecedente de la regla.
-            reglaActual.Antecedente.Remove(nombreVariable);
-            // Actualizamos el textBox de la regla.
-            ActualizarTxtRegla(reglaActual);
-            // Eliminamos la variable del comboBox del antecedente.
-            boxAntecedente.Items.Remove(boxAntecedente.SelectedValue);
-            boxValoresAntecedente.Items.Clear();
+
+            if (nombreVariable != null && reglaActual.Antecedente.Count >= 2)
+            {
+                // Eliminamos la variable de la base de datos.
+                ar.EliminarVariable(Convert.ToInt32(reglaActual.ID), nombreVariable);
+                // Removemos la variable del antecedente de la regla.
+                reglaActual.Antecedente.Remove(nombreVariable);
+                // Actualizamos el textBox de la regla.
+                ActualizarTxtRegla(reglaActual);
+                // Eliminamos la variable del comboBox del antecedente.
+                boxAntecedente.Items.Remove(boxAntecedente.SelectedValue);
+                boxValoresAntecedente.Items.Clear();
+            }
+            
         }
 
         /// <summary>
@@ -2785,18 +2927,21 @@ namespace InterfazGrafica
             string nombreValor = (string)boxValoresConsecuente.SelectedValue;
             VariableLinguistica consecuente = vm.HBPerfil;
 
-            if (nombreVariable.ToLower() == PerfilConstantes.HD)
-                consecuente = vm.HDPerfil;
-            else if (nombreVariable.ToLower() == PerfilConstantes.CF)
-                consecuente = vm.CFPerfil;
+            if (nombreVariable != null && nombreValor != null)
+            {
+                if (nombreVariable.ToLower() == PerfilConstantes.HD)
+                    consecuente = vm.HDPerfil;
+                else if (nombreVariable.ToLower() == PerfilConstantes.CF)
+                    consecuente = vm.CFPerfil;
 
-            Tuple<string, ValorLinguistico> nuevoConsecuente = new Tuple<string, ValorLinguistico>(
-                consecuente.Nombre,
-                consecuente.Valores[nombreValor]
-              );
+                Tuple<string, ValorLinguistico> nuevoConsecuente = new Tuple<string, ValorLinguistico>(
+                    consecuente.Nombre,
+                    consecuente.Valores[nombreValor]
+                  );
 
-            reglaActual.Consecuente = nuevoConsecuente;
-            ActualizarTxtRegla(reglaActual);
+                reglaActual.Consecuente = nuevoConsecuente;
+                ActualizarTxtRegla(reglaActual);
+            }
         }
 
         /// <summary>
@@ -2810,16 +2955,20 @@ namespace InterfazGrafica
             AdminReglas adminReglas = new AdminReglas();
             string nombreVariable = (string)boxNoAntecedente.SelectedValue;
             string nombreValor = (string)boxValoresNoAntecedente.SelectedValue;
-            ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
-            // Agregamos la variable al antecedente.
-            reglaActual.AgregarAntecendente(nombreVariable, valor);
-            // Actualizamos el textBox de la regla.
-            ActualizarTxtRegla(reglaActual);
-            //Actualizamos las variables del antecedente de la regla.
-            boxAntecedente.Items.Clear();
-            foreach (KeyValuePair<string, ValorLinguistico> variable in reglaActual.Antecedente)
+
+            if (nombreVariable != null && nombreValor != null)
             {
-                boxAntecedente.Items.Add(variable.Key);
+                ValorLinguistico valor = adminLD.ObtenerValor(nombreValor, nombreVariable);
+                // Agregamos la variable al antecedente.
+                reglaActual.AgregarAntecendente(nombreVariable, valor);
+                // Actualizamos el textBox de la regla.
+                ActualizarTxtRegla(reglaActual);
+                //Actualizamos las variables del antecedente de la regla.
+                boxAntecedente.Items.Clear();
+                foreach (KeyValuePair<string, ValorLinguistico> variable in reglaActual.Antecedente)
+                {
+                    boxAntecedente.Items.Add(variable.Key);
+                }
             }
         }
 

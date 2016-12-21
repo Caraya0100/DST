@@ -47,37 +47,19 @@ namespace DST
             AdminPerfil ap = new AdminPerfil();
             double totalImportancia = 0;
 
-            // Obtenemos los componentes desde la bd para obtener sus importancias.
-            /*Componente HB = ap.ObtenerComponente("HB");
-            Componente HD = ap.ObtenerComponente("HD");
-            Componente CF = ap.ObtenerComponente("CF");*/
-            // calculamos el total de la importancia para la normalizacion.
-            //totalImportancia = HB.Importancia + HD.Importancia + CF.Importancia;
-
-            Debug.WriteLine("HBT: " + HBT.Puntaje);
-            Debug.WriteLine("HDT: " + HDT.Puntaje);
-            Debug.WriteLine("CFT: " + CFT.Puntaje);
-
             // Normalizamos lso puntajes y evaluamos la igualdad de las HB, HD, Y CF.
             HBS.Puntaje = (HBS.Puntaje * HBS.Importancia) / 100;
             HBT.Puntaje = (HBT.Puntaje * HBS.Importancia) / 100;
             compatibilidadHB = EvaluarCompatibilidad(HBS, HBT);
             datos.Add("HB", compatibilidadHB);
-            //datos.Add("HB", (compatibilidadHB * HBS.Importancia) / 100);
-            //datos.Add("HB", compatibilidadHB * (HB.Importancia / totalImportancia));
             HDS.Puntaje = (HDS.Puntaje * HDS.Importancia) / 100;
             HDT.Puntaje = (HDT.Puntaje * HDS.Importancia) / 100;
             compatibilidadHD = EvaluarCompatibilidad(HDS, HDT);
             datos.Add("HD", compatibilidadHD);
-            //datos.Add("HD", (compatibilidadHD * HDS.Importancia) / 100);
-            //datos.Add("HD", compatibilidadHD/* * (HD.Importancia / totalImportancia);
             CFS.Puntaje = (CFS.Puntaje * CFS.Importancia) / 100;
             CFT.Puntaje = (CFT.Puntaje * CFS.Importancia) / 100;
             compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
             datos.Add("CF", compatibilidadCF);
-            //compatibilidadCF = EvaluarCompatibilidad(CFS, CFT);
-            //datos.Add("CF", (compatibilidadCF * CFS.Importancia) / 100);
-            //datos.Add("CF", compatibilidadCF * (CF.Importancia / totalImportancia));
 
             reglas = reglasM.Capacidad;
             variables.Add(variablesM.HB);

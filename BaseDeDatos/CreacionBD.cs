@@ -310,7 +310,7 @@ namespace DST
             + "idSeccionSolicitada MEDIUMINT NOT NULL,"
             + "capacidadSeccionActual double,"
             + "capacidadNuevaSeccion double,"
-            + "primary key(fechaSolicitud, idSeccionActual, idSeccionSolicitada),"
+            + "primary key(fechaSolicitud,idSeccionActual,idSeccionSolicitada,rutSolicitud),"
             + "foreign key(idSeccionActual) references secciones(id)"
             + "on delete CASCADE on update CASCADE,"
             + "foreign key(idSeccionSolicitada) references secciones(id)"
@@ -492,7 +492,10 @@ namespace DST
             + "(32, 'Asume la responsabilidad de las acciones colectivas e individuales.', '360', 1),"
             + "(33, 'Asegura la transparencia en la administración de recursos asignados.', '360', 1),"
             + "(34, 'Comparte información y realiza valiosos aportes en las tareas con sus pares.', '360', 1),"
-            + "(35, 'Participa y coopera en la consecución de objetivos grupales.', '360', 1),"
+            + "(35, 'Participa y coopera en la consecución de objetivos grupales.', '360', 1);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `preguntas` (`id`, `pregunta`, `tipo`, `estado`) VALUES"
             + "(36, 'Incluye a otros en el proceso de decisión para obtener la información necesaria y tomar la mejor decisión; asegura que los otros respalden y entiendan las decisiones.', '360', 1),"
             + "(37, 'Se orienta hacia los resultados, con un gran afán de alcanzar objetivos o requisitos.', '360', 1),"
             + "(38, 'Acepta riesgos calculados.', '360', 1),"
@@ -525,7 +528,10 @@ namespace DST
             + "(65, 'La apertura de caja es registrada de acuerdo a procedimientos de control administrativo y a los formatos de documentación de registro establecidos para el sector.', '360', 1),"
             + "(66, 'La boleta y vuelto son entregados a clientes de acuerdo a protocolos de atención a clientes, medios de pago utilizados y los procedimientos de caja establecidos en el sector.', '360', 1),"
             + "(67, 'Tiene la capacidad para identificar los distintos tipos de cheque.', '360', 1),"
-            + "(68, 'Tiene la capacidad para identificar y distinguir entre tarjeta de crédito y tarjeta de débito.', '360', 1),"
+            + "(68, 'Tiene la capacidad para identificar y distinguir entre tarjeta de crédito y tarjeta de débito.', '360', 1);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `preguntas` (`id`, `pregunta`, `tipo`, `estado`) VALUES"
             + "(69, 'Tiene la capacidad de identificar guías de despacho, facturas, notas de créditos y otros documentos asociados al área mercantil.', '360', 1),"
             + "(70, 'Demuestra conocimiento sobre las diversas señaléticas asociadas a elementos de seguridad.', '360', 1),"
             + "(71, 'Demuestra conocimiento sobre la normativa técnica sanitaria de Supermercados.', '360', 1),"
@@ -623,7 +629,10 @@ namespace DST
             + "(37, 'motivacion'),"
             + "(38, 'motivacion'),"
             + "(39, 'motivacion'),"
-            + "(40, 'conocimientos_matematicas'),"
+            + "(40, 'conocimientos_matematicas');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `componentespreguntas` (`idPregunta`, `idComponente`) VALUES"
             + "(41, 'conocimientos_matematicas'),"
             + "(42, 'conocimientos_matematicas'),"
             + "(43, 'normativa_procedimientos'),"
@@ -657,7 +666,10 @@ namespace DST
             + "(71, 'normas_higiene_seguridad'),"
             + "(72, 'normas_higiene_seguridad'),"
             + "(73, 'norma_sanitaria_establecimientos'),"
-            + "(74, 'norma_sanitaria_establecimientos'),"
+            + "(74, 'norma_sanitaria_establecimientos');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `componentespreguntas` (`idPregunta`, `idComponente`) VALUES"
             + "(75, 'moler_cortar_carne'),"
             + "(76, 'moler_cortar_carne'),"
             + "(77, 'moler_cortar_carne'),"
@@ -766,7 +778,10 @@ namespace DST
             + "('Alta', 'responsabilidad', 'triangular'),"
             + "('Alta', 'sistema_informatico', 'triangular'),"
             + "('Alta', 'sociabilidad', 'triangular'),"
-            + "('Alta', 'tecnicas_venta', 'triangular'),"
+            + "('Alta', 'tecnicas_venta', 'triangular');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `valoresling` (`nombre`, `nombreVariableLing`, `tipoFuncion`) VALUES"
             + "('Alta', 'tolerancia_presion', 'triangular'),"
             + "('Alta', 'trabajo_equipo', 'triangular'),"
             + "('Baja', 'adaptacion_cambio', 'triangular'),"
@@ -788,7 +803,10 @@ namespace DST
             + "('Baja', 'lenguaje_formal', 'triangular'),"
             + "('Baja', 'moler_cortar_carne', 'triangular'),"
             + "('Baja', 'motivacion', 'triangular'),"
-            + "('Baja', 'normas_higiene_seguridad', 'triangular'),"
+            + "('Baja', 'normas_higiene_seguridad', 'triangular');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `valoresling` (`nombre`, `nombreVariableLing`, `tipoFuncion`) VALUES"
             + "('Baja', 'normativa_procedimientos', 'triangular'),"
             + "('Baja', 'norma_sanitaria_establecimientos', 'triangular'),"
             + "('Baja', 'pesaje_sellado_productos', 'triangular'),"
@@ -812,7 +830,10 @@ namespace DST
             + "('Muy_alta', 'disposicion_at_insumos', 'trapezoidal'),"
             + "('Muy_alta', 'eficiencia', 'trapezoidal'),"
             + "('Muy_alta', 'elaboracion_productos_panaderia', 'trapezoidal'),"
-            + "('Muy_alta', 'empatia', 'trapezoidal'),"
+            + "('Muy_alta', 'empatia', 'trapezoidal');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `valoresling` (`nombre`, `nombreVariableLing`, `tipoFuncion`) VALUES"
             + "('Muy_alta', 'especificaciones_tecnicas', 'trapezoidal'),"
             + "('Muy_alta', 'habilidad_lectoescritura', 'trapezoidal'),"
             + "('Muy_alta', 'habilidad_logicomatematica', 'trapezoidal'),"
@@ -847,7 +868,10 @@ namespace DST
             + "('Muy_baja', 'elaboracion_productos_panaderia', 'trapezoidal'),"
             + "('Muy_baja', 'empatia', 'trapezoidal'),"
             + "('Muy_baja', 'especificaciones_tecnicas', 'trapezoidal'),"
-            + "('Muy_baja', 'habilidad_lectoescritura', 'trapezoidal'),"
+            + "('Muy_baja', 'habilidad_lectoescritura', 'trapezoidal');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `valoresling` (`nombre`, `nombreVariableLing`, `tipoFuncion`) VALUES"
             + "('Muy_baja', 'habilidad_logicomatematica', 'trapezoidal'),"
             + "('Muy_baja', 'hornear_masas', 'trapezoidal'),"
             + "('Muy_baja', 'identificar_documentos_mercantiles', 'trapezoidal'),"
@@ -870,7 +894,10 @@ namespace DST
             + "('Muy_baja', 'tolerancia_presion', 'trapezoidal'),"
             + "('Muy_baja', 'trabajo_equipo', 'trapezoidal'),"
             + "('No', 'discapacidad_fisica', 'triangular'),"
-            + "('Promedio', 'adaptacion_cambio', 'triangular'),"
+            + "('Promedio', 'adaptacion_cambio', 'triangular');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `valoresling` (`nombre`, `nombreVariableLing`, `tipoFuncion`) VALUES"
             + "('Promedio', 'almacenaje_traslado_mercaderia', 'triangular'),"
             + "('Promedio', 'atencion_clientes', 'triangular'),"
             + "('Promedio', 'autocontrol', 'triangular'),"
@@ -938,7 +965,10 @@ namespace DST
             + "('identificar_documentos_mercantiles', 'Muy_alta', 70, 90, 100, 100),"
             + "('identificar_documentos_mercantiles', 'Muy_baja', 0, 0, 10, 30),"
             + "('integridad', 'Muy_alta', 70, 90, 100, 100),"
-            + "('integridad', 'Muy_baja', 0, 0, 10, 30),"
+            + "('integridad', 'Muy_baja', 0, 0, 10, 30);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `funciontrapezoide` (`nombreVariableLing`, `nombreValorLing`, `valorInferiorIzquierdo`, `valorSuperiorIzquierdo`, `valorSuperiorDerecho`, `valorInferiorDerecho`) VALUES"
             + "('lenguaje_formal', 'Muy_alta', 70, 90, 100, 100),"
             + "('lenguaje_formal', 'Muy_baja', 0, 0, 10, 30),"
             + "('moler_cortar_carne', 'Muy_alta', 70, 90, 100, 100),"
@@ -1011,7 +1041,10 @@ namespace DST
             + "('elaboracion_productos_panaderia', 'Promedio', 30, 50, 70),"
             + "('empatia', 'Alta', 50, 70, 90),"
             + "('empatia', 'Baja', 10, 30, 50),"
-            + "('empatia', 'Promedio', 30, 50, 70),"
+            + "('empatia', 'Promedio', 30, 50, 70);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `funciontriangular` (`nombreVariableLing`, `nombreValorLing`, `valorIzquierda`, `valorCentro`, `valorDerecha`) VALUES"
             + "('especificaciones_tecnicas', 'Alta', 50, 70, 90),"
             + "('especificaciones_tecnicas', 'Baja', 10, 30, 50),"
             + "('especificaciones_tecnicas', 'Promedio', 30, 50, 70),"
@@ -1052,7 +1085,10 @@ namespace DST
             + "('pesaje_sellado_productos', 'Baja', 10, 30, 50),"
             + "('pesaje_sellado_productos', 'Promedio', 30, 50, 70),"
             + "('preparacion_masas', 'Alta', 50, 70, 90),"
-            + "('preparacion_masas', 'Baja', 10, 30, 50),"
+            + "('preparacion_masas', 'Baja', 10, 30, 50);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO `funciontriangular` (`nombreVariableLing`, `nombreValorLing`, `valorIzquierda`, `valorCentro`, `valorDerecha`) VALUES"
             + "('preparacion_masas', 'Promedio', 30, 50, 70),"
             + "('presentacion_personal', 'Alta', 50, 70, 90),"
             + "('presentacion_personal', 'Baja', 10, 30, 50),"

@@ -168,6 +168,25 @@ namespace DST
 
         }
 
+        public Alternativa ObtenerAlternativaPregunta(int idPregunta, string alternativa)
+        {
+            Alternativa al = null;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT alternativa FROM alternativasPreguntas WHERE idPregunta=" + idPregunta + " AND alternativa='" + alternativa + "';");
+
+            if (bd.Consulta.Read())
+            {
+                al = ObtenerAlternativa(bd.Consulta.GetString("alternativa"));
+            }
+
+            bd.Close();
+
+            return al;
+        }
+
         public List<Encuesta.DatosAlternativa> ObtenerAlternativas(int idPregunta, string tipo)
         {
             List<Encuesta.DatosAlternativa> listaAlternativas = new List<Encuesta.DatosAlternativa>();
@@ -319,13 +338,11 @@ namespace DST
             bd.Close();
         }
 
-        public void InsertarPreguntaSeccion(int idSeccion, string pregunta, string tipoPregunta)
+        public void InsertarPreguntaSeccion(int idSeccion, int idPregunta, string tipoPregunta)
         {
             BaseDeDatos bd = new BaseDeDatos();
 
             bd.Open();
-
-            int idPregunta = InsertarPregunta(pregunta, tipoPregunta);
 
             bd.Insertar("INSERT INTO preguntasSeccion(idSeccion,idPregunta) VALUES(" + idSeccion + ", " + idPregunta + ");");
 
@@ -431,6 +448,26 @@ namespace DST
             bd.Close();
 
             return alternativas;
+        }
+
+        public string ObtenerComponentePregunta(int idPregunta, string idComponente)
+        {
+            string componente = "";
+            AdminPerfil ap = new AdminPerfil();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT idComponente FROM componentesPreguntas WHERE idPregunta=" + idPregunta + " AND idComponente='" + idComponente + "';");
+
+            if (bd.Consulta.Read())
+            {
+                componente = bd.Consulta.GetString("idComponente");
+            }
+
+            bd.Close();
+
+            return componente;
         }
 
         public List<string> ObtenerComponentesPregunta(int idPregunta)
@@ -626,6 +663,17 @@ namespace DST
             bd.Open();
 
             bd.Insertar("UPDATE alternativas SET alternativa='" + alternativa + "', descripcion='" + descripcion + "', valor=" + valor + ", tipo='" + tipo + "' WHERE alternativa='" + alternativaActual + "';");
+
+            bd.Close();
+        }
+
+        public void ActualizarAlternativaPregunta(int idPregunta, string alternativaActual, string nuevaAlternativa)
+        {
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.Insertar("UPDATE alternativasPreguntas SET alternativa='" + nuevaAlternativa + "' WHERE idPregunta=" + idPregunta + " AND alternativa='" + alternativaActual + "';");
 
             bd.Close();
         }
