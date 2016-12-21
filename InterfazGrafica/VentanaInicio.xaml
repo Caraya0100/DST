@@ -11,15 +11,15 @@
     <Grid>
         <StackPanel>
             <WrapPanel>
-                <WrapPanel Width="509" Height="309" Margin="0,140,0,0">
+                <WrapPanel Width="509" Height="309" Margin="0,100,0,0">
                     <Rectangle Grid.Column="1" Height="149" Margin="140,0,0,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="207">
                         <Rectangle.Fill>
                             <ImageBrush ImageSource="Iconos/logotipo.png"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Margin="50,20,0,20" Height="70" Width="405">Ingresa los datos para crear la base de datos del software.Esto tomara unos minutos.<LineBreak></LineBreak><LineBreak></LineBreak>Nota: Debes tener MySQL 5.6 instalado, ademas el usuario de la base de datos debe <LineBreak></LineBreak>tener permisos para crear base de datos.</TextBlock>
+                    <TextBlock Margin="50,20,0,20" Height="76" Width="405">Ingresa los datos para crear la base de datos del software.<LineBreak></LineBreak><LineBreak></LineBreak>Nota: Debes tener MySQL 5.6 instalado, ademas el usuario de la base de <LineBreak></LineBreak>datos debe tener todos los permisos para crear y manipular base de datos.</TextBlock>
                 </WrapPanel>
-                <WrapPanel Width="551" Height="309" Margin="0,140,0,0">
+                <WrapPanel Width="551" Height="309" Margin="0,100,0,0">
                     <Label Content="Base de datos" Margin="20,0,0,0" Width="506"></Label>
                     <Label Content="Usuario:" Margin="20,10,0,0" Width="71"></Label>
                     <TextBox x:Name="txtNombreUserBD" Margin="20,10,0,0" Width="393" />
@@ -35,7 +35,8 @@
                     <TextBox x:Name="txtPassAdmin" Margin="20,10,0,0" Width="393" />
                 </WrapPanel>
             </WrapPanel>
-            <Button x:Name="btnAceptar" Content="Aceptar" Click="Aceptar" VerticalAlignment="Top" Margin="348,90,347,0" HorizontalAlignment="Center" Width="370"/>
+            <TextBlock Margin="395,40,408,0" Height="22">Importante: Este proceso tomará varios minutos.</TextBlock>
+            <Button x:Name="btnAceptar" Content="Aceptar" Click="Aceptar" VerticalAlignment="Top" Margin="348,10,347,0" HorizontalAlignment="Center" Width="370"/>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>
