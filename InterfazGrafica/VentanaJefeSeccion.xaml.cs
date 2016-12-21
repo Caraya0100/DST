@@ -352,6 +352,7 @@ namespace InterfazGrafica
             //trabajadorSeleccionado = indice;
             int identificador = 0;
             /*puntajes de seccion por habilidad*/
+            datosSeccion.IdSeccion = idSeccion;
             perfilSeccionActual = datosSeccion.PerfilSeccion();
             Dictionary<string, Componente> habilidadesPerfil = perfilSeccionActual.Blandas;
 
@@ -392,8 +393,10 @@ namespace InterfazGrafica
                             {
                                 HD.Add(habilidadDura.Value.Nombre);
                                 HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);
-                            } 
-                        }                                                                    
+                                //Console.WriteLine("HABILIADDES QUE NO SE MUESTRAN1: "+habilidadDura.Key+"  "+habilidadPerfil.Key);
+                            }
+                            //Console.WriteLine("HABILIADDES QUE NO SE MUESTRAN2: " + habilidadDura.Value.Nombre);
+                        } //Console.WriteLine("HABILIADDES QUE NO SE MUESTRAN3: " + habilidadDura.Value.Nombre);                                                                   
                     }
                     habilidadesPerfil = perfilSeccionActual.Fisicas;
                     foreach (KeyValuePair<string, Componente> caractFisica in infoTrabajador.Value.Perfil.Fisicas)
@@ -406,7 +409,10 @@ namespace InterfazGrafica
                                 CFPuntajesTrabajador.Add(caractFisica.Value.Puntaje);  
                             }
                         }                                              
-                    }      
+                    }
+                    Console.WriteLine("las habiliades: "+CF.Count+" los pjes: "+CFPuntajesTrabajador.Count);
+                    Console.WriteLine("las habiliades: " + HB.Count + " los pjes: " + HBPuntajesTrabajador.Count);
+                    Console.WriteLine("las habiliades: " + HD.Count + " los pjes: " + HDPuntajesTrabajador.Count);
                     datosSeccion.IdSeccion = idSeccion;
                     trabajadorSeleccionado = infoTrabajador.Value.Rut;//para eliminar/editar
                     datosTrabajadores.IdTrabajador = trabajadorSeleccionado;
@@ -423,7 +429,8 @@ namespace InterfazGrafica
                 }
                 identificador++;
             }         
-            /*grafico circular*/  
+            /*grafico circular*/
+            datosDesempeno.IdSeccion = idSeccion;
             AsignacionValoresGraficoCircular(datosDesempeno.CapacidadGeneralTrabajador());
             /*Grafico Radar*/
             string[] habilidades = { "CF", "HB", "HD" };          
@@ -511,6 +518,7 @@ namespace InterfazGrafica
             Console.WriteLine("PTJE hd SEC: " + HDPuntajesSeccion.Count);
             Console.WriteLine("PTJE cf TRA: " + CFPuntajesTrabajador.Count);
             Console.WriteLine("PTJE cf SEC: " + CFPuntajesSeccion.Count);
+            datosDesempeno.IdSeccion = idSeccion;
             VentanaDetalleHabilidades detalleHabilidades = new VentanaDetalleHabilidades();
             /*capacidad general*/
             detalleHabilidades.CapacidadTrabajdor = datosDesempeno.CapacidadGeneralTrabajador();
@@ -956,9 +964,9 @@ namespace InterfazGrafica
         {
             if (tipoHabilidad.Equals("general"))
             {
-                datosSeccion.ActualizacionImportanciasHabilidades("cf", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                datosSeccion.ActualizacionImportanciasHabilidades("hd", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                datosSeccion.ActualizacionImportanciasHabilidades("hb", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("HB", Convert.ToDouble(this.slider_HB.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("HD", Convert.ToDouble(this.slider_HD.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("CF", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
                 cuadroMensajes.CambiosGuardados();
             }
             else if (tipoHabilidad.Equals("hb"))
@@ -1040,6 +1048,7 @@ namespace InterfazGrafica
             rutTrabajadorRanking = trabajadorRanking[indice].Rut;
             seccionRanking.Text = datosSeccion.NombreSeccionPorRutTrabajador();
             /*grafico circular*/
+            datosDesempeno.IdSeccion = idSeccion;
             datosDesempeno.IdTrabajador = trabajadorRanking[indice].Rut;
             double capacidadGeneral = datosDesempeno.CapacidadGeneralTrabajador();
             double doble = new Random().NextDouble(); //dato de prueba
@@ -1047,6 +1056,7 @@ namespace InterfazGrafica
             /*Grafico araña*/
             datosSeccion.IdSeccion = idSeccion;
             perfilSeccionActual = datosSeccion.PerfilSeccion();
+            datosDesempeno.IdSeccion = idSeccion;
             /*puntajes generales*/
             puntajesGeneralesSeccion.Add(datosSeccion.PuntajeGeneralCF());
             puntajesGeneralesSeccion.Add(datosSeccion.PuntajeGeneralHB());
@@ -1088,6 +1098,7 @@ namespace InterfazGrafica
         private void DetalleRanking(object sender, EventArgs e)
         {
             VentanaDetalleHabilidades detalleHabilidades = new VentanaDetalleHabilidades();
+            datosDesempeno.IdSeccion = idSeccion;
             /*capacidad general*/
             detalleHabilidades.CapacidadTrabajdor = datosDesempeno.CapacidadGeneralTrabajador();
             /*puntajes generales por habilidad de la seccion*/

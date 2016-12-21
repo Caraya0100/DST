@@ -84,7 +84,8 @@ namespace InterfazGrafica
             else if (tabHB.IsSelected)
             {
                 if (puntajesSeccionHB.Count != habilidadesBlandas.Length || hbTrabajadorPuntajes.Length!=HabilidadesBlandas.Length || puntajesSeccionHB.Count != hbTrabajadorPuntajes.Length)
-                    PuntajesHBEnCero();               
+                    PuntajesHBEnCero();
+                else Console.WriteLine("NO CUMPLE2");         
                 this.grafico = new GraficoRadar(habilidadesBlandas, puntajesSeccionHB.ToArray(), hbTrabajadorPuntajes, this.GraficoHB);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();
@@ -96,7 +97,8 @@ namespace InterfazGrafica
             else if (tabHD.IsSelected)
             {
                 if (puntajesSeccionHD.Count != habilidadesDuras.Length || hdTrabajadorPuntajes.Length != HabilidadesDuras.Length || puntajesSeccionHD.Count != hdTrabajadorPuntajes.Length)
-                    PuntajesHDEnCero();               
+                    PuntajesHDEnCero();
+                else Console.WriteLine("NO CUMPLE3");
                 this.grafico = new GraficoRadar(habilidadesDuras, puntajesSeccionHD.ToArray(), hdTrabajadorPuntajes, this.GraficoHD);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();
@@ -108,7 +110,8 @@ namespace InterfazGrafica
             else if (tabCF.IsSelected)
             {
                 if (puntajesSeccionCF.Count != caracteristicasFisicas.Length || cfTrabajadorPuntajes.Length != caracteristicasFisicas.Length || puntajesSeccionCF.Count != cfTrabajadorPuntajes.Length)
-                    PuntajesCFEnCero();               
+                    PuntajesCFEnCero();
+                else Console.WriteLine("NO CUMPLE1");       
                 this.grafico = new GraficoRadar(caracteristicasFisicas, puntajesSeccionCF.ToArray(), cfTrabajadorPuntajes, this.GraficoCF);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();
@@ -221,6 +224,10 @@ namespace InterfazGrafica
            puntajesSeccionHB.Clear();
            puntajesSeccionHD.Clear();
            puntajesSeccionCF.Clear();
+           Console.WriteLine("CANTIDAD HB: "+perfilSeccion.Blandas.Count+"  PTJE "+puntajesSeccionHB.Count+" ptjeh"+hbTrabajadorPuntajes.Length);
+           Console.WriteLine("CANTIDAD HD: " + perfilSeccion.Duras.Count);
+           Console.WriteLine("CANTIDAD CF: " + perfilSeccion.Fisicas.Count);
+
            foreach (KeyValuePair<string, Componente> puntajesPerfil in perfilSeccion.Blandas)
            {              
                puntajesSeccionHB.Add(puntajesPerfil.Value.Puntaje);

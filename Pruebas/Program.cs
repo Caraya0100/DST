@@ -14,7 +14,7 @@ namespace DST
 
             //new PruebaInsercionReglas();
 
-            new PruebaEvaluacionTrabajadores();
+            //new PruebaEvaluacionTrabajadores();
 
             //new PruebaAdminMatching().InsertarComponentesMatching();
             //new PruebaAdminMatching().InsertarComponentesSecciones();
@@ -152,6 +152,25 @@ namespace DST
                 Console.WriteLine("{0} {1}", seccion.IdSeccion, seccion.Nombre );
                 Console.ReadKey();
             }*/
+
+
+            AdminMatching am = new AdminMatching();
+            AdminTrabajador at = new AdminTrabajador();
+
+            List<Trabajador> tra = at.ObtenerTrabajadoresEmpresa();
+
+            foreach (Trabajador t in tra)
+            {
+                for (int i = 1; i < 7; i++)
+                {
+                    double hb = new Random(i * 2).Next(10,200);
+                    double hd = new Random(i * 3).Next(10, 200);
+                    double cf = new Random(i * 4).Next(10, 200);
+                    double gen = new Random(i * 5).Next(10, 200);
+                    am.InsertarCapacidad(t.Rut, i, hb, hd, cf,gen);
+                }
+                    
+            }
 
             Console.ReadKey();
         }

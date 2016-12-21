@@ -206,7 +206,7 @@ namespace DST
             {
                 Componente nuevoComponente = new Componente(consulta2.GetString(0), consulta2.GetString(1), consulta2.GetString(2), 
                     consulta2.GetString(3),consulta2.GetDouble(4), consulta2.GetDouble(5),consulta2.GetBoolean(6));
-                Console.WriteLine("ENCONSULTA: "+consulta2.GetBoolean(6));
+                //Console.WriteLine("ENCONSULTA: "+consulta2.GetBoolean(6));
                 perfilSeccion.AgregarComponente(nuevoComponente);
             }
 
@@ -456,7 +456,8 @@ namespace DST
             conn3.Open();
             /*cmd3.CommandText = "SELECT hb FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
                 + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";*/
-            cmd3.CommandText = "SELECT hb FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+            //cmd3.CommandText = "SELECT hb FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+            cmd3.CommandText = "SELECT puntaje FROM componentesperfilsecciones WHERE idSeccion=" + idSeccion.ToString() + " AND id='HB';";
 
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
@@ -482,8 +483,8 @@ namespace DST
             conn3.Open();
             /*cmd3.CommandText = "SELECT hd FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
                 + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";*/
-            cmd3.CommandText = "SELECT hd FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
-
+            //cmd3.CommandText = "SELECT hd FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+            cmd3.CommandText = "SELECT puntaje FROM componentesperfilsecciones WHERE idSeccion=" + idSeccion.ToString() + " AND id='HD';";
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
             {
@@ -507,7 +508,8 @@ namespace DST
             conn3.Open();
             /*cmd3.CommandText = "SELECT cf FROM evaluacionSeccion WHERE fechaEvaluacion = (SELECT MAX(fechaEvaluacion)"
                 + "FROM evaluaciontrabajador WHERE idSeccion=" + idSeccion.ToString() + ");";*/
-            cmd3.CommandText = "SELECT cf FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+            //cmd3.CommandText = "SELECT cf FROM evaluacionSeccion WHERE idSeccion=" + idSeccion.ToString() + " ORDER BY fechaEvaluacion DESC LIMIT 1;";
+            cmd3.CommandText = "SELECT puntaje FROM componentesperfilsecciones WHERE idSeccion=" + idSeccion.ToString() + " AND id='CF';";
             Console.WriteLine(cmd3.CommandText.ToString());
             consulta3 = cmd3.ExecuteReader();
             while (consulta3.Read())
