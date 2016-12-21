@@ -88,24 +88,33 @@ namespace InterfazGrafica
             grafico.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
             grafico.ChartAreas["ChartArea1"].AxisY2.Maximum = 200;
             grafico.ChartAreas["ChartArea1"].AxisY2.Minimum = 0;
+            Console.WriteLine("CANTIDAD GRAFICO1: " + habilidades.Length + " - " + puntajesTrabajador.Length);
+            Console.WriteLine("CANTIDAD GRAFICO2: " + habilidades.Length + " - " + puntajesSeccion.Length);
+            try
+            {
+                grafico.Series[this.serieTrabajador].Points.DataBindXY(this.habilidades, this.puntajesSeccion);
+                grafico.Series[this.serieSeccion].Points.DataBindXY(this.habilidades, this.puntajesTrabajador);
 
-            grafico.Series[this.serieTrabajador].Points.DataBindXY(this.habilidades, this.puntajesSeccion);
-            grafico.Series[this.serieSeccion].Points.DataBindXY(this.habilidades, this.puntajesTrabajador);
-
-            // Set radar chart type
-            grafico.Series[serieTrabajador].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Radar;
-            grafico.Series[serieSeccion].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Radar;
-            // Set radar chart style (Area, Line or Marker)
-            grafico.Series[serieTrabajador]["RadarDrawingStyle"] = tipoGrafico;
-            grafico.Series[serieSeccion]["RadarDrawingStyle"] = tipoGrafico;
-            // Set circular area drawing style (Circle or Polygon)
-            grafico.Series[serieTrabajador]["AreaDrawingStyle"] = "Polygon";
-            grafico.Series[serieSeccion]["AreaDrawingStyle"] = "Polygon";
-            // Set labels style (Auto, Horizontal, Circular or Radial)
-            grafico.Series[serieTrabajador]["CircularLabelsStyle"] = "Horizontal";
-            grafico.Series[serieSeccion]["CircularLabelsStyle"] = "Horizontal";
-            // Show as 3D
-            grafico.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;
+                // Set radar chart type
+                grafico.Series[serieTrabajador].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Radar;
+                grafico.Series[serieSeccion].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Radar;
+                // Set radar chart style (Area, Line or Marker)
+                grafico.Series[serieTrabajador]["RadarDrawingStyle"] = tipoGrafico;
+                grafico.Series[serieSeccion]["RadarDrawingStyle"] = tipoGrafico;
+                // Set circular area drawing style (Circle or Polygon)
+                grafico.Series[serieTrabajador]["AreaDrawingStyle"] = "Polygon";
+                grafico.Series[serieSeccion]["AreaDrawingStyle"] = "Polygon";
+                // Set labels style (Auto, Horizontal, Circular or Radial)
+                grafico.Series[serieTrabajador]["CircularLabelsStyle"] = "Horizontal";
+                grafico.Series[serieSeccion]["CircularLabelsStyle"] = "Horizontal";
+                // Show as 3D
+                grafico.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("LA CANTIDAD DE VARIABLES ES DISTINTAS.");
+            }
+           
         }
 
     }

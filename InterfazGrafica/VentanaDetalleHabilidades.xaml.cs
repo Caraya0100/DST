@@ -83,6 +83,7 @@ namespace InterfazGrafica
             }
             else if (tabHB.IsSelected)
             {
+                Console.WriteLine("NO CUMPLE1-" + puntajesSeccionHB.Count + " - " + habilidadesBlandas.Length + " - " + hbTrabajadorPuntajes.Length);
                 if (puntajesSeccionHB.Count != habilidadesBlandas.Length || hbTrabajadorPuntajes.Length!=HabilidadesBlandas.Length || puntajesSeccionHB.Count != hbTrabajadorPuntajes.Length)
                     PuntajesHBEnCero();
                 else Console.WriteLine("NO CUMPLE2");         
@@ -96,6 +97,7 @@ namespace InterfazGrafica
             }
             else if (tabHD.IsSelected)
             {
+                Console.WriteLine("NO CUMPLE1" + puntajesSeccionHD.Count + " - " + habilidadesDuras.Length + " - " + hdTrabajadorPuntajes.Length);
                 if (puntajesSeccionHD.Count != habilidadesDuras.Length || hdTrabajadorPuntajes.Length != HabilidadesDuras.Length || puntajesSeccionHD.Count != hdTrabajadorPuntajes.Length)
                     PuntajesHDEnCero();
                 else Console.WriteLine("NO CUMPLE3");
@@ -109,9 +111,10 @@ namespace InterfazGrafica
             }
             else if (tabCF.IsSelected)
             {
+                Console.WriteLine("NO CUMPLE1" + puntajesSeccionCF.Count + " - " + caracteristicasFisicas.Length + " - " + cfTrabajadorPuntajes.Length);
                 if (puntajesSeccionCF.Count != caracteristicasFisicas.Length || cfTrabajadorPuntajes.Length != caracteristicasFisicas.Length || puntajesSeccionCF.Count != cfTrabajadorPuntajes.Length)
                     PuntajesCFEnCero();
-                else Console.WriteLine("NO CUMPLE1");       
+                       
                 this.grafico = new GraficoRadar(caracteristicasFisicas, puntajesSeccionCF.ToArray(), cfTrabajadorPuntajes, this.GraficoCF);
                 this.grafico.TipoGrafico = "Area";
                 this.grafico.constructorGrafico();

@@ -286,11 +286,11 @@
             </TabItem>
             <TabItem Name="itemSolicitudes" Header="Solicitudes">
                 <Grid Background="#FFFBFBFB">
-                    <ScrollViewer x:Name="scrollSolicitudes" HorizontalAlignment="Left" Height="286" Margin="124,54,0,0" VerticalAlignment="Top" Width="545" VerticalScrollBarVisibility="Hidden">
+                    <ScrollViewer x:Name="scrollSolicitudes" HorizontalAlignment="Left" Height="305" Margin="124,54,0,0" VerticalAlignment="Top" Width="545" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="panelSolicitudes" Orientation="Vertical" />
                     </ScrollViewer>
                     <Separator HorizontalAlignment="Left" Height="21" Margin="87,23,0,0" VerticalAlignment="Top" Width="609"/>
-                    <Separator HorizontalAlignment="Left" Height="21" Margin="87,345,0,0" VerticalAlignment="Top" Width="609"/>
+                    <Separator HorizontalAlignment="Left" Height="21" Margin="87,364,0,0" VerticalAlignment="Top" Width="609"/>
                     <Button x:Name="botonArribaSolicitud"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Style="{DynamicResource MetroCircleButtonStyle}" Height="49" Margin="689,152,0,0" Click="MovimientoArribaSolicitudes">
                         <DockPanel>
                             <Image Source="Iconos/flechaArriba.png" Height="24" Width="34"/>
@@ -301,7 +301,7 @@
                             <Image Source="Iconos/flechaAbajo.png" Height="24" Width="34"/>
                         </DockPanel>
                     </Button>
-                    <Button Name="reporteSolicitudes" Content="Generar Reporte" HorizontalAlignment="Left" Margin="534,391,0,0" VerticalAlignment="Top" Width="162" Click="GenerarReportesSolicitudes"/>
+                    <Button Name="reporteSolicitudes" Content="Generar Reporte" HorizontalAlignment="Left" Margin="534,421,0,0" VerticalAlignment="Top" Width="162" Click="GenerarReportesSolicitudes"/>
                 </Grid>
             </TabItem>
             <TabItem Name="itemReglas" Header="Reglas">
