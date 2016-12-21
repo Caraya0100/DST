@@ -808,14 +808,20 @@ namespace DST
         public void InsertarSolicitudCambio(string fechaSolicitud, string estadoSolicitud, string rutSolicitud,
           int idSeccionActual, int idSeccionSolicitada, double capacidadActual, double capacidadNueva)
         {
+            string ptj1 = capacidadActual.ToString("0.0");
+            string ptj2 = capacidadActual.ToString("0.0");
             conn.Open();
-
-            cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual,"
-                + "idSeccionSolicitada,capacidadSeccionActual,capacidadNuevaSeccion) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "'"
-                + rutSolicitud + "," + idSeccionActual.ToString() + "," + idSeccionSolicitada.ToString()
-                + "," + capacidadActual + "," + capacidadNueva + ");";
-            Console.WriteLine("CONSULTA" + cmd.CommandText.ToString());
-            cmd.ExecuteNonQuery();
+            try
+            {
+                cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual,"
+                + "idSeccionSolicitada,capacidadSeccionActual,capacidadNuevaSeccion) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "','"
+                + rutSolicitud + "'," + idSeccionActual.ToString() + "," + idSeccionSolicitada.ToString()
+                + "," + ptj1.Replace(",", ".") + "," + ptj2.Replace(",", ".") + ");";
+                Console.WriteLine("CONSULTA" + cmd.CommandText.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception e){}
+            
 
             conn.Close();
         }
@@ -990,6 +996,7 @@ namespace DST
             while (consulta.Read())
             {
                 puntajeCF = consulta.GetDouble(0);
+
             }
 
             conn.Close();
@@ -1058,11 +1065,12 @@ namespace DST
 
             conn.Open();
             cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "' AND idSeccionEvaluacion=" + idSeccion + ";";
-
+            Console.WriteLine(cmd.CommandText.ToString());
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
             {
                 puntajeCF = consulta.GetDouble(0);
+                Console.WriteLine("EL PUNTAJE");
             }
 
             conn.Close();

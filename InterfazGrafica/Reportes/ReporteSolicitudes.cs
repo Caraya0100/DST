@@ -15,7 +15,10 @@ namespace InterfazGrafica.Reportes
         private string rutaFichero;
         private Document reporte;
         private Fuentes fuente;
-
+        private AdminDesempeño datosDesempeno;
+        private InteraccionBD.InteraccionSecciones datosSeccion;
+        private InteraccionBD.InteraccionTrabajadores datosTrabajador;
+        private List<Solicitud> solicitudes;
         public ReporteSolicitudes()
         {
             IniciarComponentes();
@@ -25,6 +28,11 @@ namespace InterfazGrafica.Reportes
         {
             this.rutaFichero = string.Empty;
             fuente = new Fuentes();
+            datosDesempeno = new AdminDesempeño();
+            solicitudes = datosDesempeno.ObtenerSolicitudes();
+            datosSeccion = new InteraccionBD.InteraccionSecciones();
+            datosTrabajador = new InteraccionBD.InteraccionTrabajadores();
+            
         }
 
         public void GenerarReporte()
@@ -81,8 +89,9 @@ namespace InterfazGrafica.Reportes
         {
             Paragraph espacios = new Paragraph("\n\n", fuente.Normal(18));
             reporte.Add(espacios);
+            
             /*datos de prueba*/
-            for (int i = 0; i < 10; i++)
+            foreach (Solicitud sol in solicitudes)
             {
                 PdfPTable tablaSolicitudes = new PdfPTable(2);
                 tablaSolicitudes.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -114,14 +123,14 @@ namespace InterfazGrafica.Reportes
                 capacidadActualEtiqueta.BackgroundColor = new BaseColor(171, 196, 237);
                 estadoEtiqueta.BackgroundColor = new BaseColor(171, 196, 237);
 
-                PdfPCell seccion = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell jefeSeccion = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell fecha = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell trabajador = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell seccionActual = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell capacidadActual = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell capacidadNueva = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
-                PdfPCell estado = new PdfPCell(new Paragraph("Un dato de prueba", fuente.Normal(12)));
+                PdfPCell seccion = new PdfPCell(new Paragraph(datosSeccion.NombreSeccionPorId(sol.IdSeccionSolicitada), fuente.Normal(12)));
+                PdfPCell jefeSeccion = new PdfPCell(new Paragraph("", fuente.Normal(12)));
+                PdfPCell fecha = new PdfPCell(new Paragraph(sol.FechaSolicitud, fuente.Normal(12)));
+                PdfPCell trabajador = new PdfPCell(new Paragraph(datosTrabajador.NombreTrabajadorPorRut(sol.RutSolicitud), fuente.Normal(12)));
+                PdfPCell seccionActual = new PdfPCell(new Paragraph(datosSeccion.NombreSeccionPorId(sol.IdSeccionActual), fuente.Normal(12)));
+                PdfPCell capacidadActual = new PdfPCell(new Paragraph(""+sol.CapacidadSeccionActual, fuente.Normal(12)));
+                PdfPCell capacidadNueva = new PdfPCell(new Paragraph(""+sol.CapacidadNuevaSeccion, fuente.Normal(12)));
+                PdfPCell estado = new PdfPCell(new Paragraph(sol.EstadoSolicitud, fuente.Normal(12)));
 
                 seccion.HorizontalAlignment = Element.ALIGN_CENTER;
                 jefeSeccion.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -134,7 +143,7 @@ namespace InterfazGrafica.Reportes
 
                 /*se agregan las celdas a la tabla*/
                 tablaSolicitudes.AddCell(seccionEtiqueta); tablaSolicitudes.AddCell(seccionActual);
-                tablaSolicitudes.AddCell(jefeSeccionEtiqueta); tablaSolicitudes.AddCell(jefeSeccion);
+                //tablaSolicitudes.AddCell(jefeSeccionEtiqueta); tablaSolicitudes.AddCell(jefeSeccion);
                 tablaSolicitudes.AddCell(fechaEtiqueta); tablaSolicitudes.AddCell(fecha);
                 tablaSolicitudes.AddCell(trabajadorEtiqueta); tablaSolicitudes.AddCell(trabajador);
                 tablaSolicitudes.AddCell(seccionActualEtiqueta); tablaSolicitudes.AddCell(seccionActual);
