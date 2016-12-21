@@ -264,7 +264,7 @@ namespace DST
 
         public double ObtenerDesempenoGqm(int idSeccion, int mes, int anio)
         {
-            double desempeno = -1;
+            double desempeno = 0;
             //string fecha = anio + "-" + mes + "-01";
             BaseDeDatos bd = new BaseDeDatos();
 
@@ -681,7 +681,15 @@ namespace DST
 
             while (bd.Consulta.Read())
             {
-                fecha = bd.Consulta.GetDateTime(0).ToString();
+                try
+                {
+                    fecha = bd.Consulta.GetDateTime(0).ToString();
+
+                }
+                catch
+                {
+                    fecha = "";
+                }
             }
 
             bd.Close();
@@ -705,7 +713,14 @@ namespace DST
 
             while (bd.Consulta.Read())
             {
-                fecha = bd.Consulta.GetDateTime(0).ToString();
+                try
+                {
+                    fecha = bd.Consulta.GetDateTime(0).ToString();
+                }
+                catch
+                {
+                    fecha = "";
+                }
             }
 
             bd.Close();
@@ -846,14 +861,16 @@ namespace DST
         /// </summary>
         /// <param name="rutTrabajador"></param>
         /// <returns></returns>
-        public double ObtenerPuntajeHB(string rutTrabajador)
+        public double ObtenerPuntajeHB(string rutTrabajador, int id)
         {
             double puntajeHB = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+            /*cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
                 + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
-                + " rutTrabajador='" + rutTrabajador + "');";
+                + " rutTrabajador='" + rutTrabajador + "');";*/
+
+            cmd.CommandText = "SELECT gradoigualdadHB FROM capacidadtrabajador WHERE rutTrabajador='" + rutTrabajador + "' AND idSeccionEvaluacion=" + id + ";";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -871,14 +888,16 @@ namespace DST
         /// </summary>
         /// <param name="rutTrabajador"></param>
         /// <returns></returns>
-        public double ObtenerPuntajeHD(string rutTrabajador)
+        public double ObtenerPuntajeHD(string rutTrabajador, int id)
         {
             double puntajeHD = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT hd FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+            /*cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
                 + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
-                + " rutTrabajador='" + rutTrabajador + "');";
+                + " rutTrabajador='" + rutTrabajador + "');";*/
+
+            cmd.CommandText = "SELECT gradoigualdadHD FROM capacidadtrabajador WHERE rutTrabajador='" + rutTrabajador + "' AND idSeccionEvaluacion=" + id + ";";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -896,14 +915,16 @@ namespace DST
         /// </summary>
         /// <param name="rutTrabajador"></param>
         /// <returns></returns>
-        public double ObtenerPuntajeCF(string rutTrabajador)
+        public double ObtenerPuntajeCF(string rutTrabajador, int id)
         {
             double puntajeCF = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT cf FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
+            /*cmd.CommandText = "SELECT hb FROM evaluaciontrabajador WHERE rutTrabajador='" + rutTrabajador
                 + "' AND fechaEvaluacion=(SELECT MAX(fechaEvaluacion) FROM evaluaciontrabajador WHERE"
-                + " rutTrabajador='" + rutTrabajador + "');";
+                + " rutTrabajador='" + rutTrabajador + "');";*/
+
+            cmd.CommandText = "SELECT gradoigualdadCF FROM capacidadtrabajador WHERE rutTrabajador='" + rutTrabajador + "' AND idSeccionEvaluacion=" + id + ";";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())

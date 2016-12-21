@@ -181,6 +181,9 @@
     <Compile Include="VentanaEleccionGradoImportancia.xaml.cs" />
     <Compile Include="VentanaEncuesta.xaml.cs" />
     <Compile Include="VentanaEvaluadores.xaml.cs" />
+    <Compile Include="VentanaInicio.xaml.cs">
+      <DependentUpon>VentanaInicio.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VentanaJefeSeccion.xaml.cs" />
     <Compile Include="VentanaLogin.xaml.cs" />
     <Compile Include="Paneles\VisorEncuestados.cs" />
@@ -258,6 +261,10 @@
     <Page Include="VentanaEvaluadores.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VentanaInicio.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="VentanaJefeSeccion.xaml">
       <Generator>MSBuild:Compile</Generator>

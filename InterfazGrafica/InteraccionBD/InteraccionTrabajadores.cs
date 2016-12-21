@@ -55,15 +55,18 @@ namespace InterfazGrafica.InteraccionBD
         }
         public double PuntajeGeneralCF()
         {
-            return datosPuntajes.ObtenerPuntajeCF(idTrabajador);
+            AdminTrabajador at = new AdminTrabajador();
+            return at.ObtenerGCF(idTrabajador, idSeccion);
         }
         public double PuntajeGeneralHB()
         {
-            return datosPuntajes.ObtenerPuntajeHB(idTrabajador);
+            AdminTrabajador at = new AdminTrabajador();
+            return at.ObtenerGHB(idTrabajador, idSeccion);
         }
         public double PuntajeGeneralHD()
         {
-            return datosPuntajes.ObtenerPuntajeHD(idTrabajador);
+            AdminTrabajador at = new AdminTrabajador();
+            return at.ObtenerGHD(idTrabajador, idSeccion);
         }
         public Dictionary<string, Trabajador> TrabajadoresSeccion()
         {            

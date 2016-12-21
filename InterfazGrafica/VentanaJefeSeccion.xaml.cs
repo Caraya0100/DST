@@ -411,6 +411,7 @@ namespace InterfazGrafica
                     trabajadorSeleccionado = infoTrabajador.Value.Rut;//para eliminar/editar
                     datosTrabajadores.IdTrabajador = trabajadorSeleccionado;
                     datosDesempeno.IdTrabajador = trabajadorSeleccionado;
+                    datosTrabajadores.IdSeccion = IdSeccion;
 
                     puntajesGeneralesSeccion.Add(datosSeccion.PuntajeGeneralCF());
                     puntajesGeneralesSeccion.Add(datosSeccion.PuntajeGeneralHB());
@@ -785,11 +786,20 @@ namespace InterfazGrafica
 
         private void GeneradorPanelHabilidadesGenerales() 
         {
+            AdminSeccion asec = new AdminSeccion();
+            List<Seccion> secciones = asec.ObtenerSecciones();
+            Seccion seccion = null;
+            foreach (Seccion s in secciones)
+            {
+                if (s.IdSeccion == IdSeccion) seccion = s;
+            }
+
+            Perfil perfilEvaluado = EvaluacionPerfil.Ejecutar(seccion.Perfil, IdSeccion);
             datosSeccion.IdSeccion = idSeccion;
-            this.puntajeCF.Content = datosSeccion.PuntajeGeneralCF();
-            this.puntajeHB.Content = datosSeccion.PuntajeGeneralHB();
-            this.puntajeHD.Content = datosSeccion.PuntajeGeneralHD();
-            
+            this.puntajeCF.Content = perfilEvaluado.CF.Puntaje;
+            this.puntajeHB.Content = perfilEvaluado.HB.Puntaje;
+            this.puntajeHD.Content = perfilEvaluado.HD.Puntaje;
+
             this.grado_importancia_CF.Content = "" + datosSeccion.ImportanciaCF();
             this.grado_importancia_HB.Content = "" + datosSeccion.ImportanciaHB();
             this.grado_importancia_HD.Content = "" + datosSeccion.ImportanciaHD();

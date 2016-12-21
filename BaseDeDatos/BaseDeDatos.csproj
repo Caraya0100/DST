@@ -57,6 +57,7 @@
     <Compile Include="AdminTrabajador.cs" />
     <Compile Include="AdminSeccion.cs" />
     <Compile Include="AdminUsuario.cs" />
+    <Compile Include="CreacionBD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

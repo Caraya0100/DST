@@ -648,7 +648,10 @@ namespace InterfazGrafica
 
             foreach (Seccion seccion in s)
             {
-                Tuple<double, double> desempeno = EvaluacionDesempeno.Ejecutar(seccion.VentasActuales, seccion.VentasAnioAnterior, seccion.VentasPlan);
+                Tuple<double, double> desempeno = new Tuple<double, double>(0,0);
+
+                if (seccion.VentasAnioAnterior > 0 && seccion.VentasPlan > 0)
+                    desempeno = EvaluacionDesempeno.Ejecutar(seccion.VentasActuales, seccion.VentasAnioAnterior, seccion.VentasPlan);
 
                 seccion.ActualAnterior = desempeno.Item1;
                 seccion.ActualPlan = desempeno.Item2;
@@ -957,48 +960,52 @@ namespace InterfazGrafica
         private void DetallesDesempenoSeccion(object sender, RoutedEventArgs e)
         {
             desempenoSeccionActual = (Seccion)tablaDesempeno.SelectedItem;
-            AdminDesempeño ad = new AdminDesempeño();
-            DateTime fechaActual = DateTime.Now;
-            List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion, desempenoSeccionActual.Tipo);
 
-            // Iniciamos los comboBox con los años y los meses.
-            boxWrapDDetalles.Items.Clear();
-            foreach (int anio in anios)
+            if (desempenoSeccionActual != null )
             {
-                boxWrapDDetalles.Items.Add(anio.ToString());
+                AdminDesempeño ad = new AdminDesempeño();
+                DateTime fechaActual = DateTime.Now;
+                List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion, desempenoSeccionActual.Tipo);
+
+                // Iniciamos los comboBox con los años y los meses.
+                boxWrapDDetalles.Items.Clear();
+                foreach (int anio in anios)
+                {
+                    boxWrapDDetalles.Items.Add(anio.ToString());
+                }
+
+                string tipoSeccion = desempenoSeccionActual.Tipo.ToLower();
+                // Iniciamos los graficos.
+                if (tipoSeccion == "ventas")
+                {
+                    IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
+                }
+                else if (tipoSeccion == "gqm")
+                {
+                    IniciarGraficoObjetivo(desempenoSeccionActual.DesempenoGqm / 100);
+                }
+
+                //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
+                IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
+
+                // Habilitamos el ingreso de datos si no se han ingresado antes.
+                double ventasAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
+
+                if (ventasAnterior == -1)
+                    btnDIngreso.IsEnabled = true;
+                else
+                    btnDIngreso.IsEnabled = false;
+
+                // Se muestra o esconde el aviso para realizar reubicaciones.
+                MostrarAvisoReubicacion();
+
+                // Hacemos visible el panel del desempeño de la seccion.
+                panelDResumen.Visibility = Visibility.Hidden;
+                lblNombreSeccion.Content = desempenoSeccionActual.Nombre;
+                //ValorGraficoDAnterior = desempenoSeccionActual.ActualAnterior;
+                //ValorGraficoDPlan = desempenoSeccionActual.ActualPlan;
+                panelDDetalles.Visibility = Visibility.Visible;
             }
-
-            string tipoSeccion = desempenoSeccionActual.Tipo.ToLower();
-            // Iniciamos los graficos.
-            if (tipoSeccion == "ventas")
-            {
-                IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
-            }
-            else if (tipoSeccion == "gqm")
-            {
-                IniciarGraficoObjetivo(desempenoSeccionActual.DesempenoGqm / 100);
-            }
-
-            //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
-            IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
-
-            // Habilitamos el ingreso de datos si no se han ingresado antes.
-            double ventasAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
-
-            if (ventasAnterior == -1)
-                btnDIngreso.IsEnabled = true;
-            else
-                btnDIngreso.IsEnabled = false;
-
-            // Se muestra o esconde el aviso para realizar reubicaciones.
-            MostrarAvisoReubicacion();
-
-            // Hacemos visible el panel del desempeño de la seccion.
-            panelDResumen.Visibility = Visibility.Hidden;
-            lblNombreSeccion.Content = desempenoSeccionActual.Nombre;
-            //ValorGraficoDAnterior = desempenoSeccionActual.ActualAnterior;
-            //ValorGraficoDPlan = desempenoSeccionActual.ActualPlan;
-            panelDDetalles.Visibility = Visibility.Visible;
         }
 
         public void SeleccionAnioDDetalles(object sender, RoutedEventArgs e)

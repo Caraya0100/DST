@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace DST
 {
@@ -22,14 +23,30 @@ namespace DST
         //public MySqlConnection conectarBD(string servidor, string usuario, string password, string nombreBD)
         public MySqlConnection conectarBD()
         {
-            //builder.Server = servidor; //"localhost"
-            builder.Server = "localhost"; //"localhost"
-            //builder.UserID = usuario; //"root"
-            builder.UserID = "root"; //"root"
-            //builder.Password = password; //""
-            builder.Password = ""; //""
-            //builder.Database = nombreBD; //"bddst"
-            builder.Database = "bddst"; //"bddst"
+            string[] lines = File.ReadAllLines("dataDST");
+            string servidor = "localhost";
+            string usuario = "";
+            string password = "";
+            string nombreBD = "bddst";
+
+            if (lines.Length >= 2)
+            {
+                usuario = lines[0];
+                password = lines[1];
+            } else if (lines.Length == 1)
+            {
+                usuario = lines[0];
+                password = "";
+            }
+
+            builder.Server = servidor; //"localhost"
+            //builder.Server = "localhost"; //"localhost"
+            builder.UserID = usuario; //"root"
+            //builder.UserID = "root"; //"root"
+            builder.Password = password; //""
+            //builder.Password = ""; //""
+            builder.Database = nombreBD; //"bddst"
+            //builder.Database = "bddst"; //"bddst"
             conn = new MySqlConnection(builder.ToString());
             cmd = conn.CreateCommand();
             return conn;
