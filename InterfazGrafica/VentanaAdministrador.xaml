@@ -396,7 +396,7 @@
                             </DataGrid>
                             <Button x:Name="agregarComponente" Content="Agregar Componente" Click="IrPanelComponente" VerticalAlignment="Top" Width="159" Margin="272,0,0,0" HorizontalAlignment="Right"/>
                             <Button x:Name="editarComponente" Content="Editar Componente" Click="IrPanelComponente" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
-                            <Button x:Name="eliminarComponente" Content="Eliminar Componente" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
+                            <Button x:Name="eliminarComponente" Content="Eliminar Componente" Click="EliminarComponente" VerticalAlignment="Top" Width="158" Margin="15,0,0,0" HorizontalAlignment="Right"/>
                         </WrapPanel>
                     </StackPanel>
                     <StackPanel x:Name="panelComponente" Visibility="Hidden">

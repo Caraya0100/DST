@@ -215,6 +215,76 @@ namespace DST
             return perfilSeccion;
         }
 
+
+        public Seccion ObtenerSeccion(int id)
+        {
+            AdminDesempeño ad = new AdminDesempeño();
+            Seccion seccion = null;
+            AdminEncuesta ae = new AdminEncuesta();
+            AdminTrabajador obtenerTrabajadores = new AdminTrabajador();
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+            bd.ConsultaMySql("SELECT * FROM secciones WHERE id=" + id + ";");
+
+            if (bd.Consulta.Read())
+            {
+                int idSeccion = bd.Consulta.GetInt32(0);
+                string fecha = "";
+                string tipo = bd.Consulta.GetString("tipoSeccion");
+                Tuple<double, double, double> ventas = null;
+
+                if (tipo.ToLower() == "ventas")
+                {
+                    fecha = ad.ObtenerUltimaFecha(idSeccion);
+                    ventas = ad.ObtenerVentas(idSeccion, fecha);
+                }
+
+                if (ventas == null) ventas = new Tuple<double, double, double>(0, 0, 0);
+
+                if (tipo.ToLower() == "ventas")
+                {
+                    seccion = new Seccion(
+                        bd.Consulta.GetString(1),
+                        bd.Consulta.GetInt16(0),
+                        ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)),
+                        obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0)),
+                        ventas.Item1,
+                        ventas.Item2,
+                        ventas.Item3,
+                        bd.Consulta.GetString("tipoSeccion")
+                    );
+                }
+                else if (tipo.ToLower() == "gqm")
+                {
+                    fecha = ad.ObtenerUltimaFechaGqm(idSeccion);
+                    int mes = 0;
+                    int anio = 0;
+
+                    if (fecha != "")
+                    {
+                        fecha = new AdminFecha().FechaConFormato(fecha);
+                        mes = Convert.ToInt32(fecha.Split('-')[1]);
+                        anio = Convert.ToInt32(fecha.Split('-')[0]);
+                    }
+
+                    seccion = new Seccion(
+                        bd.Consulta.GetString(1),
+                        bd.Consulta.GetInt16(0),
+                        ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)),
+                        obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0)),
+                        ad.ObtenerDesempenoGqm(bd.Consulta.GetInt16(0), mes, anio),
+                        ae.ObtenerPreguntasSeccion(bd.Consulta.GetInt32("id")),
+                        tipo
+                    );
+                }
+            }
+
+            bd.Close();
+
+            return seccion;
+        }
+
         /// <summary>
         /// Funcion que retorna una lista de las secciones con todos sus campos.
         /// Esta debe ser usada en la ventana del administrador.

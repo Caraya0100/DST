@@ -282,6 +282,26 @@ namespace DST
             return desempeno;
         }
 
+        public bool ExisteDesempenoGqm(int idSeccion, int mes, int anio)
+        {
+            bool desempeno = false;
+            //string fecha = anio + "-" + mes + "-01";
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT desempeño FROM desempeñoGQM WHERE idSeccion=" + idSeccion + " AND fecha='" + anio + "-" + mes + "-01';");
+
+            if (bd.Consulta.Read())
+            {
+                desempeno = true;
+            }
+
+            bd.Close();
+
+            return desempeno;
+        }
+
         public Dictionary<string, double> ObtenerDesempenoGqmAnual(int idSeccion, int inicioAnioFiscal, int anio)
         {
             Dictionary<string, double> desempenos = new Dictionary<string, double>();

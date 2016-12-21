@@ -149,9 +149,9 @@ namespace DST
 
             bd.Insertar("DELETE FROM componentesPerfil WHERE id='" + id + "';");
 
-            ar.EliminarReglasNombreVariable(id);
-
             bd.Close();
+
+            ar.EliminarReglasNombreVariable(id);
         }
 
         public Componente ObtenerComponentePerfilSeccion(int idSeccion, string idComponente)
