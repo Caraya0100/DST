@@ -37,22 +37,22 @@ namespace InterfazGrafica.InteraccionBD
 
         public double CapacidadGeneralTrabajador()
         {
-            return datosDesempeno.ObtenerCapacidadGeneral(idTrabajador) * 0.01;
+            return datosDesempeno.ObtenerCapacidadGeneral(idTrabajador,idSeccion) * 0.01;
         }
 
         public double CapacidadGeneralHB()
         {
-            return datosDesempeno.ObtenerCapacidadHBRanking(idTrabajador);
+            return datosDesempeno.ObtenerCapacidadHBRanking(idTrabajador, idSeccion);
         }
 
         public double CapacidadGeneralHD()
         {
-            return datosDesempeno.ObtenerCapacidadHDRanking(idTrabajador);
+            return datosDesempeno.ObtenerCapacidadHDRanking(idTrabajador,idSeccion);
         }
 
         public double CapacidadGeneralCF()
         {
-            return datosDesempeno.ObtenerCapacidadCFRanking(idTrabajador);
+            return datosDesempeno.ObtenerCapacidadCFRanking(idTrabajador,idSeccion);
         }
 
         public void ActualizacionSolicitud(string estado,int idActual, int idNueva, string rut)

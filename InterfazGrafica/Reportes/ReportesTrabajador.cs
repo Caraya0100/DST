@@ -41,11 +41,11 @@ namespace InterfazGrafica.Reportes
             PuntajesGenerales();
             GraficoGeneral();
             HabilidadesBlandas();
-            GraficoHB();
+            //GraficoHB();
             HabilidadesDuras();
-            GraficoHD();
+            //GraficoHD();
             CaracteristicasFisicas();
-            GraficoCF();
+            //GraficoCF();
             reporte.Close();
         }
         /// <summary>

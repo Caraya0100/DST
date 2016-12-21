@@ -93,6 +93,7 @@ namespace InterfazGrafica
         string itemReporte;
         Trabajador trabajadorActual;
         string rutAdministrador;
+        
 
         public VentanaJefeSeccion()
         {
@@ -352,6 +353,7 @@ namespace InterfazGrafica
             //trabajadorSeleccionado = indice;
             int identificador = 0;
             /*puntajes de seccion por habilidad*/
+            datosSeccion.IdSeccion = idSeccion;
             perfilSeccionActual = datosSeccion.PerfilSeccion();
             Dictionary<string, Componente> habilidadesPerfil = perfilSeccionActual.Blandas;
 
@@ -392,8 +394,10 @@ namespace InterfazGrafica
                             {
                                 HD.Add(habilidadDura.Value.Nombre);
                                 HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);
-                            } 
-                        }                                                                    
+                                //Console.WriteLine("HABILIADDES QUE NO SE MUESTRAN1: "+habilidadDura.Key+"  "+habilidadPerfil.Key);
+                            }
+                            //Console.WriteLine("HABILIADDES QUE NO SE MUESTRAN2: " + habilidadDura.Value.Nombre);
+                        } //Console.WriteLine("HABILIADDES QUE NO SE MUESTRAN3: " + habilidadDura.Value.Nombre);                                                                   
                     }
                     habilidadesPerfil = perfilSeccionActual.Fisicas;
                     foreach (KeyValuePair<string, Componente> caractFisica in infoTrabajador.Value.Perfil.Fisicas)
@@ -406,7 +410,10 @@ namespace InterfazGrafica
                                 CFPuntajesTrabajador.Add(caractFisica.Value.Puntaje);  
                             }
                         }                                              
-                    }      
+                    }
+                    Console.WriteLine("las habiliades: "+CF.Count+" los pjes: "+CFPuntajesTrabajador.Count);
+                    Console.WriteLine("las habiliades: " + HB.Count + " los pjes: " + HBPuntajesTrabajador.Count);
+                    Console.WriteLine("las habiliades: " + HD.Count + " los pjes: " + HDPuntajesTrabajador.Count);
                     datosSeccion.IdSeccion = idSeccion;
                     trabajadorSeleccionado = infoTrabajador.Value.Rut;//para eliminar/editar
                     datosTrabajadores.IdTrabajador = trabajadorSeleccionado;
@@ -423,7 +430,8 @@ namespace InterfazGrafica
                 }
                 identificador++;
             }         
-            /*grafico circular*/  
+            /*grafico circular*/
+            datosDesempeno.IdSeccion = idSeccion;
             AsignacionValoresGraficoCircular(datosDesempeno.CapacidadGeneralTrabajador());
             /*Grafico Radar*/
             string[] habilidades = { "CF", "HB", "HD" };          
@@ -502,15 +510,8 @@ namespace InterfazGrafica
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void detalleTrabajador(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("PTJE GEN TRA: " + puntajesGeneralesTrabajador.Count);
-            Console.WriteLine("PTJE GEN SEC: " + puntajesGeneralesSeccion.Count);
-            Console.WriteLine("PTJE hb TRA: " + HBPuntajesTrabajador.Count);
-            Console.WriteLine("PTJE hb SEC: " + HBPuntajesSeccion.Count);
-            Console.WriteLine("PTJE hd TRA: " + HDPuntajesTrabajador.Count);
-            Console.WriteLine("PTJE hd SEC: " + HDPuntajesSeccion.Count);
-            Console.WriteLine("PTJE cf TRA: " + CFPuntajesTrabajador.Count);
-            Console.WriteLine("PTJE cf SEC: " + CFPuntajesSeccion.Count);
+        {           
+            datosDesempeno.IdSeccion = idSeccion;
             VentanaDetalleHabilidades detalleHabilidades = new VentanaDetalleHabilidades();
             /*capacidad general*/
             detalleHabilidades.CapacidadTrabajdor = datosDesempeno.CapacidadGeneralTrabajador();
@@ -542,49 +543,100 @@ namespace InterfazGrafica
             SaveFileDialog explorador = new SaveFileDialog();
             explorador.Filter = "Pdf Files|*.pdf";
             explorador.ShowDialog();
+            List<double> puntajesSeccionHB = new List<double>();
+            List<double> puntajesSeccionHD = new List<double>();
+            List<double> puntajesSeccionCF = new List<double>();
+            reporte = new Reportes.ReportesTrabajador();
+
             if (explorador.FileName != "")
             {
+                /*habilidades del perfil*/
+                datosSeccion.IdSeccion = idSeccion;
+                perfilSeccionActual = datosSeccion.PerfilSeccion();
+
+                Dictionary<string, Componente> habilidadesPerfil = perfilSeccionActual.Blandas;
+                foreach (KeyValuePair<string, Componente> habilidadBlanda in trabajadorActual.Perfil.Blandas)
+                {
+                    foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                    {
+                        if (habilidadPerfil.Key.Equals(habilidadBlanda.Key))
+                        {
+                            HB.Add(habilidadBlanda.Value.Nombre);
+                            HBPuntajesTrabajador.Add(habilidadBlanda.Value.Puntaje);
+                            HBPuntajesSeccion.Add(habilidadPerfil.Value.Puntaje);
+                            Console.WriteLine("KEY: " + habilidadBlanda.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                        }
+                    }
+                }
+                habilidadesPerfil = perfilSeccionActual.Duras;
+                foreach (KeyValuePair<string, Componente> habilidadDura in trabajadorActual.Perfil.Duras)
+                {
+                    foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                    {
+                        if (habilidadPerfil.Key.Equals(habilidadDura.Key))
+                        {
+                            HD.Add(habilidadDura.Value.Nombre);
+                            HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);
+                            HDPuntajesSeccion.Add(habilidadPerfil.Value.Puntaje);
+                            Console.WriteLine("KEY: " + habilidadDura.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                        }
+                    }
+                }
+                habilidadesPerfil = perfilSeccionActual.Fisicas;
+                foreach (KeyValuePair<string, Componente> caracFisica in trabajadorActual.Perfil.Fisicas)
+                {
+                    foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                    {
+                        if (habilidadPerfil.Key.Equals(caracFisica.Key))
+                        {
+                            CF.Add(caracFisica.Value.Nombre);
+                            CFPuntajesTrabajador.Add(caracFisica.Value.Puntaje);
+                            CFPuntajesSeccion.Add(habilidadPerfil.Value.Puntaje);
+                            Console.WriteLine("KEY: " + caracFisica.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                        }
+                    }
+                } 
                 /*Ingresar datos del grafico y generarlo*/
                 /*Grafico Radar General*/
                 MemoryStream imagenGeneral = new MemoryStream();
                 MemoryStream imagenHB = new MemoryStream();
                 MemoryStream imagenHD = new MemoryStream();
-                MemoryStream imagenCF = new MemoryStream();
-                double[] trabajador = { 20, new Random().Next(60), new Random().Next(70) };//datos de prueba
-                double[] seccion = { new Random().Next(100), new Random().Next(200), 50 };//datos de prueba
-                string[] habilidades = { "CF", "HB", "HD" };//datos de prueba
+                MemoryStream imagenCF = new MemoryStream();                
+                string[] habilidades = { "CF", "HB", "HD" };
+                
+                /*Grafico Radar HB*/
+                GraficoRadar graficoHB = new GraficoRadar(HB.ToArray(), HBPuntajesSeccion.ToArray(), HBPuntajesTrabajador.ToArray(), this.GraficoTrabajadores);
+                graficoHB.TipoGrafico = "Area";
+                graficoHB.constructorGrafico();
+                graficoHB.Grafico.SaveImage(imagenHB, ChartImageFormat.Png);
+                reporte.ImagenGraficoHB = iTextSharp.text.Image.GetInstance(imagenHB.GetBuffer());
+                /*Grafico Radar HD*/
+                GraficoRadar graficoHD = new GraficoRadar(HD.ToArray(), HDPuntajesSeccion.ToArray(), HDPuntajesTrabajador.ToArray(), this.GraficoTrabajadores);
+                graficoHD.TipoGrafico = "Area";
+                graficoHD.constructorGrafico();
+                graficoHD.Grafico.SaveImage(imagenHD, ChartImageFormat.Png);
+                /*Grafico Radar CF*/
+                GraficoRadar graficoCF = new GraficoRadar(CF.ToArray(), CFPuntajesSeccion.ToArray(), CFPuntajesTrabajador.ToArray(), this.GraficoTrabajadores);
+                graficoCF.TipoGrafico = "Area";
+                graficoCF.constructorGrafico();
+                graficoCF.Grafico.SaveImage(imagenCF, ChartImageFormat.Png);
+                /*Grafico General*/
                 GraficoRadar graficoGeneral = new GraficoRadar
                     (
-                        habilidades, 
+                        habilidades,
                         puntajesGeneralesSeccion.ToArray(),
-                        puntajesGeneralesTrabajador.ToArray(), 
+                        puntajesGeneralesTrabajador.ToArray(),
                         this.GraficoTrabajadores
                     );
                 graficoGeneral.TipoGrafico = "Area";
                 graficoGeneral.constructorGrafico();
                 graficoGeneral.Grafico.SaveImage(imagenGeneral, ChartImageFormat.Png);
-                /*Grafico Radar HB*/
-                GraficoRadar graficoHB = new GraficoRadar(habilidades, seccion, trabajador, this.GraficoTrabajadores);
-                graficoHB.TipoGrafico = "Area";
-                graficoHB.constructorGrafico();
-                graficoHB.Grafico.SaveImage(imagenHB, ChartImageFormat.Png);
-                /*Grafico Radar HB*/
-                GraficoRadar graficoHD = new GraficoRadar(habilidades, seccion, trabajador, this.GraficoTrabajadores);
-                graficoHD.TipoGrafico = "Area";
-                graficoHD.constructorGrafico();
-                graficoHD.Grafico.SaveImage(imagenHD, ChartImageFormat.Png);
-                /*Grafico Radar CF*/
-                GraficoRadar graficoCF = new GraficoRadar(habilidades, seccion, trabajador, this.GraficoTrabajadores);
-                graficoCF.TipoGrafico = "Area";
-                graficoCF.constructorGrafico();
-                graficoCF.Grafico.SaveImage(imagenCF, ChartImageFormat.Png);
                 /*reporte*/
 
-                reporte = new Reportes.ReportesTrabajador();
+                
                 reporte.RutaFichero = explorador.FileName;
 
-                reporte.ImagenGrafico = iTextSharp.text.Image.GetInstance(imagenGeneral.GetBuffer());
-                reporte.ImagenGraficoHB = iTextSharp.text.Image.GetInstance(imagenHB.GetBuffer());
+                reporte.ImagenGrafico = iTextSharp.text.Image.GetInstance(imagenGeneral.GetBuffer());                
                 reporte.ImagenGraficoHD = iTextSharp.text.Image.GetInstance(imagenHD.GetBuffer());
                 reporte.ImagenGraficoCF = iTextSharp.text.Image.GetInstance(imagenCF.GetBuffer());
                 reporte.Trabajador = trabajadorActual;
@@ -956,9 +1008,9 @@ namespace InterfazGrafica
         {
             if (tipoHabilidad.Equals("general"))
             {
-                datosSeccion.ActualizacionImportanciasHabilidades("cf", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                datosSeccion.ActualizacionImportanciasHabilidades("hd", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
-                datosSeccion.ActualizacionImportanciasHabilidades("hb", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("HB", Convert.ToDouble(this.slider_HB.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("HD", Convert.ToDouble(this.slider_HD.Value.ToString("0.0")));
+                datosSeccion.ActualizacionImportanciasHabilidades("CF", Convert.ToDouble(this.slider_CF.Value.ToString("0.0")));
                 cuadroMensajes.CambiosGuardados();
             }
             else if (tipoHabilidad.Equals("hb"))
@@ -1040,6 +1092,7 @@ namespace InterfazGrafica
             rutTrabajadorRanking = trabajadorRanking[indice].Rut;
             seccionRanking.Text = datosSeccion.NombreSeccionPorRutTrabajador();
             /*grafico circular*/
+            datosDesempeno.IdSeccion = idSeccion;
             datosDesempeno.IdTrabajador = trabajadorRanking[indice].Rut;
             double capacidadGeneral = datosDesempeno.CapacidadGeneralTrabajador();
             double doble = new Random().NextDouble(); //dato de prueba
@@ -1047,6 +1100,7 @@ namespace InterfazGrafica
             /*Grafico araña*/
             datosSeccion.IdSeccion = idSeccion;
             perfilSeccionActual = datosSeccion.PerfilSeccion();
+            datosDesempeno.IdSeccion = idSeccion;
             /*puntajes generales*/
             puntajesGeneralesSeccion.Add(datosSeccion.PuntajeGeneralCF());
             puntajesGeneralesSeccion.Add(datosSeccion.PuntajeGeneralHB());
@@ -1054,21 +1108,47 @@ namespace InterfazGrafica
             puntajesGeneralesTrabajador.Add(datosDesempeno.CapacidadGeneralCF()); 
             puntajesGeneralesTrabajador.Add(datosDesempeno.CapacidadGeneralHB()); 
             puntajesGeneralesTrabajador.Add(datosDesempeno.CapacidadGeneralHD());
+            datosSeccion.IdSeccion = idSeccion;
+            perfilSeccionActual = datosSeccion.PerfilSeccion();
+            Dictionary<string, Componente> habilidadesPerfil = perfilSeccionActual.Blandas;           
             foreach (KeyValuePair<string, Componente> habilidadBlanda in trabajadorRanking[indice].Perfil.Blandas)
             {
-                HB.Add(habilidadBlanda.Value.Nombre);
-                HBPuntajesTrabajador.Add(habilidadBlanda.Value.Puntaje);
+                foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                {
+                    if (habilidadPerfil.Key.Equals(habilidadBlanda.Key))
+                    {
+                        HB.Add(habilidadBlanda.Value.Nombre);
+                        HBPuntajesTrabajador.Add(habilidadBlanda.Value.Puntaje);
+                        Console.WriteLine("KEY: " + habilidadBlanda.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                    }
+                } 
             }
+            habilidadesPerfil = perfilSeccionActual.Duras;
             foreach (KeyValuePair<string, Componente> habilidadDura in trabajadorRanking[indice].Perfil.Duras)
             {
-                HD.Add(habilidadDura.Value.Nombre);
-                HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);
+                foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                {
+                    if (habilidadPerfil.Key.Equals(habilidadDura.Key))
+                    {
+                        HD.Add(habilidadDura.Value.Nombre);
+                        HDPuntajesTrabajador.Add(habilidadDura.Value.Puntaje);
+                        Console.WriteLine("KEY: " + habilidadDura.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                    }
+                } 
             }
+            habilidadesPerfil = perfilSeccionActual.Fisicas;
             foreach (KeyValuePair<string, Componente> caracFisica in trabajadorRanking[indice].Perfil.Fisicas)
             {
-                CF.Add(caracFisica.Value.Nombre);
-                CFPuntajesTrabajador.Add(caracFisica.Value.Puntaje);
-            }           
+                foreach (KeyValuePair<string, Componente> habilidadPerfil in habilidadesPerfil)
+                {
+                    if (habilidadPerfil.Key.Equals(caracFisica.Key))
+                    {
+                        CF.Add(caracFisica.Value.Nombre);
+                        CFPuntajesTrabajador.Add(caracFisica.Value.Puntaje);
+                        Console.WriteLine("KEY: " + caracFisica.Key + " - KEY PERFIL: " + habilidadPerfil.Key);
+                    }
+                } 
+            }          
            
             string[] habilidades = { "CF", "HD", "HB" };         
             GraficoRadar graficoRadar = new GraficoRadar
@@ -1087,14 +1167,15 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void DetalleRanking(object sender, EventArgs e)
         {
-            VentanaDetalleHabilidades detalleHabilidades = new VentanaDetalleHabilidades();
+            VentanaDetalleHabilidades detalleHabilidades = new VentanaDetalleHabilidades();            
+            datosDesempeno.IdSeccion = idSeccion;
             /*capacidad general*/
             detalleHabilidades.CapacidadTrabajdor = datosDesempeno.CapacidadGeneralTrabajador();
             /*puntajes generales por habilidad de la seccion*/
             detalleHabilidades.PuntajesGeneralesSeccion = puntajesGeneralesSeccion.ToArray();
             detalleHabilidades.PuntajesGeneralesTrabajador = puntajesGeneralesTrabajador.ToArray();
             /*puntajes hab blandas seccion*/
-            detalleHabilidades.PerfilSeccion = perfilSeccionActual;
+            detalleHabilidades.PerfilSeccion = datosSeccion.PerfilSeccion();
             /*habilidades blandas*/
             detalleHabilidades.HabilidadesBlandas = HB.ToArray();
             detalleHabilidades.PuntajesHbTrabajador = HBPuntajesTrabajador.ToArray();

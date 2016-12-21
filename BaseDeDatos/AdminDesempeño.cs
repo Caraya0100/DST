@@ -828,14 +828,20 @@ namespace DST
         public void InsertarSolicitudCambio(string fechaSolicitud, string estadoSolicitud, string rutSolicitud,
           int idSeccionActual, int idSeccionSolicitada, double capacidadActual, double capacidadNueva)
         {
+            string ptj1 = capacidadActual.ToString("0.0");
+            string ptj2 = capacidadActual.ToString("0.0");
             conn.Open();
-
-            cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual,"
-                + "idSeccionSolicitada,capacidadSeccionActual,capacidadNuevaSeccion) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "'"
-                + rutSolicitud + "," + idSeccionActual.ToString() + "," + idSeccionSolicitada.ToString()
-                + "," + capacidadActual + "," + capacidadNueva + ");";
-            Console.WriteLine("CONSULTA" + cmd.CommandText.ToString());
-            cmd.ExecuteNonQuery();
+            try
+            {
+                cmd.CommandText = "INSERT INTO solicitudes(fechaSolicitud,estadoSolicitud,rutSolicitud,idSeccionActual,"
+                + "idSeccionSolicitada,capacidadSeccionActual,capacidadNuevaSeccion) VALUES('" + fechaSolicitud + "','" + estadoSolicitud + "','"
+                + rutSolicitud + "'," + idSeccionActual.ToString() + "," + idSeccionSolicitada.ToString()
+                + "," + ptj1.Replace(",", ".") + "," + ptj2.Replace(",", ".") + ");";
+                Console.WriteLine("CONSULTA" + cmd.CommandText.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception e){}
+            
 
             conn.Close();
         }
@@ -999,12 +1005,31 @@ namespace DST
          *                              MIS CONSULTAS
          * *************************************************************************/
 
-        public double ObtenerCapacidadGeneral(string rutTrabajador)
+        public double ObtenerCapacidadGeneral(string rutTrabajador, int id)
         {
             double puntajeCF = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador +"';";
+            cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador +"' AND idSeccionEvaluacion="+id+";";
+
+            consulta = cmd.ExecuteReader();
+            while (consulta.Read())
+            {
+                puntajeCF = consulta.GetDouble(0);
+
+            }
+
+            conn.Close();
+
+            return puntajeCF;
+        }
+
+        public double ObtenerCapacidadHBRanking(string rutTrabajador, int id)
+        {
+            double puntajeCF = 0;
+
+            conn.Open();
+            cmd.CommandText = "SELECT gradoIgualdadHB FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "' AND idSeccionEvaluacion="+id+";";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -1017,12 +1042,12 @@ namespace DST
             return puntajeCF;
         }
 
-        public double ObtenerCapacidadHBRanking(string rutTrabajador)
+        public double ObtenerCapacidadHDRanking(string rutTrabajador, int id)
         {
             double puntajeCF = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT gradoIgualdadHB FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+            cmd.CommandText = "SELECT gradoIgualdadHD FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "' AND idSeccionEvaluacion="+id+";";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -1035,30 +1060,12 @@ namespace DST
             return puntajeCF;
         }
 
-        public double ObtenerCapacidadHDRanking(string rutTrabajador)
+        public double ObtenerCapacidadCFRanking(string rutTrabajador, int id)
         {
             double puntajeCF = 0;
 
             conn.Open();
-            cmd.CommandText = "SELECT gradoIgualdadHD FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
-
-            consulta = cmd.ExecuteReader();
-            while (consulta.Read())
-            {
-                puntajeCF = consulta.GetDouble(0);
-            }
-
-            conn.Close();
-
-            return puntajeCF;
-        }
-
-        public double ObtenerCapacidadCFRanking(string rutTrabajador)
-        {
-            double puntajeCF = 0;
-
-            conn.Open();
-            cmd.CommandText = "SELECT gradoIgualdadCF FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "';";
+            cmd.CommandText = "SELECT gradoIgualdadCF FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "' AND idSeccionEvaluacion="+id+";";
 
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
@@ -1078,11 +1085,12 @@ namespace DST
 
             conn.Open();
             cmd.CommandText = "SELECT capacidadTrabajador FROM capacidadTrabajador WHERE rutTrabajador ='" + rutTrabajador + "' AND idSeccionEvaluacion=" + idSeccion + ";";
-
+            Console.WriteLine(cmd.CommandText.ToString());
             consulta = cmd.ExecuteReader();
             while (consulta.Read())
             {
                 puntajeCF = consulta.GetDouble(0);
+                Console.WriteLine("EL PUNTAJE");
             }
 
             conn.Close();

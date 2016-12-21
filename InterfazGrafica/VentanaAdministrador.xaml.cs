@@ -507,7 +507,7 @@ namespace InterfazGrafica
             if (MessageDialogResult.Affirmative.Equals(await cuadroMensajes.ConfirmarSolicitud()))
             {
                 Solicitud solicitud = listaDeSolicitudes[indice];
-                //datosDesempeno.ActualizacionSolicitud("ACEPTADA", solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.RutSolicitud);
+                datosDesempeno.ActualizacionSolicitud("ACEPTADA", solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.RutSolicitud);
                 cuadroMensajes.SolicitudConfirmada();
                 datosDesempeno.ReubicarTrabajador(solicitud.RutSolicitud, solicitud.IdSeccionActual, solicitud.IdSeccionSolicitada, solicitud.FechaSolicitud.Replace(" 0:00:00",""));
                 listaDeSolicitudes = datosSolicitudes.ListaDeSolicitudes();
