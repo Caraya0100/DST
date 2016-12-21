@@ -244,7 +244,7 @@ namespace DST
                     ventas = ad.ObtenerVentas(idSeccion, fecha);
                 }
 
-                if (ventas == null) ventas = new Tuple<double, double, double>(-1,-1,-1);
+                if (ventas == null) ventas = new Tuple<double, double, double>(0,0,0);
 
                 Seccion nuevaSeccion = null;
                 if (tipo.ToLower() == "ventas")
@@ -262,15 +262,22 @@ namespace DST
                 } else if (tipo.ToLower() == "gqm")
                 {
                     fecha = ad.ObtenerUltimaFechaGqm(idSeccion);
-                    fecha = new AdminFecha().FechaConFormato(fecha);
-                    string mes = fecha.Split('-')[1];
-                    string anio = fecha.Split('-')[0];
+                    int mes = 0;
+                    int anio = 0;
+
+                    if (fecha != "")
+                    {
+                        fecha = new AdminFecha().FechaConFormato(fecha);
+                        mes = Convert.ToInt32(fecha.Split('-')[1]);
+                        anio = Convert.ToInt32(fecha.Split('-')[0]);
+                    }
+                    
                     nuevaSeccion = new Seccion(
                         bd.Consulta.GetString(1),
                         bd.Consulta.GetInt16(0),
                         ObtenerPerfilSeccion(bd.Consulta.GetInt16(0)),
                         obtenerTrabajadores.ObtenerTrabajadoresSeccion(bd.Consulta.GetInt16(0)),
-                        ad.ObtenerDesempenoGqm(bd.Consulta.GetInt16(0), Convert.ToInt32(mes), Convert.ToInt32(anio)),
+                        ad.ObtenerDesempenoGqm(bd.Consulta.GetInt16(0), mes, anio),
                         ae.ObtenerPreguntasSeccion(bd.Consulta.GetInt32("id")),
                         tipo
                     );

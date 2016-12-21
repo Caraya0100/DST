@@ -648,7 +648,10 @@ namespace InterfazGrafica
 
             foreach (Seccion seccion in s)
             {
-                Tuple<double, double> desempeno = EvaluacionDesempeno.Ejecutar(seccion.VentasActuales, seccion.VentasAnioAnterior, seccion.VentasPlan);
+                Tuple<double, double> desempeno = new Tuple<double, double>(0,0);
+
+                if (seccion.VentasAnioAnterior > 0 && seccion.VentasPlan > 0)
+                    desempeno = EvaluacionDesempeno.Ejecutar(seccion.VentasActuales, seccion.VentasAnioAnterior, seccion.VentasPlan);
 
                 seccion.ActualAnterior = desempeno.Item1;
                 seccion.ActualPlan = desempeno.Item2;
@@ -865,6 +868,8 @@ namespace InterfazGrafica
         private void IniciarPanelIngresoObjetivos()
         {
             respuestasSeccionActual = new Dictionary<string, string>();
+
+            listObjetivos.Items.Clear();
             foreach (KeyValuePair<string, Pregunta> pregunta in desempenoSeccionActual.Preguntas)
             {
                 listObjetivos.Items.Add(pregunta.Value);
@@ -955,48 +960,52 @@ namespace InterfazGrafica
         private void DetallesDesempenoSeccion(object sender, RoutedEventArgs e)
         {
             desempenoSeccionActual = (Seccion)tablaDesempeno.SelectedItem;
-            AdminDesempeño ad = new AdminDesempeño();
-            DateTime fechaActual = DateTime.Now;
-            List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion, desempenoSeccionActual.Tipo);
 
-            // Iniciamos los comboBox con los años y los meses.
-            boxWrapDDetalles.Items.Clear();
-            foreach (int anio in anios)
+            if (desempenoSeccionActual != null )
             {
-                boxWrapDDetalles.Items.Add(anio.ToString());
+                AdminDesempeño ad = new AdminDesempeño();
+                DateTime fechaActual = DateTime.Now;
+                List<int> anios = ad.ObtenerAnios(desempenoSeccionActual.IdSeccion, desempenoSeccionActual.Tipo);
+
+                // Iniciamos los comboBox con los años y los meses.
+                boxWrapDDetalles.Items.Clear();
+                foreach (int anio in anios)
+                {
+                    boxWrapDDetalles.Items.Add(anio.ToString());
+                }
+
+                string tipoSeccion = desempenoSeccionActual.Tipo.ToLower();
+                // Iniciamos los graficos.
+                if (tipoSeccion == "ventas")
+                {
+                    IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
+                }
+                else if (tipoSeccion == "gqm")
+                {
+                    IniciarGraficoObjetivo(desempenoSeccionActual.DesempenoGqm / 100);
+                }
+
+                //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
+                IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
+
+                // Habilitamos el ingreso de datos si no se han ingresado antes.
+                double ventasAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
+
+                if (ventasAnterior == -1)
+                    btnDIngreso.IsEnabled = true;
+                else
+                    btnDIngreso.IsEnabled = false;
+
+                // Se muestra o esconde el aviso para realizar reubicaciones.
+                MostrarAvisoReubicacion();
+
+                // Hacemos visible el panel del desempeño de la seccion.
+                panelDResumen.Visibility = Visibility.Hidden;
+                lblNombreSeccion.Content = desempenoSeccionActual.Nombre;
+                //ValorGraficoDAnterior = desempenoSeccionActual.ActualAnterior;
+                //ValorGraficoDPlan = desempenoSeccionActual.ActualPlan;
+                panelDDetalles.Visibility = Visibility.Visible;
             }
-
-            string tipoSeccion = desempenoSeccionActual.Tipo.ToLower();
-            // Iniciamos los graficos.
-            if (tipoSeccion == "ventas")
-            {
-                IniciarGraficosDesempeno((desempenoSeccionActual.ActualAnterior / 100), (desempenoSeccionActual.ActualPlan / 100));
-            }
-            else if (tipoSeccion == "gqm")
-            {
-                IniciarGraficoObjetivo(desempenoSeccionActual.DesempenoGqm / 100);
-            }
-
-            //boxWrapDDetalles.SelectedValue = fechaActual.Year.ToString();
-            IniciarPanelDatosAnuales(desempenoSeccionActual.IdSeccion, fechaActual.Year);
-
-            // Habilitamos el ingreso de datos si no se han ingresado antes.
-            double ventasAnterior = ad.ObtenerVentasAnioAnterior(desempenoSeccionActual.IdSeccion, fechaActual.Month, fechaActual.Year);
-
-            if (ventasAnterior == -1)
-                btnDIngreso.IsEnabled = true;
-            else
-                btnDIngreso.IsEnabled = false;
-
-            // Se muestra o esconde el aviso para realizar reubicaciones.
-            MostrarAvisoReubicacion();
-
-            // Hacemos visible el panel del desempeño de la seccion.
-            panelDResumen.Visibility = Visibility.Hidden;
-            lblNombreSeccion.Content = desempenoSeccionActual.Nombre;
-            //ValorGraficoDAnterior = desempenoSeccionActual.ActualAnterior;
-            //ValorGraficoDPlan = desempenoSeccionActual.ActualPlan;
-            panelDDetalles.Visibility = Visibility.Visible;
         }
 
         public void SeleccionAnioDDetalles(object sender, RoutedEventArgs e)
@@ -2435,6 +2444,7 @@ namespace InterfazGrafica
         /// <param name="e"></param>
         private void VolverPanelComponentes(object sender, RoutedEventArgs e)
         {
+            IniciarPanelComponentes();
             panelOpcionesAvanzadas.Visibility = Visibility.Hidden;
             panelComponente.Visibility = Visibility.Hidden;
             panelComponentes.Visibility = Visibility.Visible;
@@ -2527,6 +2537,7 @@ namespace InterfazGrafica
             AdminReglas ar = new AdminReglas();
             Regla regla = (Regla)tablaReglas.SelectedItem;
             ar.EliminarRegla(Convert.ToInt32(regla.ID));
+            IniciarPanelReglas();
         }
 
         /// <summary>
@@ -2873,6 +2884,41 @@ namespace InterfazGrafica
                 Debug.WriteLine("Igualdad HD: " + et.IgualdadHD);
                 Debug.WriteLine("Igualdad CF: " + et.IgualdadCF);
                 Debug.WriteLine("Capacidad: " + et.Capacidad);
+            }
+        }
+
+        private void IniciarEvaluaciones(object sender, RoutedEventArgs e)
+        {
+            AdminTrabajador at = new AdminTrabajador();
+            AdminPerfil ap = new AdminPerfil();
+            AdminMatching am = new AdminMatching();
+
+            List<Trabajador> trabajadores = at.ObtenerTrabajadoresEmpresa();
+
+            foreach (Trabajador trabajador in trabajadores)
+            {
+                EvaluacionTrabajador et = new EvaluacionTrabajador(trabajador);
+                foreach (KeyValuePair<string, Seccion> seccion in secciones)
+                {
+                    Perfil perfilEvaluado = EvaluacionPerfil.Ejecutar(seccion.Value.Perfil, seccion.Value.IdSeccion);
+
+                    perfilEvaluado.HB.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "HB").Importancia;
+                    perfilEvaluado.HD.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "HD").Importancia;
+                    perfilEvaluado.CF.Importancia = ap.ObtenerComponentePerfilSeccion(seccion.Value.IdSeccion, "CF").Importancia;
+
+                    // En caso de no existir en la bd insertamos las generales (HB, HD, CF)
+                    //am.InsertarComponentes();
+                    // Insertamos tambien en caso de que no existan en la sección.
+                    am.InsertarComponente(seccion.Value.IdSeccion, "HB", perfilEvaluado.HB.Puntaje, perfilEvaluado.HB.Importancia);
+                    am.InsertarComponente(seccion.Value.IdSeccion, "HD", perfilEvaluado.HD.Puntaje, perfilEvaluado.HD.Importancia);
+                    am.InsertarComponente(seccion.Value.IdSeccion, "CF", perfilEvaluado.CF.Puntaje, perfilEvaluado.CF.Importancia);
+
+
+                    et.EvaluarCapacidad(perfilEvaluado, seccion.Value.IdSeccion);
+
+                    // Guardamos o actualizamos la capacidad del trabajador.
+                    am.InsertarCapacidad(trabajador.Rut, seccion.Value.IdSeccion, et.IgualdadHB, et.IgualdadHD, et.IgualdadCF, et.Capacidad);
+                }
             }
         }
     }

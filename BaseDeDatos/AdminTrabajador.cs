@@ -346,5 +346,65 @@ namespace DST
 
             return capacidad;
         }
+
+        public double ObtenerGHB(string rut, int idSeccion)
+        {
+            // el valor de las fp por defecto es -1, por eso el -500.
+            double capacidad = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT gradoIgualdadHB FROM capacidadTrabajador WHERE rutTrabajador='" + rut + "' AND idSeccionEvaluacion=" + idSeccion + ";");
+
+            if (bd.Consulta.Read())
+            {
+                capacidad = bd.Consulta.GetDouble("gradoIgualdadHB");
+            }
+
+            bd.Close();
+
+            return capacidad;
+        }
+
+        public double ObtenerGHD(string rut, int idSeccion)
+        {
+            // el valor de las fp por defecto es -1, por eso el -500.
+            double capacidad = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT gradoIgualdadHD FROM capacidadTrabajador WHERE rutTrabajador='" + rut + "' AND idSeccionEvaluacion=" + idSeccion + ";");
+
+            if (bd.Consulta.Read())
+            {
+                capacidad = bd.Consulta.GetDouble("gradoIgualdadHD");
+            }
+
+            bd.Close();
+
+            return capacidad;
+        }
+
+        public double ObtenerGCF(string rut, int idSeccion)
+        {
+            // el valor de las fp por defecto es -1, por eso el -500.
+            double capacidad = 0;
+            BaseDeDatos bd = new BaseDeDatos();
+
+            bd.Open();
+
+            bd.ConsultaMySql("SELECT gradoIgualdadCF FROM capacidadTrabajador WHERE rutTrabajador='" + rut + "' AND idSeccionEvaluacion=" + idSeccion + ";");
+
+            if (bd.Consulta.Read())
+            {
+                capacidad = bd.Consulta.GetDouble("gradoIgualdadCF");
+            }
+
+            bd.Close();
+
+            return capacidad;
+        }
     }
 }

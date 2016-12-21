@@ -161,11 +161,13 @@ namespace DST
 
             bd.Open();
 
-            bd.ConsultaMySql("SELECT id FROM componentesPerfilSecciones WHERE idSeccion=" + idSeccion + " AND id='" + idComponente + "';");
+            bd.ConsultaMySql("SELECT * FROM componentesPerfilSecciones WHERE idSeccion=" + idSeccion + " AND id='" + idComponente + "';");
 
             if (bd.Consulta.Read())
             {
                 componente = ObtenerComponente(bd.Consulta.GetString("id"));
+                componente.Puntaje = bd.Consulta.GetDouble("puntaje");
+                componente.Importancia = bd.Consulta.GetDouble("importancia");
             }
 
             bd.Close();
